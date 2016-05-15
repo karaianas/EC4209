@@ -13,6 +13,8 @@
 #include "Student.h"
 #include "Course.h"
 #include "Graph.h"
+#include "TimeSlot.h"
+
 
 #define PI 3.1415926
 
@@ -41,6 +43,7 @@ vector<Student*> student_list;
 vector<Course*> course_list;
 Graph* multi_graph;
 Graph* simple_graph;
+TimeSlot* time_slot;
 
 // function prototypes
 bool in_conversion(const char* path);
@@ -181,6 +184,13 @@ int main(int argc, char** argv)
 	// real case, students > class size
 	course_list[0]->set_course_size(5, 1, _size);
 	*/
+
+	time_slot = new TimeSlot(12);
+	time_slot->put_graph_info(multi_graph);
+	time_slot->course_sort();
+	time_slot->find_basic_solution(multi_graph);
+	time_slot->print_graph_info();
+	time_slot->print_timeslot(multi_graph);
 
 
 	// graphical interface

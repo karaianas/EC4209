@@ -70,7 +70,7 @@
     <ClCompile Include="build_simple_graph.cpp" />
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
-    <ClCompile Include="happinese.cpp" />
+    <ClCompile Include="happiness.cpp" />
     <ClCompile Include="is_connected.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -79,6 +79,7 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="RCourse.h" />
     <ClInclude Include="Student.h" />
+    <ClInclude Include="TimeSlot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

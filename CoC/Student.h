@@ -17,6 +17,7 @@ public:
 
 	vector<RCourse*> get_course_list()
 	{
+		
 		return course_list; 
 	}
 
@@ -123,10 +124,11 @@ public:
 	}
 
 	// register a course
-	void register_course(int track, int num)
+	void register_course(int track, int num, int index)
 	{
 		RCourse* c = new RCourse(track, num);
 		course_list.push_back(c);
+		courses.push_back(index);
 	}
 
 	// get student ID
@@ -135,8 +137,16 @@ public:
 		return id;
 	}
 
+	// get course_id's
+	vector<int> get_courses()
+	{
+		return courses;
+	}
+
 private:
 	vector<RCourse*> course_list;
+
+	vector<int> courses;
 	// unit needs to be included
 	int id, year;
 	int major; int minor;

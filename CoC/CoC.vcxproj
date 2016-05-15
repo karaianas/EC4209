@@ -70,6 +70,7 @@
     <ClCompile Include="build_simple_graph.cpp" />
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
+    <ClCompile Include="happinese.cpp" />
     <ClCompile Include="is_connected.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

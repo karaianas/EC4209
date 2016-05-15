@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	// Add your own home directory
 	int user_id;
 	char* home_dir = " ";
-	cout << "Giyeon[1] Sunwoo_lab[2] Kyubin[3] Seoyoung_room[4] Seoyoung_lab[5]" << endl << "Enter user number:";
+	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5]" << endl << "Enter user number:";
 	cin >> user_id;
 
 	// Determine whether this is an ideal/real registration

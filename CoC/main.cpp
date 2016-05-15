@@ -182,7 +182,6 @@ int main(int argc, char** argv)
 	course_list[0]->set_course_size(5, 1, _size);
 	*/
 
-
 	// graphical interface
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

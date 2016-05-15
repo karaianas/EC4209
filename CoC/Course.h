@@ -178,6 +178,13 @@ public:
 		return availability;
 	}
 
+	void set_class_size(int size) {
+		class_size = size;
+	}
+	void set_num_classes(int num_cls) {
+		num_classes = num_cls;
+	}
+
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;

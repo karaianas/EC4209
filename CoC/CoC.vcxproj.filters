@@ -33,7 +33,7 @@
     <ClCompile Include="build_multi_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="happinese.cpp">
+    <ClCompile Include="happiness.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

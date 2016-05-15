@@ -8,10 +8,11 @@ using namespace std;
 
 class Course{
 public:
-	Course(int _track, int _num)
+	Course(int _track, int _num, int _id)
 	{
 		track = _track;
 		num = _num;
+		course_id = _id;
 
 		// by default
 		popularity = 0;
@@ -25,6 +26,8 @@ public:
 
 	// get course num
 	int get_num(){ return num; }
+
+	int get_id(){ return course_id; }
 
 	// get pointer to the student list
 	vector<Student*>* get_ptr_student_list()
@@ -189,6 +192,8 @@ private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
 	int num;
+
+	int course_id;
 
 	float popularity;
 	float availability;

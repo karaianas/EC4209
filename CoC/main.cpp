@@ -637,7 +637,7 @@ bool in_conversion(const char* path)
 
 			if (first)
 			{
-				Course* C = new Course(track, num);
+				Course* C = new Course(track, num, counter);
 				counter++;
 				course_list.push_back(C);
 				C->enroll_student(S);
@@ -661,7 +661,7 @@ bool in_conversion(const char* path)
 
 				if (!exist)
 				{
-					Course* C = new Course(track, num);
+					Course* C = new Course(track, num, counter);
 					counter++;
 					course_list.push_back(C);
 					C->enroll_student(S);

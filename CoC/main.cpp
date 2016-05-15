@@ -592,6 +592,8 @@ bool in_conversion(const char* path)
 	int s_id = 1;
 	bool first = true;
 
+	int counter = 0;
+
 	for (int i = 0; code[i] != '\0'; i++)
 	{
 
@@ -611,6 +613,7 @@ bool in_conversion(const char* path)
 		Student* S = new Student(s_id, year, major, minor);
 
 		// add courses with track and number
+
 		while (code[i] != '\n')
 		{
 			int track, num;
@@ -624,9 +627,10 @@ bool in_conversion(const char* path)
 			if (first)
 			{
 				Course* C = new Course(track, num);
+				counter++;
 				course_list.push_back(C);
 				C->enroll_student(S);
-				S->register_course(track, num);
+				S->register_course(track, num, counter);
 				first = false;
 			}
 			else
@@ -638,7 +642,7 @@ bool in_conversion(const char* path)
 					if ((course_list[j]->get_num() == num) && (course_list[j]->get_track() == track))
 					{
 						course_list[j]->enroll_student(S);
-						S->register_course(track, num);
+						S->register_course(track, num, j);
 						exist = true;
 						break;
 					}
@@ -647,9 +651,10 @@ bool in_conversion(const char* path)
 				if (!exist)
 				{
 					Course* C = new Course(track, num);
+					counter++;
 					course_list.push_back(C);
 					C->enroll_student(S);
-					S->register_course(track, num);
+					S->register_course(track, num, counter);
 				}
 			}
 		}
@@ -658,7 +663,6 @@ bool in_conversion(const char* path)
 	}
 
 	// read in list.txt
-
 
 	return true;
 }

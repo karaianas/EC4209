@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <bitset>
@@ -658,7 +659,39 @@ bool in_conversion(const char* path)
 	}
 
 	// read in list.txt
+	string size_file_name = "list.txt";
+	ifstream size_file(s + size_file_name);
+	string line;
 
+	while (getline(size_file, line))
+	{
+		istringstream iss(line);
+		string crs;
+		int num_cls, cls_size;
+
+		if (!(iss >> crs >> num_cls >> cls_size))
+		{
+			printf("wrong file format!\n");
+			break;
+		}
+
+		// process pair
+		// find course
+		int crs_trk, crs_num;
+		//if (crs[0] == 'g' && crs[1] == 's') { crs_trk = 1; }
+		for (int i = 0; i < course_list.size(); i++)
+		{
+			string crs_name(course_list[i]->get_course_name());
+			if (crs_name == crs)
+			{
+				course_list[i]->set_class_size(cls_size);
+				course_list[i]->set_num_classes(num_cls);
+				break;
+			}
+		}
+	}
+	
+	size_file.close();
 
 	return true;
 }

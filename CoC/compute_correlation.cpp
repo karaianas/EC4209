@@ -30,8 +30,8 @@ void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Cou
 
 	if (!intersection)
 	{
-		G->set_correlation(cour_i, cour_j, -1);
-		G->set_correlation(cour_j, cour_i, -1);
+		G->set_correlation(cour_i, cour_j, 0);
+		G->set_correlation(cour_j, cour_i, 0);
 		return;
 	}
 

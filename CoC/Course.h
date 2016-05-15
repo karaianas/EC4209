@@ -80,7 +80,6 @@ public:
 			printf("ph%02i ", num);
 			break;
 		}
-		printf("\n");
 	}
 
 	// get course name in array[4] e.g. gs24

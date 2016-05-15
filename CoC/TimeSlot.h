@@ -46,19 +46,18 @@ public:
 
 private:
 	vector< vector < int > > Base_Solution_Array;
-
 	//		Course course_list;
 	int timeslotnum;
 	int CourseNum;
-
 	vector< pair< pair<int, int>, float> > graph_info;
 };
 
 void TimeSlot::print_timeslot(Graph *G)
 {
+	cout << endl;
 	for (int i = 0; i < Base_Solution_Array.size(); i++)
 	{
-		cout << "timeslot " << i << " : ";
+		cout << "timeslot " << i << endl;
 		for (int j = 0; j < Base_Solution_Array.at(i).size(); j++)
 		{
 			Course* temp = G->get_course(Base_Solution_Array.at(i).at(j));
@@ -164,6 +163,12 @@ void TimeSlot::find_basic_solution(Graph *G){
 				{
 					num = j;
 					min_correlation_sum = temp_correlation_sum;
+				}
+
+				else if (temp_correlation_sum == min_correlation_sum)
+				{
+					if (Base_Solution_Array.at(j).size() < Base_Solution_Array.at(num).size())
+						num = j;
 				}
 			}
 

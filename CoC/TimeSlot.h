@@ -191,8 +191,8 @@ void TimeSlot::find_basic_solution(Graph *G){
 					min_correlation_sum = temp_correlation_sum;
 				}
 			}
-
-			Base_Solution_Array.at(num).push_back(num2);
+			int newid = G->get_course(num2)->get_id();
+			Base_Solution_Array.at(num).push_back(newid);
 			visited[num2] = 1;
 		}
 	}

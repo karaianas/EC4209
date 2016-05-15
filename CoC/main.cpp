@@ -191,11 +191,10 @@ int main(int argc, char** argv)
 	time_slot->put_graph_info(multi_graph);
 	time_slot->course_sort();
 	time_slot->find_basic_solution(multi_graph);
-	time_slot->print_graph_info();
+//	time_slot->print_graph_info();
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 50);
-	for (int i = 0; i < student_list[0]->get_courses().size(); i++)
-		cout << student_list[0]->get_courses().at(i) << endl;
+
 
 	// graphical interface
 	glutInit(&argc, argv);
@@ -724,7 +723,6 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 		if (ptr->at(i)->get_id() == s_id + 1)
 		{
 			index = i;
-			cout << "I'm number 1 " << index << endl;
 			break;
 		}
 	}
@@ -758,18 +756,24 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 					purity++;
 					checking_course++;
 				}
+//				cout << "checking course :" << checking_course << endl;
+
 			}
-			if (checking_course > 0)
-				sum++;
 			if (purity == total_course)
 				break;
+			if (checking_course > 0)
+				sum++;
+//			cout << "sum :" << sum << endl;
+			
 		}
+		if (purity = total_course)
+			break;
 	}
-	cout << "DAMN!" << sum << endl;
-	cout << "total_course" << total_course << endl;
+//	cout << "DAMN!" << sum << endl;
+//	cout << "total_course" << total_course << endl;
 	_one_happiness = ((float)sum / (float)total_course) * 100;
 
-	cout << "HAPPY!" << _one_happiness << endl;
+//	cout << "HAPPY!" << _one_happiness << endl;
 	return _one_happiness;
 }
 
@@ -798,8 +802,8 @@ float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
 {
 	for (int i = 0; i < ptr->size(); i++)
-		cout << 0 << "th happiness : " << one_happiness(ptr, 0, T, ptr2) << "%" << endl;
+		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
 
 	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
-	cout << "The average happiness of all student" << average_happiness(ptr, T, ptr2) << "%" << endl;
+	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;
 }

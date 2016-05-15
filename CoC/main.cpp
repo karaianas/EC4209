@@ -681,29 +681,29 @@ bool in_conversion(const char* path)
 	while (getline(size_file, line))
 	{
 		istringstream iss(line);
-		string crs;
+		string crs, dummy;
 		int num_cls, cls_size;
 
-		if (!(iss >> crs >> num_cls >> cls_size))
-		{
-			printf("wrong file format!\n");
-			break;
-		}
+		iss >> crs >> num_cls >> cls_size >> dummy;
 
 		// process pair
 		// find course
 		for (int i = 0; i < course_list.size(); i++)
 		{
+			char* name = course_list[i]->get_course_name();
 			string crs_name(course_list[i]->get_course_name());
+			
+			crs_name.resize(4);
+
 			if (crs_name == crs)
 			{
-				cout << crs_name << " num_cls: " << num_cls << " size: " << cls_size << endl;
 				course_list[i]->set_class_size(cls_size);
 				course_list[i]->set_num_classes(num_cls);
 				break;
 			}
 		}
 	}
+
 	
 	size_file.close();
 

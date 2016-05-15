@@ -157,7 +157,7 @@ public:
 			else
 				availability = float(class_size * num_classes) / num_students;
 		}
-		
+
 		popularity = num_students / float(num_total_students);
 
 		//if (_num == -1)
@@ -186,6 +186,14 @@ public:
 	}
 	void set_num_classes(int num_cls) {
 		num_classes = num_cls;
+	}
+
+	int get_class_size() {
+		return class_size;
+	}
+
+	int get_num_classes() {
+		return num_classes;
 	}
 
 private:

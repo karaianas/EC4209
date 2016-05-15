@@ -678,7 +678,6 @@ bool in_conversion(const char* path)
 	ifstream size_file(s + size_file_name);
 	string line;
 
-<<<<<<< HEAD
 	while (getline(size_file, line))
 	{
 		istringstream iss(line);
@@ -693,13 +692,12 @@ bool in_conversion(const char* path)
 
 		// process pair
 		// find course
-		int crs_trk, crs_num;
-		//if (crs[0] == 'g' && crs[1] == 's') { crs_trk = 1; }
 		for (int i = 0; i < course_list.size(); i++)
 		{
 			string crs_name(course_list[i]->get_course_name());
 			if (crs_name == crs)
 			{
+				cout << crs_name << " num_cls: " << num_cls << " size: " << cls_size << endl;
 				course_list[i]->set_class_size(cls_size);
 				course_list[i]->set_num_classes(num_cls);
 				break;
@@ -709,7 +707,5 @@ bool in_conversion(const char* path)
 	
 	size_file.close();
 
-=======
->>>>>>> origin/ClashOfClass
 	return true;
 }

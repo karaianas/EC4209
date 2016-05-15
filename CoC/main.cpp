@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 		home_dir = "C:\\Users\\cvlab2243\\Source\\Repos\\EC4209\\CoC\\";
 		break;
 	case 3:
-		home_dir = "C:\\Users\\±Ôºó\\Documents\\EC4209-ClashOfClass\\EC4209-ClashOfClass\\CoC\\";
+		home_dir = "C:\\Users\\±Ôºó\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
 	case 4:
 		home_dir = "C:\\Users\\USER\\Documents\\GitHub\\EC4209\\CoC\\";

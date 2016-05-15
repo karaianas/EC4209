@@ -194,6 +194,8 @@ int main(int argc, char** argv)
 	time_slot->print_graph_info();
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 50);
+	for (int i = 0; i < student_list[0]->get_courses().size(); i++)
+		cout << student_list[0]->get_courses().at(i) << endl;
 
 	// graphical interface
 	glutInit(&argc, argv);
@@ -715,13 +717,14 @@ bool in_conversion(const char* path)
 float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
 {
 
-	int one_happiness;
+	float _one_happiness;
 	int index = -1;
 	for (int i = 0; i < ptr->size(); i++)
 	{
-		if (ptr->at(i)->get_id() == s_id)
+		if (ptr->at(i)->get_id() == s_id + 1)
 		{
 			index = i;
+			cout << "I'm number 1 " << index << endl;
 			break;
 		}
 	}
@@ -735,7 +738,9 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 
 	int total_course = my_list.size();
 	vector <vector <int> > temp = T->get_Array();
+
 	int sum = 0;
+	int purity = 0;
 	for (int i = 0; i < temp.size(); i++)
 	{
 		int checking_course = 0;
@@ -744,21 +749,28 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			break;
 		for (int j = 0; j < temp.at(i).size(); j++)
 		{
-
+			checking_course = 0;
 			for (int k = 0; k < my_list.size(); k++)
 			{
-				if (temp.at(i).at(j) == my_list.at(k))
+				//cout << simple_graph->get_course(temp.at(i).at(j))->get_id() << " " << my_list.at(k) << endl;
+				if (simple_graph->get_course(temp.at(i).at(j))->get_id() == my_list.at(k))
 				{
-					my_list.erase(my_list.begin() + k - 1);
+					purity++;
 					checking_course++;
 				}
-				if (checking_course > 0)
-					sum++;
 			}
+			if (checking_course > 0)
+				sum++;
+			if (purity == total_course)
+				break;
 		}
 	}
-	one_happiness = (sum / total_course) * 100;
-	return one_happiness;
+	cout << "DAMN!" << sum << endl;
+	cout << "total_course" << total_course << endl;
+	_one_happiness = ((float)sum / (float)total_course) * 100;
+
+	cout << "HAPPY!" << _one_happiness << endl;
+	return _one_happiness;
 }
 
 int num_of_student(vector<Student*>* ptr, float happiness, TimeSlot* T, vector<Course*>* ptr2)
@@ -786,7 +798,7 @@ float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
 {
 	for (int i = 0; i < ptr->size(); i++)
-		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
+		cout << 0 << "th happiness : " << one_happiness(ptr, 0, T, ptr2) << "%" << endl;
 
 	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
 	cout << "The average happiness of all student" << average_happiness(ptr, T, ptr2) << "%" << endl;

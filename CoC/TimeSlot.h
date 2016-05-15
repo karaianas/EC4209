@@ -99,7 +99,7 @@ void TimeSlot::put_graph_info(Graph *G)
 		for (int j = 0; j<G->get_size(); j++)
 		{
 			Course* temp_course_2 = G->get_course(j);
-			int temp_correlation_value = G->get_correlation(temp_course, temp_course_2);
+			float temp_correlation_value = G->get_correlation(temp_course, temp_course_2);
 
 			pair< pair<int, int>, float> L_tempNode;
 			pair< int, int > S_tempNode;

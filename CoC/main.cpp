@@ -54,6 +54,7 @@ void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Cou
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 
+void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
 int main(int argc, char** argv)
 {
@@ -192,7 +193,7 @@ int main(int argc, char** argv)
 	time_slot->find_basic_solution(multi_graph);
 	time_slot->print_graph_info();
 	time_slot->print_timeslot(multi_graph);
-
+	printf_happiness(&student_list, time_slot, &course_list, 50);
 
 	// graphical interface
 	glutInit(&argc, argv);
@@ -622,7 +623,7 @@ bool in_conversion(const char* path)
 		i += 2;
 
 		Student* S = new Student(s_id, year, major, minor);
-
+		
 		// add courses with track and number
 
 		while (code[i] != '\n')

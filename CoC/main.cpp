@@ -97,10 +97,10 @@ int main(int argc, char** argv)
 	// result print out on console
 	if (is_parsed)
 	{
-		for (int i = 0; i < student_list.size(); i++)
-			student_list[i]->print_student_info();
-		for (int j = 0; j < course_list.size(); j++)
-			course_list[j]->print_student_list();
+	for (int i = 0; i < student_list.size(); i++)
+	student_list[i]->print_student_info();
+	for (int j = 0; j < course_list.size(); j++)
+	course_list[j]->print_student_list();
 	}
 	*/
 
@@ -144,14 +144,14 @@ int main(int argc, char** argv)
 
 	/*for (int p = 0; p < simple_graph->get_size(); p++)
 	{
-		for (int q = p + 1; q < simple_graph->get_size(); q++)
-		{
-			if (!is_connected(simple_graph, course_list[p], course_list[q]))
-				printf("%d\t%d\n", p, q);
-		}
+	for (int q = p + 1; q < simple_graph->get_size(); q++)
+	{
+	if (!is_connected(simple_graph, course_list[p], course_list[q]))
+	printf("%d\t%d\n", p, q);
+	}
 	}*/
 
-	
+
 	// TEST01: get correlation statistics
 	vector<Course*>* cptr;
 	cptr = &course_list;
@@ -191,11 +191,10 @@ int main(int argc, char** argv)
 	time_slot->put_graph_info(multi_graph);
 	time_slot->course_sort();
 	time_slot->find_basic_solution(multi_graph);
-//	time_slot->print_graph_info();
+	//	time_slot->print_graph_info();
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 50);
-
-
+	cout << multi_graph->get_size() << endl;
 	// graphical interface
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -738,9 +737,30 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 	vector <vector <int> > temp = T->get_Array();
 
 	int sum = 0;
-	int purity = 0;
+	int purity = my_list.size();
 	for (int i = 0; i < temp.size(); i++)
 	{
+		bool checked = 0;
+		for (int j = 0; j < my_list.size(); j++)
+		{
+			for (int k = 0; k < temp.at(i).size(); k++)
+			{
+				if ( multi_graph->get_course(temp.at(i).at(k))->get_id() == my_list.at(j))
+				{
+			//		cout << " student ID: " << s_id << " ";
+			//		multi_graph->get_course(temp.at(i).at(k))->print_course_info();
+			//		cout << " time slot : " << i << " ";
+			//		cout << endl;
+					if (!checked)
+						checked = 1;
+					else
+						purity--;
+				}
+			}
+		}
+	}
+
+		/*
 		int checking_course = 0;
 		int len = my_list.size();
 		if (len == 0)
@@ -750,8 +770,9 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			checking_course = 0;
 			for (int k = 0; k < my_list.size(); k++)
 			{
+
 				//cout << simple_graph->get_course(temp.at(i).at(j))->get_id() << " " << my_list.at(k) << endl;
-				if (simple_graph->get_course(temp.at(i).at(j))->get_id() == my_list.at(k))
+				if (multi_graph->get_course(temp.at(i).at(j))->get_id() == my_list.at(k))
 				{
 					purity++;
 					checking_course++;
@@ -769,9 +790,10 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 		if (purity = total_course)
 			break;
 	}
+	*/
 //	cout << "DAMN!" << sum << endl;
 //	cout << "total_course" << total_course << endl;
-	_one_happiness = ((float)sum / (float)total_course) * 100;
+	_one_happiness = ((float)purity / (float)total_course) * 100;
 
 //	cout << "HAPPY!" << _one_happiness << endl;
 	return _one_happiness;

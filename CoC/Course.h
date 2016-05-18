@@ -255,42 +255,6 @@ public:
 	}
 
 	
-/*	void remove_color(Graph *G, Course *i, Course *j)
-	{
-		int a = 0, b = 0;
-		for (int q = 0; q < 12; q++)
-		{
-			a += i->get_color()[q];
-			b += j->get_color()[q];
-		}
-		
-		if (G->is_edge(i, j))
-		{
-				int A;
-				if (a == 1)
-				{
-					for (int q = 0; q < 12; q++)
-						if (i->get_color()[q] == 0)
-						{
-							A = q;
-							break;
-						}
-					j->get_color()[A] = 0;
-				}	
-				int B;
-				if (b == 1)
-				{
-					for (int q = 0; q < 12; q++)
-						if (j->get_color()[q] == 0)
-						{
-							B = q;
-							break;
-						}
-					i->get_color()[B] = 0;
-				}
-		}
-	}
-*/
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;

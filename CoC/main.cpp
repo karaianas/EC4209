@@ -835,8 +835,8 @@ float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
 {
-	for (int i = 0; i < ptr->size(); i++)
-		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
+//	for (int i = 0; i < ptr->size(); i++)
+	//	cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
 
 	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
 	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;

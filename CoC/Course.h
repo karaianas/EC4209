@@ -11,7 +11,7 @@ using namespace std;
 class Course{
 public:
 	
-	Course(int _track, int _num, int _id)
+	Course(int _track = 0, int _num = 0, int _id = 0)
 	{
 		track = _track;
 		num = _num;

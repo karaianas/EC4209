@@ -16,9 +16,10 @@ vector<Course*>* bfs(Graph* G, Course* root)
 	// initialize
 	to_visit.push_back(root);
 
+	cout << "[bfs] start" << endl;
+
 	while (first < to_visit.size())
 	{
-		cout << "[bfs] start" << endl;
 		/* loop the neighbors of to_visit[first]
 		* if not in visited list, push back to to_visit
 		*/

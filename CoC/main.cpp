@@ -115,13 +115,15 @@ int main(int argc, char** argv)
 	 */
 	vector<Course*> toy_course_list;
 	toy_course_list.push_back(course_list[0]);
-	toy_course_list.push_back(course_list[1]);
+	//toy_course_list.push_back(course_list[1]);
 	toy_course_list.push_back(course_list[3]);
 	toy_course_list.push_back(course_list[29]);
 	toy_course_list.push_back(course_list[69]);
 	toy_course_list.push_back(course_list[39]);
 	toy_course_list.push_back(course_list[98]);
-	toy_course_list.push_back(course_list[100]);
+	toy_course_list.push_back(course_list[50]);
+	toy_course_list.push_back(course_list[113]);
+	//toy_course_list.push_back(course_list[103]);
 	toy_course_list.push_back(course_list[110]);
 
 
@@ -221,8 +223,12 @@ int main(int argc, char** argv)
 	for (int i = 0; i < tmp_vec->size(); i++)
 		cout << tmp_vec->at(i)->get_course_name() << " ";
 	cout << endl;
-
 	cout << "get random test: " << tmp_simple.get_random_vertex()->get_course_name() << endl;
+	//list_subgraphs(&tmp_simple, subgraphs);
+	cout << "subgraphs: ";
+	for (int i = 0; i < subgraphs->size(); i++)
+		cout << subgraphs->at(i)->get_size() << " ";
+	cout << endl;
 
 
 	// graphical interface

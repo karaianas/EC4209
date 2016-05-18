@@ -43,7 +43,7 @@ public:
 	}
 
 	// return TRUE if nodes have an edge, FALSE if not
-	bool is_edge(Course* i, Course* j) {
+	 bool is_edge(Course* i, Course* j) {
 		float cor = get_correlation(i, j);
 		if (cor > 0)
 			return true;
@@ -257,14 +257,13 @@ public:
 
 		return list;
 	}
+
 	int get_max_degree()
 	{
 		int max_degree = 0, degree;
-		int a;
+		int a = 0;
 		for (int i = 0; i < num_courses; i++)
 		{
-			if (i == 8 || i==6)
-				continue;
 			degree = get_neighbors(index.at(i))->size();
 			if (max_degree < degree)
 			{
@@ -277,6 +276,9 @@ public:
 		cout << max_degree;
 		return max_degree;
 	}
+
+	// 
+	//int 
 	
 	void remove_less_threshold(float threshold)
 	{
@@ -307,6 +309,15 @@ public:
 			for (int j = i + 1; j < num_courses; j++)
 				if (p.at(i).at(j) > 0)
 					return get_course(i);
+	}
+
+	void print_course_availablilty()
+	{
+		for (int i = 0; i < num_courses; i++)
+		{
+			index[i]->print_course_info();
+			cout << index[i]->get_availability() << endl;
+		}
 	}
 
 	// correlation statistics

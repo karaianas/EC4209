@@ -3,11 +3,14 @@
 #include <vector>
 #include <iostream>
 #include "Student.h"
+//#include "Graph.h"
 
 using namespace std;
+#define Color_size 12
 
 class Course{
 public:
+	
 	Course(int _track = 0, int _num = 0, int _id = 0)
 	{
 		track = _track;
@@ -141,28 +144,14 @@ public:
 		num_classes = _num;
 
 		float num_students = student_list.size();
-
-		// in an ideal case
-		if (_num == -1)
-		{
-			num_classes = ceil(num_students / class_size);
+		
+		if ((int)num_students <= class_size * num_classes)
 			availability = 1;
-		}
-		else// number of classes are already set
-		{
-			num_classes = _num;
-			if ((int)num_students <= class_size * num_classes)
-				availability = 1;
-			else
-				availability = float(class_size * num_classes) / num_students;
-		}
+		else
+			availability = float(class_size * num_classes) / (float)num_students;
 
-		popularity = num_students / float(num_total_students);
+		popularity = (float)num_students / float(num_total_students);
 
-		//if (_num == -1)
-		//	cout << "[Ideal Case]" << endl;
-		//else
-		//	cout << "[Not an Ideal Case]" << endl;
 		//cout << "The number of registered students: " << num_students << endl;
 		//cout << "The size of the class: " << class_size << endl;
 		//cout << "The number of classes: " << num_classes << endl;
@@ -180,6 +169,23 @@ public:
 		return availability;
 	}
 
+	void set_popularity()
+	{
+		float num_students = student_list.size();
+
+		popularity = (float)num_students / float(class_size * num_classes);
+	}
+
+	void set_availability()
+	{
+		float num_students = student_list.size();
+
+		if ((int)num_students <= class_size * num_classes)
+			availability = 1;
+		else
+			availability = float(class_size * num_classes) / (float)num_students;
+	}
+
 	void set_class_size(int size) {
 		class_size = size;
 	}
@@ -194,14 +200,72 @@ public:
 	int get_num_classes() {
 		return num_classes;
 	}
+	
+	void init_color_set()
+	{
+		for (int i = 0; i < Color_size; i++)
+			get_color()[i] = 1;
+	}
 
+	bool *get_color(){
+		return color;
+	}
+
+	void remove_color_set(int which_number)
+	{
+		get_color()[which_number] = 0;
+	}
+
+	void insert_color_set(int which_number)
+	{
+		get_color()[which_number] = 1;
+	}
+	
+	bool is_empty()
+	{
+		int sum = 0;
+		for (int i = 0; i < Color_size; i++)
+			sum += get_color()[i];
+		if (!sum)
+			return 1;		//비었으면 return 1;
+		else
+			return 0;		//안 비어있으면 return 0;
+	}
+	bool whether_selected()
+	{
+		int sum = 0;
+		for (int i = 0; i < Color_size; i++)
+			sum += get_color()[i];
+		if (sum == 1)
+			return 1;
+		else
+			return 0;	
+	}
+
+	int get_select_color()
+	{
+		return selected_color;
+	}
+
+	void set_select_color()
+	{
+		if (whether_selected())
+			for (int i = 0; i < Color_size; i++)
+				if (get_color()[i])
+					selected_color = i;
+		else
+			cout << "we can not choose the selected color" << endl;
+	}
+
+	
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
 	int num;
 
 	int course_id;
-
+	bool color[Color_size];
+	int selected_color;
 	float popularity;
 	float availability;
 	int class_size;// this is the size of one single class of the course

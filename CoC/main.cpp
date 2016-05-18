@@ -46,6 +46,7 @@ Graph* multi_graph;
 Graph* simple_graph;
 Graph* Copy_graph;
 TimeSlot* time_slot;
+vector<Graph*>* subgraphs;
 
 // function prototypes
 bool in_conversion(const char* path);
@@ -54,6 +55,9 @@ Graph* build_multi_graph(vector<Course*> course_list);
 void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Course* cour_j);
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
+void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
+vector<Course*>* bfs(Graph* G, Course* root);
+
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
@@ -109,7 +113,7 @@ int main(int argc, char** argv)
 	 * with simple toy course list
 	 * used course list 0 to 4
 	 */
-	/*vector<Course*> toy_course_list;
+	vector<Course*> toy_course_list;
 	toy_course_list.push_back(course_list[0]);
 	toy_course_list.push_back(course_list[1]);
 	toy_course_list.push_back(course_list[3]);
@@ -117,9 +121,8 @@ int main(int argc, char** argv)
 	toy_course_list.push_back(course_list[69]);
 	toy_course_list.push_back(course_list[39]);
 	toy_course_list.push_back(course_list[98]);
-
 	toy_course_list.push_back(course_list[100]);
-	toy_course_list.push_back(course_list[110]);*/
+	toy_course_list.push_back(course_list[110]);
 
 
 
@@ -202,6 +205,26 @@ int main(int argc, char** argv)
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
+
+
+	/* make list of subgraphs from the simple_graph */
+	subgraphs = new vector<Graph*>();
+	//list_subgraphs(simple_graph, subgraphs);
+
+	/* list_subgraph tests */
+	Graph tmp = build_multi_graph(toy_course_list);
+	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
+	tmp_simple.print_graph();
+	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
+	vector<Course*>* tmp_vec = bfs(&tmp_simple, toy_course_list[0]);
+	cout << "[main] tmp_vec: ";
+	for (int i = 0; i < tmp_vec->size(); i++)
+		cout << tmp_vec->at(i)->get_course_name() << " ";
+	cout << endl;
+
+	cout << "get random test: " << tmp_simple.get_random_vertex()->get_course_name() << endl;
+
+
 	// graphical interface
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

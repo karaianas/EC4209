@@ -33,6 +33,12 @@ public:
 				index.push_back(to_copy->in)
 			}*/
 		}
+
+		if (n) {
+			vector<float> tmp(n, 0);
+			for (int i = 0; i < n; i++)
+				p.push_back(tmp);
+		}
 		
 	}
 
@@ -172,15 +178,6 @@ public:
 		set_correlation(v, v, correlation);
 	}
 
-	// get linear addition of the two correlations
-	float get_correlation_addition(Course* i, Course* j)
-	{
-		float i_j = get_correlation(i, j);
-		float j_i = get_correlation(j, i);
-
-		return i_j + j_i;
-	}
-
 	// get std, avg, min, and max of correlations
 	void get_correlation_stats(vector<Course*>* cptr)
 	{
@@ -291,6 +288,25 @@ public:
 				if (temp <= threshold)
 					p.at(i).at(j) = 0;
 			} 
+	}
+
+	int get_num_edge()
+	{
+		int sum = 0;
+		for (int i = 0; i < num_courses; i++)
+			for (int j = i + 1; j < num_courses; j++)
+				if (p.at(i).at(j) > 0)
+					sum++;
+
+		return sum;
+	}
+
+	Course* get_random_vertex()
+	{
+		for (int i = 0; i < num_courses; i++)
+			for (int j = i + 1; j < num_courses; j++)
+				if (p.at(i).at(j) > 0)
+					return get_course(i);
 	}
 
 	// correlation statistics

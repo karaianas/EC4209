@@ -36,6 +36,12 @@
     <ClCompile Include="happiness.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="list_subgraphs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bfs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Student.h">

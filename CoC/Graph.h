@@ -257,10 +257,11 @@ public:
 
 		return list;
 	}
+
 	int get_max_degree()
 	{
 		int max_degree = 0, degree;
-		int a;
+		int a = 0;
 		for (int i = 0; i < num_courses; i++)
 		{
 			degree = get_neighbors(index.at(i))->size();
@@ -275,6 +276,8 @@ public:
 		cout << max_degree;
 		return max_degree;
 	}
+
+	// 
 	
 	void remove_less_threshold(float threshold)
 	{

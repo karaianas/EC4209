@@ -144,28 +144,14 @@ public:
 		num_classes = _num;
 
 		float num_students = student_list.size();
-
-		// in an ideal case
-		if (_num == -1)
-		{
-			num_classes = ceil(num_students / class_size);
+		
+		if ((int)num_students <= class_size * num_classes)
 			availability = 1;
-		}
-		else// number of classes are already set
-		{
-			num_classes = _num;
-			if ((int)num_students <= class_size * num_classes)
-				availability = 1;
-			else
-				availability = float(class_size * num_classes) / num_students;
-		}
+		else
+			availability = float(class_size * num_classes) / (float)num_students;
 
-		popularity = num_students / float(num_total_students);
+		popularity = (float)num_students / float(num_total_students);
 
-		//if (_num == -1)
-		//	cout << "[Ideal Case]" << endl;
-		//else
-		//	cout << "[Not an Ideal Case]" << endl;
 		//cout << "The number of registered students: " << num_students << endl;
 		//cout << "The size of the class: " << class_size << endl;
 		//cout << "The number of classes: " << num_classes << endl;
@@ -181,6 +167,23 @@ public:
 	float get_availability()
 	{
 		return availability;
+	}
+
+	void set_popularity()
+	{
+		float num_students = student_list.size();
+
+		popularity = (float)num_students / float(class_size * num_classes);
+	}
+
+	void set_availability()
+	{
+		float num_students = student_list.size();
+
+		if ((int)num_students <= class_size * num_classes)
+			availability = 1;
+		else
+			availability = float(class_size * num_classes) / (float)num_students;
 	}
 
 	void set_class_size(int size) {

@@ -155,6 +155,7 @@ int main(int argc, char** argv)
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);
 	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");
+
 	Copy_graph->get_max_degree();
 	Copy_graph->remove_less_threshold(threshold);
 	Copy_graph->file_print_graph(home_dir, "Copy_graph.txt");
@@ -169,9 +170,9 @@ int main(int argc, char** argv)
 	course_list[0]->print_student_list();
 
 	// TEST03: get popularity and availability of the course
-	int _size = student_list.size();
-	for (int j = 0; j < course_list.size(); j++)
-		course_list[j]->set_course_size(30, -1, _size);
+	//int _size = student_list.size();
+	//for (int j = 0; j < course_list.size(); j++)
+	//	course_list[j]->set_course_size(30, -1, _size);
 
 	// TEST04: get neighbors of a course
 	int _length = multi_graph->get_neighbors(course_list[40])->size();
@@ -202,6 +203,7 @@ int main(int argc, char** argv)
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
+
 	// graphical interface
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -707,6 +709,8 @@ bool in_conversion(const char* path)
 			{
 				course_list[i]->set_class_size(cls_size);
 				course_list[i]->set_num_classes(num_cls);
+				course_list[i]->set_popularity();
+				course_list[i]->set_availability();
 				break;
 			}
 		}

@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bfs.cpp" />
     <ClCompile Include="build_multi_graph.cpp" />
     <ClCompile Include="build_simple_graph.cpp" />
     <ClCompile Include="check_track.cpp" />
@@ -73,6 +74,7 @@
     <ClCompile Include="generate_virtual_students.cpp" />
     <ClCompile Include="happiness.cpp" />
     <ClCompile Include="is_connected.cpp" />
+    <ClCompile Include="list_subgraphs.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

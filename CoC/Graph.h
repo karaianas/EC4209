@@ -260,9 +260,42 @@ public:
 
 		return list;
 	}
+	int get_max_degree()
+	{
+		int max_degree = 0, degree;
+		int a;
+		for (int i = 0; i < num_courses; i++)
+		{
+			if (i == 8 || i==6)
+				continue;
+			degree = get_neighbors(index.at(i))->size();
+			if (max_degree < degree)
+			{
+				a = i;
+				max_degree = degree;
+			}
+		}
+		cout << a << endl;
+		index.at(a)->print_course_info();
+		cout << max_degree;
+		return max_degree;
+	}
+	
+	void remove_less_threshold(float threshold)
+	{
+		float temp;
+		for (int i = 0; i < num_courses; i++)
+			for (int j = 0; j < num_courses; j++)
+			{
+				temp = p.at(i).at(j);
+				if (temp <= threshold)
+					p.at(i).at(j) = 0;
+			} 
+	}
 
 	// correlation statistics
 	float avg, min, max;
+
 
 private:
 	int num_courses;

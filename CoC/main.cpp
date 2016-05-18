@@ -44,6 +44,7 @@ vector<Student*> student_list;
 vector<Course*> course_list;
 Graph* multi_graph;
 Graph* simple_graph;
+Graph* Copy_graph;
 TimeSlot* time_slot;
 
 // function prototypes
@@ -152,6 +153,12 @@ int main(int argc, char** argv)
 	}*/
 
 
+	Copy_graph = build_simple_graph(multi_graph, course_list);
+	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");
+	Copy_graph->get_max_degree();
+	Copy_graph->remove_less_threshold(threshold);
+	Copy_graph->file_print_graph(home_dir, "Copy_graph.txt");
+	
 	// TEST01: get correlation statistics
 	vector<Course*>* cptr;
 	cptr = &course_list;
@@ -193,7 +200,7 @@ int main(int argc, char** argv)
 	time_slot->find_basic_solution(multi_graph);
 	//	time_slot->print_graph_info();
 	time_slot->print_timeslot(multi_graph);
-	printf_happiness(&student_list, time_slot, &course_list, 50);
+	printf_happiness(&student_list, time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
 	// graphical interface
 	glutInit(&argc, argv);
@@ -823,8 +830,8 @@ float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
 {
-	for (int i = 0; i < ptr->size(); i++)
-		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
+//	for (int i = 0; i < ptr->size(); i++)
+//		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
 
 	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
 	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;

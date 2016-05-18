@@ -3,11 +3,14 @@
 #include <vector>
 #include <iostream>
 #include "Student.h"
+//#include "Graph.h"
 
 using namespace std;
+#define Color_size 12
 
 class Course{
 public:
+	
 	Course(int _track, int _num, int _id)
 	{
 		track = _track;
@@ -194,14 +197,108 @@ public:
 	int get_num_classes() {
 		return num_classes;
 	}
+	
+	void init_color_set()
+	{
+		for (int i = 0; i < Color_size; i++)
+			get_color()[i] = 1;
+	}
 
+	bool *get_color(){
+		return color;
+	}
+
+	void remove_color_set(int which_number)
+	{
+		get_color()[which_number] = 0;
+	}
+
+	void insert_color_set(int which_number)
+	{
+		get_color()[which_number] = 1;
+	}
+	
+	bool is_empty()
+	{
+		int sum = 0;
+		for (int i = 0; i < Color_size; i++)
+			sum += get_color()[i];
+		if (!sum)
+			return 1;		//비었으면 return 1;
+		else
+			return 0;		//안 비어있으면 return 0;
+	}
+	bool whether_selected()
+	{
+		int sum = 0;
+		for (int i = 0; i < Color_size; i++)
+			sum += get_color()[i];
+		if (sum == 1)
+			return 1;
+		else
+			return 0;	
+	}
+
+	int get_select_color()
+	{
+		return selected_color;
+	}
+
+	void set_select_color()
+	{
+		if (whether_selected())
+			for (int i = 0; i < Color_size; i++)
+				if (get_color()[i])
+					selected_color = i;
+		else
+			cout << "we can not choose the selected color" << endl;
+	}
+
+	
+/*	void remove_color(Graph *G, Course *i, Course *j)
+	{
+		int a = 0, b = 0;
+		for (int q = 0; q < 12; q++)
+		{
+			a += i->get_color()[q];
+			b += j->get_color()[q];
+		}
+		
+		if (G->is_edge(i, j))
+		{
+				int A;
+				if (a == 1)
+				{
+					for (int q = 0; q < 12; q++)
+						if (i->get_color()[q] == 0)
+						{
+							A = q;
+							break;
+						}
+					j->get_color()[A] = 0;
+				}	
+				int B;
+				if (b == 1)
+				{
+					for (int q = 0; q < 12; q++)
+						if (j->get_color()[q] == 0)
+						{
+							B = q;
+							break;
+						}
+					i->get_color()[B] = 0;
+				}
+		}
+	}
+*/
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
 	int num;
 
 	int course_id;
-
+	bool color[Color_size];
+	int selected_color;
 	float popularity;
 	float availability;
 	int class_size;// this is the size of one single class of the course

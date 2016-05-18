@@ -37,7 +37,7 @@ public:
 	}
 
 	// return TRUE if nodes have an edge, FALSE if not
-	bool is_edge(Course* i, Course* j) {
+	 bool is_edge(Course* i, Course* j) {
 		float cor = get_correlation(i, j);
 		if (cor > 0)
 			return true;
@@ -266,8 +266,6 @@ public:
 		int a;
 		for (int i = 0; i < num_courses; i++)
 		{
-			if (i == 8 || i==6)
-				continue;
 			degree = get_neighbors(index.at(i))->size();
 			if (max_degree < degree)
 			{

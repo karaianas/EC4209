@@ -717,7 +717,14 @@ bool in_conversion(const char* path)
 
 	return true;
 }
-
+void remove_color(Graph *G, Course *i, Course *j)
+{
+	if (G->is_edge(i, j))
+	{
+		
+	
+	}
+}
 
 float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
 {

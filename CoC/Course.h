@@ -172,17 +172,26 @@ public:
 
 	float get_popularity()
 	{
+		int num_students = student_list.size();
+		popularity = (float)num_students / float(class_size * num_classes);
+
 		return popularity;
 	}
 
 	float get_availability()
 	{
+		int num_students = student_list.size();
+		availability = float(class_size * num_classes) / (float)num_students;
+		if (availability >= 1)
+			availability = 1;
+
 		return availability;
 	}
 
 	void set_class_size(int size) {
 		class_size = size;
 	}
+
 	void set_num_classes(int num_cls) {
 		num_classes = num_cls;
 	}

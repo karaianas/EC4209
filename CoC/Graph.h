@@ -261,6 +261,15 @@ public:
 		return list;
 	}
 
+	void print_course_availablilty()
+	{
+		for (int i = 0; i < num_courses; i++)
+		{
+			index[i]->print_course_info();
+			cout << index[i]->get_availability() << endl;
+		}
+	}
+
 	// correlation statistics
 	float avg, min, max;
 

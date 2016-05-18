@@ -53,6 +53,8 @@ Graph* build_multi_graph(vector<Course*> course_list);
 void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Course* cour_j);
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
+void generate_virtual_students(vector<Student*>* orig_student, vector<Course*>* orig_course);
+void enroll_virtual_students(vector<Student*>* orig_student, vector<Course*>* orig_course);
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
@@ -92,6 +94,9 @@ int main(int argc, char** argv)
 	}
 
 	is_parsed = in_conversion(home_dir);
+	
+
+
 
 	/*
 	// result print out on console
@@ -162,9 +167,9 @@ int main(int argc, char** argv)
 	course_list[0]->print_student_list();
 
 	// TEST03: get popularity and availability of the course
-	int _size = student_list.size();
-	for (int j = 0; j < course_list.size(); j++)
-		course_list[j]->set_course_size(30, -1, _size);
+	//int _size = student_list.size();
+	//for (int j = 0; j < course_list.size(); j++)
+	//	course_list[j]->set_course_size(30, -1, _size);
 
 	// TEST04: get neighbors of a course
 	int _length = multi_graph->get_neighbors(course_list[40])->size();
@@ -195,6 +200,12 @@ int main(int argc, char** argv)
 	time_slot->print_timeslot(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 50);
 	cout << multi_graph->get_size() << endl;
+
+	//for (int i = 0; i < course_list.size(); i++)
+	//	cout << course_list[i]->get_availability() << endl;
+	//multi_graph->print_course_availablilty();
+	//cout << student_list.size() << endl;
+
 	// graphical interface
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -708,9 +719,10 @@ bool in_conversion(const char* path)
 	
 	size_file.close();
 
+	//generate_virtual_students(&student_list, &course_list);
+
 	return true;
 }
-
 
 float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
 {

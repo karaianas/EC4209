@@ -78,25 +78,83 @@ public:
 	{
 
 	}
+	*/
 
-	// get vertex of maximum degree i.e. MRV
-	Course* get_max_degree_vertex()
+	// Graph에 존재하는 get_vertex_degree로 짜서 만든건데 혹시 이게
+	// color가 정해진 거를 degree에서 제외시키는 게 없으면 오류가 나요
+	// MRV
+	vector<Course*>* get_max_degree_vertex( vector<Course*>* list )
 	{
+		vector<Course*>* max_degree_course = NULL;
+		int maxdegree = -1;
+		for (int i = 0; i < list->size(); i++)
+		{
+			Course* temp = list->at(i);
+			if (gptr->get_vertex_degree(temp) > maxdegree)
+			{
+				maxdegree = gptr->get_vertex_degree(temp);
+			}
+		}
 
+		for (int i = 0; i < list->size(); i++)
+		{
+			Course* temp = list->at(i);
+			if (gptr->get_vertex_degree(temp) == maxdegree)
+				max_degree_course->push_back(temp);
+		}
+
+		return max_degree_course;
 	}
-
+	
 	// get vertex of minimum remaining colors i.e. LRV
-	Course* get_min_colors_vertex()
+	// MRV with LCV
+	vector<Course*>* get_min_colors_vertex( vector<Course*>* list )
 	{
+		vector<Course*>* min_remaining_colors_course = NULL;
+		int min_remaining_colors = INFINITE;
+		for (int i = 0; i < list->size(); i++)
+		{
+			Course* temp = list->at(i);
+			if (temp->color_possible_num() < min_remaining_colors)
+				min_remaining_colors = temp->color_possible_num();
+		}
 
+		for (int i = 0; i < list->size(); i++)
+		{
+			Course* temp = list->at(i);
+			if (temp->color_possible_num() == min_remaining_colors)
+				min_remaining_colors_course->push_back(temp);
+		}
+
+		return min_remaining_colors_course;
 	}
 
 	// get vertex of maximum correlation
-	Course* get_max_corr_vertex()
+	Course* get_max_corr_vertex( vector<Course*>* list)
 	{
+		Course* max_corr_vertex = NULL;
+		float max_corr = -1.0;
 
+		for (int i = 0; i < list->size(); i++)
+		{
+			Course* temp = list->at(i);
+			float temp_corr = 0.0;
+			for (int j = 0; j < gptr->get_size(); j++)
+			{
+				Course* temp2 = gptr->get_course(j);
+				if (temp->get_id() != temp2->get_id())
+					temp_corr = temp_corr + gptr->get_correlation(temp, temp2);
+			}
+
+			if (temp_corr > max_corr)
+			{
+				max_corr = temp_corr;
+				max_corr_vertex = temp;
+			}
+		}
+		return max_corr_vertex;
 	}
-		*/
+	
 
 private:
 

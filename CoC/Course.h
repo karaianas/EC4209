@@ -196,6 +196,14 @@ public:
 			return false;
 	}
 
+	int color_possible_num()
+	{
+		int temp = 0;
+		for (int i = 0; i < Color_size; i++)
+			temp = temp + is_color_ok(i);
+		return temp;
+	}
+
 	// set color to i = (0, 11)
 	void set_color(int i)
 	{

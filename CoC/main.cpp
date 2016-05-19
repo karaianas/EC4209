@@ -15,6 +15,7 @@
 #include "Course.h"
 #include "Graph.h"
 #include "TimeSlot.h"
+#include "Color.h"
 
 
 #define PI 3.1415926
@@ -137,6 +138,17 @@ int main(int argc, char** argv)
 	//simple_graph = build_simple_graph(multi_graph, toy_course_list);	
 
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
+
+	/*
+	// Graph coloring test
+	Color C(simple_graph, 5);
+	cout << simple_graph->get_correlation(course_list[0], course_list[1]) << endl;
+	C.color_vertex(course_list[0]);
+	C.color_vertex(course_list[1]);
+	*/
+
+
+
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);
 	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");

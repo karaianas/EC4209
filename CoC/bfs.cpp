@@ -47,7 +47,8 @@ vector<Course*>* bfs(Graph* G, Course* root)
 				if (not_visited) {
 					to_visit.push_back(tmp_crs);
 					visited->push_back(tmp_crs);
-					cout << tmp_crs->get_course_name() << " ";
+					//cout << tmp_crs->get_course_name() << " ";
+					tmp_crs->print_course_info();
 				}
 			}
 		}

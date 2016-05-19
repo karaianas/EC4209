@@ -22,20 +22,10 @@ public:
 		availability = 0;
 		class_size = 0;
 		num_classes = 0;
-	}
 
-	// get course track
-	int get_track(){ return track; }
-
-	// get course num
-	int get_num(){ return num; }
-
-	int get_id(){ return course_id; }
-
-	// get pointer to the student list
-	vector<Student*>* get_ptr_student_list()
-	{
-		return &student_list;
+		for (int i = 0; i < Color_size; i++)
+			color[i] = 1;
+		selected_color = -1;
 	}
 
 	// enroll a student
@@ -44,6 +34,7 @@ public:
 		student_list.push_back(S);
 	}
 
+	// print---------------------------------------------------------
 	// print the enrolled students by their ID
 	void print_student_list()
 	{
@@ -83,6 +74,21 @@ public:
 			printf("ph%02i ", num);
 			break;
 		}
+	}
+
+	// get-----------------------------------------------------------
+	// get course track
+	int get_track(){ return track; }
+
+	// get course num
+	int get_num(){ return num; }
+
+	int get_id(){ return course_id; }
+
+	// get pointer to the student list
+	vector<Student*>* get_ptr_student_list()
+	{
+		return &student_list;
 	}
 
 	// get course name in array[4] e.g. gs24
@@ -137,28 +143,6 @@ public:
 		return student_list.size();
 	}
 
-	// set course size, number of classes
-	void set_course_size(int _size, int _num, int num_total_students)
-	{
-		class_size = _size;
-		num_classes = _num;
-
-		float num_students = student_list.size();
-		
-		if ((int)num_students <= class_size * num_classes)
-			availability = 1;
-		else
-			availability = float(class_size * num_classes) / (float)num_students;
-
-		popularity = (float)num_students / float(num_total_students);
-
-		//cout << "The number of registered students: " << num_students << endl;
-		//cout << "The size of the class: " << class_size << endl;
-		//cout << "The number of classes: " << num_classes << endl;
-		//cout << "The popularity of the course: " << popularity << endl;
-		//cout << "The availability of the course: " << availability << endl;
-	}
-
 	float get_popularity()
 	{
 		return popularity;
@@ -169,6 +153,15 @@ public:
 		return availability;
 	}
 
+	int get_class_size() {
+		return class_size;
+	}
+
+	int get_num_classes() {
+		return num_classes;
+	}
+
+	// set-----------------------------------------------------------
 	void set_popularity()
 	{
 		float num_students = student_list.size();
@@ -189,31 +182,82 @@ public:
 	void set_class_size(int size) {
 		class_size = size;
 	}
+
 	void set_num_classes(int num_cls) {
 		num_classes = num_cls;
 	}
-
-	int get_class_size() {
-		return class_size;
-	}
-
-	int get_num_classes() {
-		return num_classes;
-	}
 	
-	void init_color_set()
+	// color---------------------------------------------------------
+	bool is_color_ok(int i)
 	{
+		if (color[i])
+			return true;
+		else
+			return false;
+	}
+
+	// set color to i = (0, 11)
+	void set_color(int i)
+	{
+		char* name;
+		name = get_course_name();
+
+		for (int j = 0; j < 4; j++)
+			cout << name[j];
+
+		if (color[i])
+		{
+			selected_color = i;
+			cout << ": color set to " << i << endl;
+		}
+		else
+			cout << ": color " << i << " cannot be used[unavailable]" << endl;
+	}
+
+	// remove a color
+	bool remove_color(int i)
+	{
+		char* name;
+		name = get_course_name();
+
+		for (int j = 0; j < 4; j++)
+			cout << name[j];
+
+		color[i] = 0;
+
+		if (is_empty())
+		{
+			cout << ": color " << i << " cannot be removed[becomes empty]" << endl;
+			color[i] = 1;
+			return false;
+		}
+		else
+		{
+			cout << ": color " << i << " removed" << endl;
+			return true;
+		}
+	}
+
+	// check if the color set is empty
+	bool is_empty()
+	{
+		int sum = 0;
 		for (int i = 0; i < Color_size; i++)
-			get_color()[i] = 1;
+			sum += color[i];
+
+		if (!sum)
+			return 1;		//비었으면 return 1;
+		else
+			return 0;		//안 비어있으면 return 0;
+	}
+
+	int get_select_color()
+	{
+		return selected_color;
 	}
 
 	bool *get_color(){
 		return color;
-	}
-
-	void remove_color_set(int which_number)
-	{
-		get_color()[which_number] = 0;
 	}
 
 	void insert_color_set(int which_number)
@@ -221,16 +265,6 @@ public:
 		get_color()[which_number] = 1;
 	}
 	
-	bool is_empty()
-	{
-		int sum = 0;
-		for (int i = 0; i < Color_size; i++)
-			sum += get_color()[i];
-		if (!sum)
-			return 1;		//비었으면 return 1;
-		else
-			return 0;		//안 비어있으면 return 0;
-	}
 	bool whether_selected()
 	{
 		int sum = 0;
@@ -240,11 +274,6 @@ public:
 			return 1;
 		else
 			return 0;	
-	}
-
-	int get_select_color()
-	{
-		return selected_color;
 	}
 
 	void set_select_color()
@@ -257,19 +286,19 @@ public:
 			cout << "we can not choose the selected color" << endl;
 	}
 
-	
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
 	int num;
 
 	int course_id;
-	bool color[Color_size];
-	int selected_color;
 	float popularity;
 	float availability;
 	int class_size;// this is the size of one single class of the course
 	int num_classes;// this is the number of classes of the course
+
+	bool color[Color_size];
+	int selected_color;
 
 	// list of enrolled students
 	vector<Student*> student_list;

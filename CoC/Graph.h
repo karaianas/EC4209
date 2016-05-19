@@ -258,6 +258,22 @@ public:
 		return list;
 	}
 
+	// get uncolored neighbors of Course i
+	vector<Course*>* get_uncolored_neighbors(Course* i)
+	{
+		vector<Course*>* list = new vector<Course*>;
+
+		for (int j = 0; j < num_courses; j++)
+		{
+			Course* ptr = get_course(j);
+			// it is a neighbor and its uncolor is unset
+			if (is_edge(i, ptr) && (ptr->get_select_color() == -1))
+				list->push_back(get_course(j));
+		}
+
+		return list;
+	}
+
 	int get_max_degree()
 	{
 		int max_degree = 0, degree;

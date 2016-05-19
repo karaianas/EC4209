@@ -163,6 +163,8 @@ bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* 
 			{
 				c_list->at(i)->set_class_size(cls_size);
 				c_list->at(i)->set_num_classes(num_cls);
+				c_list->at(i)->set_availability();
+				c_list->at(i)->set_popularity();
 				break;
 			}
 		}

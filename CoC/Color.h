@@ -66,20 +66,28 @@ public:
 	}
 
 	// color the graph
-	bool start_coloring()
+	bool start_coloring(vector<Course *> course_list, int limit)
 	{
-		Course* start = get_init_vertex();
+		Course* start = get_init_vertex(course_list);
 		int size = gptr->get_size();
-
+		int purity = 1;
 		// (1) color starting vertex
-		if (!color_vertex(start))
+		while (purity)
 		{
-			cout << "Choose another starting vertex!" << endl;
-			return false;
+			int check=color_vertex(start, limit);
+			if (!check)
+			{
+				cout << "Choose another starting vertex!" << endl;
+				course_list.erase(start->get_id());
+				start = get_init_vertex(course_list);
+				continue;	//다른 점이 색칠 될때까지 계속 진행.
+			}
+			else
+			{
+				cout << "Colored vertex is : " << start->get_course_name() << endl;
+				return TRUE;
+			}
 		}
-		
-		gptr->get_neighbors(start);
-		
 	}
 
 	
@@ -91,7 +99,7 @@ public:
 
 
 	// get starting vertex of graph G
-	Course* get_init_vertex()
+	Course* get_init_vertex(vector<Course *> list)
 	{
 
 	}

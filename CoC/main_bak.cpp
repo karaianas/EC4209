@@ -15,7 +15,7 @@
 #include "Course.h"
 #include "Graph.h"
 #include "TimeSlot.h"
-#include "Color.h"
+
 
 #define PI 3.1415926
 
@@ -49,7 +49,7 @@ TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 
 // function prototypes
-bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
+bool in_conversion(const char* path);
 int check_track(char x, char y);
 Graph* build_multi_graph(vector<Course*> course_list);
 void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Course* cour_j);
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	// Add your own home directory
 	int user_id;
 	char* home_dir = " ";
-	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5] Seoyoung Debug[6]" << endl << "Enter user number:";
+	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5]" << endl << "Enter user number:";
 	cin >> user_id;
 
 	// Determine whether this is an ideal/real registration
@@ -89,17 +89,14 @@ int main(int argc, char** argv)
 		home_dir = "C:\\Users\\±Ôºó\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
 	case 4:
-		home_dir = "C:\\Users\\June\\Desktop\\EC4209 (2)\\CoC\\";
+		home_dir = "C:\\Users\\USER\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
 	case 5:
 		home_dir = "C:\\Users\\June\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
-	case 6:
-		home_dir = "C:\\Users\\USER\\Desktop\\back_up\\CoC\\";
-		break;
 	}
 
-	is_parsed = in_conversion(home_dir, &student_list, &course_list);
+	is_parsed = in_conversion(home_dir);
 
 	/*
 	// result print out on console
@@ -177,9 +174,9 @@ int main(int argc, char** argv)
 	course_list[0]->print_student_list();
 
 	// TEST03: get popularity and availability of the course
-	//int _size = student_list.size();
-	//for (int j = 0; j < course_list.size(); j++)
-	//	course_list[j]->set_course_size(30, -1, _size);
+	int _size = student_list.size();
+	for (int j = 0; j < course_list.size(); j++)
+		course_list[j]->set_course_size(30, -1, _size);
 
 	// TEST04: get neighbors of a course
 	int _length = multi_graph->get_neighbors(course_list[40])->size();
@@ -583,6 +580,173 @@ void mouse(int button, int state, int x, int y)
 
 	glutPostRedisplay();
 }
+
+bool in_conversion(const char* path)
+{
+	int id, year, unit;
+	char* major; char* minor;
+	char* prefix; int num;
+
+	// creating output.txt
+	ofstream output;
+	string s = path;
+	output.open(s + "output.txt");
+
+	// read in test.txt
+	string p = s + "test3.txt";
+	FILE* file = fopen(p.c_str(), "r");
+	int c;
+
+	while ((c = fgetc(file)) != EOF)
+	{
+		// characters that are neither delims nor separators
+		if (((char)c != ',') && ((char)c != '\t') && ((char)c != '\"') && ((char)c != ' '))
+		{
+			// unit
+			if ((char)c == '(')
+			{
+				c = fgetc(file); c = fgetc(file); c = fgetc(file);
+			}
+			else
+				output << (char)c;
+		}
+	}
+	output.close();
+	fclose(file);
+
+	// read in output.txt
+	string s2 = s + "output.txt";
+	FILE* file2 = fopen(s2.c_str(), "r");
+	char* code;
+	size_t n = 0;
+	int c2;
+
+	// end if file is empty
+	if (file2 == NULL)
+		return false;
+
+	// find and allocate file size
+	fseek(file2, 0, SEEK_END);
+	long f_size = ftell(file2);
+	fseek(file2, 0, SEEK_SET);
+	code = (char*)malloc(f_size);
+
+	while ((c2 = fgetc(file2)) != EOF)
+		code[n++] = (char)c2;
+
+	code[n] = '\0';
+	fclose(file2);
+
+	int s_id = 1;
+	bool first = true;
+
+	int counter = 0;
+
+	for (int i = 0; code[i] != '\0'; i++)
+	{
+
+		// year
+		int year = 2000 + (code[i] - '0') * 10 + (code[i + 1] - '0');
+		i += 2;
+
+		// Major, minor
+		int major = 0; int minor = 0;
+		char x = code[i]; char y = code[i + 1];
+		major = check_track(x, y);
+		i += 2;
+		x = code[i]; y = code[i + 1];
+		minor = check_track(x, y);
+		i += 2;
+
+		Student* S = new Student(s_id, year, major, minor);
+		
+		// add courses with track and number
+
+		while (code[i] != '\n')
+		{
+			int track, num;
+			x = code[i]; y = code[i + 1];
+			track = check_track(x, y);
+			i += 2;
+			x = code[i]; y = code[i + 1];
+			num = (x - '0') * 10 + (y - '0');
+			i += 2;
+
+			if (first)
+			{
+				Course* C = new Course(track, num, counter);
+				counter++;
+				course_list.push_back(C);
+				C->enroll_student(S);
+				S->register_course(track, num, counter);
+				first = false;
+			}
+			else
+			{
+				// find if the course is already in course_list
+				bool exist = false;
+				for (int j = 0; j < course_list.size(); j++)
+				{
+					if ((course_list[j]->get_num() == num) && (course_list[j]->get_track() == track))
+					{
+						course_list[j]->enroll_student(S);
+						S->register_course(track, num, j);
+						exist = true;
+						break;
+					}
+				}
+
+				if (!exist)
+				{
+					Course* C = new Course(track, num, counter);
+					counter++;
+					course_list.push_back(C);
+					C->enroll_student(S);
+					S->register_course(track, num, counter);
+				}
+			}
+		}
+		student_list.push_back(S);
+		s_id++;
+	}
+
+	// read in list.txt
+	string size_file_name = "list.txt";
+	ifstream size_file(s + size_file_name);
+	string line;
+
+	while (getline(size_file, line))
+	{
+		istringstream iss(line);
+		string crs, dummy;
+		int num_cls, cls_size;
+
+		iss >> crs >> num_cls >> cls_size >> dummy;
+
+		// process pair
+		// find course
+		for (int i = 0; i < course_list.size(); i++)
+		{
+			char* name = course_list[i]->get_course_name();
+			string crs_name(course_list[i]->get_course_name());
+			
+			crs_name.resize(4);
+
+			if (crs_name == crs)
+			{
+				course_list[i]->set_class_size(cls_size);
+				course_list[i]->set_num_classes(num_cls);
+				break;
+			}
+		}
+	}
+
+	
+	size_file.close();
+
+	return true;
+}
+
 
 float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
 {

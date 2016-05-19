@@ -71,12 +71,14 @@
     <ClCompile Include="build_simple_graph.cpp" />
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
-    <ClCompile Include="happiness.cpp" />
+    <ClCompile Include="generate_virtual_students.cpp" />
+    <ClCompile Include="in_conversion.cpp" />
     <ClCompile Include="is_connected.cpp" />
     <ClCompile Include="list_subgraphs.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Course.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="RCourse.h" />

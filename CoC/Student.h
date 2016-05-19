@@ -137,6 +137,21 @@ public:
 		return id;
 	}
 
+	int get_year()
+	{
+		return year;
+	}
+
+	int get_maj()
+	{
+		return major;
+	}
+
+	int get_minor()
+	{
+		return minor;
+	}
+
 	// get course_id's
 	vector<int> get_courses()
 	{

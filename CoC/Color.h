@@ -65,7 +65,24 @@ public:
 		return false;
 	}
 
-	/*
+	// color the graph
+	bool start_coloring()
+	{
+		Course* start = get_init_vertex();
+		int size = gptr->get_size();
+
+		// (1) color starting vertex
+		if (!color_vertex(start))
+		{
+			cout << "Choose another starting vertex!" << endl;
+			return false;
+		}
+		
+		gptr->get_neighbors(start);
+		
+	}
+
+	
 	// get an optimal color
 	int get_opt_color()
 	{
@@ -96,7 +113,6 @@ public:
 	{
 
 	}
-		*/
 
 private:
 

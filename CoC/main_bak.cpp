@@ -49,7 +49,7 @@ TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 
 // function prototypes
-bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
+bool in_conversion(const char* path);
 int check_track(char x, char y);
 Graph* build_multi_graph(vector<Course*> course_list);
 void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Course* cour_j);
@@ -96,15 +96,23 @@ int main(int argc, char** argv)
 		break;
 	}
 
-	is_parsed = in_conversion(home_dir, &student_list, &course_list);
+	is_parsed = in_conversion(home_dir);
 
-	cout << "The number of students: " << student_list.size() << endl;
-	cout << "The number of courses: " << course_list.size() << endl;
+	/*
+	// result print out on console
+	if (is_parsed)
+	{
+	for (int i = 0; i < student_list.size(); i++)
+	student_list[i]->print_student_info();
+	for (int j = 0; j < course_list.size(); j++)
+	course_list[j]->print_student_list();
+	}
+	*/
 
 	/* Toy graph example
-	* with simple toy course list
-	* used course list 0 to 4
-	*/
+	 * with simple toy course list
+	 * used course list 0 to 4
+	 */
 	vector<Course*> toy_course_list;
 	toy_course_list.push_back(course_list[0]);
 	//toy_course_list.push_back(course_list[1]);
@@ -117,11 +125,13 @@ int main(int argc, char** argv)
 	toy_course_list.push_back(course_list[113]);
 	//toy_course_list.push_back(course_list[103]);
 	toy_course_list.push_back(course_list[110]);
-	
+
+
+
 	/* Build Multi Graph
-	*  builds a directed graph
-	*  with bidirectional correlation coefficients
-	*/
+	 *  builds a directed graph
+	 *  with bidirectional correlation coefficients
+	 */
 	multi_graph = build_multi_graph(course_list);
 	//multi_graph = build_multi_graph(toy_course_list);
 
@@ -130,19 +140,64 @@ int main(int argc, char** argv)
 	multi_graph->file_print_graph(home_dir, "directed_graph.txt");
 
 	/* Build Simple Graph
-	*  conversion from the bidirectional graph to a simple weighted graph
-	*  need specific models to merge the correlation coefficients
-	*/
+	 *  conversion from the bidirectional graph to a simple weighted graph
+	 *  need specific models to merge the correlation coefficients
+	 */
 	simple_graph = build_simple_graph(multi_graph, course_list);
 	//simple_graph = build_simple_graph(multi_graph, toy_course_list);	
 
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
+
+	/*for (int p = 0; p < simple_graph->get_size(); p++)
+	{
+	for (int q = p + 1; q < simple_graph->get_size(); q++)
+	{
+	if (!is_connected(simple_graph, course_list[p], course_list[q]))
+	printf("%d\t%d\n", p, q);
+	}
+	}*/
+
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);
 	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");
 	Copy_graph->get_max_degree();
 	Copy_graph->remove_less_threshold(threshold);
 	Copy_graph->file_print_graph(home_dir, "Copy_graph.txt");
+	
+	// TEST01: get correlation statistics
+	vector<Course*>* cptr;
+	cptr = &course_list;
+	simple_graph->get_correlation_stats(cptr);
+
+	// TEST02: get course info
+	cout << course_list[0]->get_num_enrolled_students() << endl;
+	course_list[0]->print_student_list();
+
+	// TEST03: get popularity and availability of the course
+	int _size = student_list.size();
+	for (int j = 0; j < course_list.size(); j++)
+		course_list[j]->set_course_size(30, -1, _size);
+
+	// TEST04: get neighbors of a course
+	int _length = multi_graph->get_neighbors(course_list[40])->size();
+	cout << _length << endl;
+	for (int i = 0; i < _length; i++)
+		multi_graph->get_neighbors(course_list[1])->at(i)->print_course_info();
+	/*
+	// ideal case, students < class size
+	course_list[0]->set_course_size(15, -1, _size);
+	// ideal case, students == class size
+	course_list[0]->set_course_size(10, -1, _size);
+	// ideal case, students > class size
+	course_list[0]->set_course_size(5, -1, _size);
+
+	// real case, students < class size
+	course_list[0]->set_course_size(15, 1, _size);
+	// real case, students == class size
+	course_list[0]->set_course_size(10, 1, _size);
+	// real case, students > class size
+	course_list[0]->set_course_size(5, 1, _size);
+	*/
 
 	time_slot = new TimeSlot(12);
 	time_slot->put_graph_info(multi_graph);
@@ -180,7 +235,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(1000, 1000);
-	glutCreateWindow("Clash of Class");
+	glutCreateWindow("Graph");
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
@@ -198,86 +253,6 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
-{
-
-	float _one_happiness;
-	int index = -1;
-	for (int i = 0; i < ptr->size(); i++)
-	{
-		if (ptr->at(i)->get_id() == s_id + 1)
-		{
-			index = i;
-			break;
-		}
-	}
-
-	if (index == -1)
-	{
-		cout << "There is no such student" << endl;
-		return -1;
-	}
-	vector<int> my_list = ptr->at(index)->get_courses();
-
-	int total_course = my_list.size();
-	vector <vector <int> > temp = T->get_Array();
-
-	int sum = 0;
-	int purity = my_list.size();
-	for (int i = 0; i < temp.size(); i++)
-	{
-		bool checked = 0;
-		for (int j = 0; j < my_list.size(); j++)
-		{
-			for (int k = 0; k < temp.at(i).size(); k++)
-			{
-				if (multi_graph->get_course(temp.at(i).at(k))->get_id() == my_list.at(j))
-				{
-					if (!checked)
-						checked = 1;
-					else
-						purity--;
-				}
-			}
-		}
-	}
-	_one_happiness = ((float)purity / (float)total_course) * 100;
-
-	return _one_happiness;
-}
-
-int num_of_student(vector<Student*>* ptr, float happiness, TimeSlot* T, vector<Course*>* ptr2)
-{
-	int num_of_student = 0;
-
-	for (int i = 0; i < ptr->size(); i++)
-		if (one_happiness(ptr, i, T, ptr2) >= happiness)
-			num_of_student++;
-
-	return num_of_student;
-}
-
-float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr2)
-{
-	float total_happiness = 0;
-	float average_happiness;
-	for (int i = 0; i < ptr->size(); i++)
-		total_happiness += one_happiness(ptr, i, T, ptr2);
-	average_happiness = total_happiness / ptr->size();
-
-	return average_happiness;
-}
-
-void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
-{
-	//	for (int i = 0; i < ptr->size(); i++)
-	//		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
-
-	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
-	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;
-}
-
-// graphical interface functions
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -309,38 +284,38 @@ void display()
 			{
 				char* name = new char[4];
 				name = course_list[j]->get_course_name();
-
+					
 				switch (course_list[j]->get_track())
 				{
-					// gs
+				// gs
 				case 1:
 					glColor3f(0.4, 0.804, 0.667);// medium aquamarine
 					break;
-					// bi
+				// bi
 				case 2:
 					glColor3f(1, 0.843, 0);// gold
 					break;
-					// ch
+				// ch
 				case 3:
 					glColor3f(1, 0.498, 0.314);// coral
 					break;
-					// cs
+				// cs
 				case 4:
 					glColor3f(0, 0.749, 1);// deep sky blue
 					break;
-					// ev
+				// ev
 				case 5:
 					glColor3f(1, 0.753, 0.796);// pink
 					break;
-					// ma
+				// ma
 				case 6:
 					glColor3f(0.498039, 0.53, 1.0);// purple
 					break;
-					// me
+				// me
 				case 7:
 					glColor3f(1.00, 0.11, 0.68);// hot pink
 					break;
-					// ph
+				// ph
 				case 8:
 					glColor3f(0.678, 1, 0.184);// green yellow
 					break;
@@ -443,6 +418,7 @@ void display()
 			for (int y = 0; y < x; y++)
 			{
 				float weight = simple_graph->get_correlation(course_list[x], course_list[y]);
+				//float weight = multi_graph->get_correlation_addition(course_list[x], course_list[y]);
 
 				if (weight >= 0)
 				{
@@ -492,12 +468,12 @@ void display()
 			glTranslatef(-92 + x * step, -88 + freq[(int)x], 0);
 			glScalef(0.015f, 0.015f, 1.f);
 			glLineWidth(sizeL[0]);
-
+			
 			char* number = new char[3];
 			int n = freq[(int)x];
 			int count = 0;
 
-			do
+			do 
 			{
 				int digit = n % 10;
 				putchar('0' + digit);
@@ -528,7 +504,7 @@ void display()
 
 	}
 
-	glutSwapBuffers();
+	glutSwapBuffers(); // this is only used for double buffers
 }
 
 void reshape(int w, int h)
@@ -548,7 +524,7 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case 'p':
 		if (threshold <= 10)
-		{
+		{ 
 			threshold += thr_step;
 			cout << "Current Threshold = " << threshold << endl;
 			break;
@@ -570,6 +546,17 @@ void keyboard(unsigned char key, int x, int y)
 void menu(int value)
 {
 	view = value;
+	/*
+	switch (value)
+	{
+	case 1:
+		view = 1;
+		break;
+	case 2:
+		view = 2;
+		break;
+	}
+	*/
 
 	glutPostRedisplay();
 }
@@ -583,7 +570,7 @@ void mouse(int button, int state, int x, int y)
 		{
 			mouse_x = (float)x / 5 - 100;
 			mouse_y = 100 - (float)y / 5;
-
+			
 			cout << mouse_x << " " << mouse_y << endl;
 			mouse_down = true;
 		}
@@ -592,4 +579,289 @@ void mouse(int button, int state, int x, int y)
 	};
 
 	glutPostRedisplay();
+}
+
+bool in_conversion(const char* path)
+{
+	int id, year, unit;
+	char* major; char* minor;
+	char* prefix; int num;
+
+	// creating output.txt
+	ofstream output;
+	string s = path;
+	output.open(s + "output.txt");
+
+	// read in test.txt
+	string p = s + "test3.txt";
+	FILE* file = fopen(p.c_str(), "r");
+	int c;
+
+	while ((c = fgetc(file)) != EOF)
+	{
+		// characters that are neither delims nor separators
+		if (((char)c != ',') && ((char)c != '\t') && ((char)c != '\"') && ((char)c != ' '))
+		{
+			// unit
+			if ((char)c == '(')
+			{
+				c = fgetc(file); c = fgetc(file); c = fgetc(file);
+			}
+			else
+				output << (char)c;
+		}
+	}
+	output.close();
+	fclose(file);
+
+	// read in output.txt
+	string s2 = s + "output.txt";
+	FILE* file2 = fopen(s2.c_str(), "r");
+	char* code;
+	size_t n = 0;
+	int c2;
+
+	// end if file is empty
+	if (file2 == NULL)
+		return false;
+
+	// find and allocate file size
+	fseek(file2, 0, SEEK_END);
+	long f_size = ftell(file2);
+	fseek(file2, 0, SEEK_SET);
+	code = (char*)malloc(f_size);
+
+	while ((c2 = fgetc(file2)) != EOF)
+		code[n++] = (char)c2;
+
+	code[n] = '\0';
+	fclose(file2);
+
+	int s_id = 1;
+	bool first = true;
+
+	int counter = 0;
+
+	for (int i = 0; code[i] != '\0'; i++)
+	{
+
+		// year
+		int year = 2000 + (code[i] - '0') * 10 + (code[i + 1] - '0');
+		i += 2;
+
+		// Major, minor
+		int major = 0; int minor = 0;
+		char x = code[i]; char y = code[i + 1];
+		major = check_track(x, y);
+		i += 2;
+		x = code[i]; y = code[i + 1];
+		minor = check_track(x, y);
+		i += 2;
+
+		Student* S = new Student(s_id, year, major, minor);
+		
+		// add courses with track and number
+
+		while (code[i] != '\n')
+		{
+			int track, num;
+			x = code[i]; y = code[i + 1];
+			track = check_track(x, y);
+			i += 2;
+			x = code[i]; y = code[i + 1];
+			num = (x - '0') * 10 + (y - '0');
+			i += 2;
+
+			if (first)
+			{
+				Course* C = new Course(track, num, counter);
+				counter++;
+				course_list.push_back(C);
+				C->enroll_student(S);
+				S->register_course(track, num, counter);
+				first = false;
+			}
+			else
+			{
+				// find if the course is already in course_list
+				bool exist = false;
+				for (int j = 0; j < course_list.size(); j++)
+				{
+					if ((course_list[j]->get_num() == num) && (course_list[j]->get_track() == track))
+					{
+						course_list[j]->enroll_student(S);
+						S->register_course(track, num, j);
+						exist = true;
+						break;
+					}
+				}
+
+				if (!exist)
+				{
+					Course* C = new Course(track, num, counter);
+					counter++;
+					course_list.push_back(C);
+					C->enroll_student(S);
+					S->register_course(track, num, counter);
+				}
+			}
+		}
+		student_list.push_back(S);
+		s_id++;
+	}
+
+	// read in list.txt
+	string size_file_name = "list.txt";
+	ifstream size_file(s + size_file_name);
+	string line;
+
+	while (getline(size_file, line))
+	{
+		istringstream iss(line);
+		string crs, dummy;
+		int num_cls, cls_size;
+
+		iss >> crs >> num_cls >> cls_size >> dummy;
+
+		// process pair
+		// find course
+		for (int i = 0; i < course_list.size(); i++)
+		{
+			char* name = course_list[i]->get_course_name();
+			string crs_name(course_list[i]->get_course_name());
+			
+			crs_name.resize(4);
+
+			if (crs_name == crs)
+			{
+				course_list[i]->set_class_size(cls_size);
+				course_list[i]->set_num_classes(num_cls);
+				break;
+			}
+		}
+	}
+
+	
+	size_file.close();
+
+	return true;
+}
+
+
+float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*>* ptr2)
+{
+
+	float _one_happiness;
+	int index = -1;
+	for (int i = 0; i < ptr->size(); i++)
+	{
+		if (ptr->at(i)->get_id() == s_id + 1)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	if (index == -1)
+	{
+		cout << "There is no such student" << endl;
+		return -1;
+	}
+	vector<int> my_list = ptr->at(index)->get_courses();
+
+	int total_course = my_list.size();
+	vector <vector <int> > temp = T->get_Array();
+
+	int sum = 0;
+	int purity = my_list.size();
+	for (int i = 0; i < temp.size(); i++)
+	{
+		bool checked = 0;
+		for (int j = 0; j < my_list.size(); j++)
+		{
+			for (int k = 0; k < temp.at(i).size(); k++)
+			{
+				if ( multi_graph->get_course(temp.at(i).at(k))->get_id() == my_list.at(j))
+				{
+			//		cout << " student ID: " << s_id << " ";
+			//		multi_graph->get_course(temp.at(i).at(k))->print_course_info();
+			//		cout << " time slot : " << i << " ";
+			//		cout << endl;
+					if (!checked)
+						checked = 1;
+					else
+						purity--;
+				}
+			}
+		}
+	}
+
+		/*
+		int checking_course = 0;
+		int len = my_list.size();
+		if (len == 0)
+			break;
+		for (int j = 0; j < temp.at(i).size(); j++)
+		{
+			checking_course = 0;
+			for (int k = 0; k < my_list.size(); k++)
+			{
+
+				//cout << simple_graph->get_course(temp.at(i).at(j))->get_id() << " " << my_list.at(k) << endl;
+				if (multi_graph->get_course(temp.at(i).at(j))->get_id() == my_list.at(k))
+				{
+					purity++;
+					checking_course++;
+				}
+//				cout << "checking course :" << checking_course << endl;
+
+			}
+			if (purity == total_course)
+				break;
+			if (checking_course > 0)
+				sum++;
+//			cout << "sum :" << sum << endl;
+			
+		}
+		if (purity = total_course)
+			break;
+	}
+	*/
+//	cout << "DAMN!" << sum << endl;
+//	cout << "total_course" << total_course << endl;
+	_one_happiness = ((float)purity / (float)total_course) * 100;
+
+//	cout << "HAPPY!" << _one_happiness << endl;
+	return _one_happiness;
+}
+
+int num_of_student(vector<Student*>* ptr, float happiness, TimeSlot* T, vector<Course*>* ptr2)
+{
+	int num_of_student = 0;
+
+	for (int i = 0; i < ptr->size(); i++)
+		if (one_happiness(ptr, i, T, ptr2) >= happiness)
+			num_of_student++;
+
+	return num_of_student;
+}
+
+float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr2)
+{
+	float total_happiness = 0;
+	float average_happiness;
+	for (int i = 0; i < ptr->size(); i++)
+		total_happiness += one_happiness(ptr, i, T, ptr2);
+	average_happiness = total_happiness / ptr->size();
+
+	return average_happiness;
+}
+
+void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
+{
+//	for (int i = 0; i < ptr->size(); i++)
+//		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
+
+	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
+	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;
 }

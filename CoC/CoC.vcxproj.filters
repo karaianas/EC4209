@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="check_track.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,10 +30,19 @@
     <ClCompile Include="build_multi_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="happiness.cpp">
+    <ClCompile Include="generate_virtual_students.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="generate_virtual_students.cpp">
+    <ClCompile Include="bfs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="list_subgraphs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="in_conversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

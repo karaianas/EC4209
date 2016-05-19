@@ -276,9 +276,6 @@ public:
 		cout << max_degree;
 		return max_degree;
 	}
-
-	// 
-	//int 
 	
 	void remove_less_threshold(float threshold)
 	{

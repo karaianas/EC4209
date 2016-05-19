@@ -139,15 +139,22 @@ int main(int argc, char** argv)
 
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
 
+	
 	/*
 	// Graph coloring test
 	Color C(simple_graph, 5);
+	cout << " -------------------- Color Test -------------------- " << endl;
 	cout << simple_graph->get_correlation(course_list[0], course_list[1]) << endl;
+	
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# uncolored neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
 	C.color_vertex(course_list[0]);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# uncolored neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
 	C.color_vertex(course_list[1]);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# uncolored neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
 	*/
-
-
 
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);

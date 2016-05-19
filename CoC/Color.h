@@ -72,6 +72,7 @@ public:
 
 	}
 
+
 	// get starting vertex of graph G
 	Course* get_init_vertex()
 	{
@@ -95,7 +96,7 @@ public:
 	{
 
 	}
-	*/
+		*/
 
 private:
 

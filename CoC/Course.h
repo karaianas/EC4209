@@ -220,20 +220,21 @@ public:
 		char* name;
 		name = get_course_name();
 
-		for (int j = 0; j < 4; j++)
-			cout << name[j];
-
 		color[i] = 0;
 
 		if (is_empty())
 		{
+			for (int j = 0; j < 4; j++)
+				cout << name[j];
 			cout << ": color " << i << " cannot be removed[becomes empty]" << endl;
 			color[i] = 1;
 			return false;
 		}
 		else
 		{
-			cout << ": color " << i << " removed" << endl;
+			//for (int j = 0; j < 4; j++)
+			//	cout << name[j];
+			//cout << ": color " << i << " removed" << endl;
 			return true;
 		}
 	}

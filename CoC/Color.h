@@ -20,20 +20,20 @@ public:
 		set_color_limit(_limit);
 		num_used_colors = 0;
 	}
-
+	
 	// color a vertex
-	bool color_vertex(Course* C)
+	bool color_vertex(Course* C, int limit)
 	{
 		// 일단 되는 대로 색깔을 칠하고 있음
 		for (int i = 0; i < NUM; i++)
 		{
-			if (color_frequency[i] > 0 && C->is_color_ok(i))
+			if (color_frequency[i] <= limit && C->is_color_ok(i))
 			{
 				// (1) color a vertex
 				C->set_color(i);
 
 				// (2) decrease color frequency
-				color_frequency[i] -= 1;
+				color_frequency[i] += 1;
 
 				// (3) remove the color from its neighbors
 				vector<Course*>* neigbor = gptr->get_uncolored_neighbors(C);
@@ -112,6 +112,6 @@ private:
 		assert(limit > 0);
 
 		for (int i = 0; i < NUM; i++)
-			color_frequency[i] = limit;
+			color_frequency[i] = 0;
 	}
 };

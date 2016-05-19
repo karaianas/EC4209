@@ -161,6 +161,16 @@ int main(int argc, char** argv)
 	}
 	}*/
 
+	Color C(simple_graph, 5);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
+	C.color_vertex(course_list[0], 10);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
+	C.color_vertex(course_list[1], 10);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
+
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);
 	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");

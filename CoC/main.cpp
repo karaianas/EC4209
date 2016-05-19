@@ -15,7 +15,7 @@
 #include "Course.h"
 #include "Graph.h"
 #include "TimeSlot.h"
-
+#include "Color.h"
 
 #define PI 3.1415926
 

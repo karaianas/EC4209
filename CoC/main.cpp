@@ -45,6 +45,7 @@ vector<Course*> course_list;
 Graph* multi_graph;
 Graph* simple_graph;
 Graph* Copy_graph;
+TimeSlot* greedy_time_slot;
 TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 
@@ -202,13 +203,10 @@ int main(int argc, char** argv)
 	course_list[0]->set_course_size(5, 1, _size);
 	*/
 
+	greedy_time_slot = new TimeSlot(12);
 	time_slot = new TimeSlot(12);
-	time_slot->put_graph_info(multi_graph);
-	time_slot->course_sort();
-	time_slot->find_basic_solution(multi_graph);
-	//	time_slot->print_graph_info();
-	time_slot->print_timeslot(multi_graph);
-	printf_happiness(&student_list, time_slot, &course_list, 80);
+	greedy_time_slot->Find_Greedy_Solution(multi_graph);
+	printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
 
 

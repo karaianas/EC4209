@@ -31,7 +31,7 @@ public:
 
 	//		float happiness(Course *a, int time);
 	//when a would be in timeslot, calculate the expected happinessvalue
-	void find_basic_solution(Graph *G);
+	void find_greedy_basic_solution(Graph *G);
 
 	//	bool cmp(pair< pair<int, int>, float> a, pair< pair<int, int>, float> b);
 	void course_sort();
@@ -40,9 +40,12 @@ public:
 
 	void print_timeslot(Graph *G);
 	void print_graph_info();
+	void Find_Greedy_Solution(Graph *G);
 
 	vector< vector < int > > get_Array(void);
 	vector< pair< pair<int, int>, float> > get_graph_info(void);
+
+	void put_course_color(Graph *G);
 
 private:
 	vector< vector < int > > Base_Solution_Array;
@@ -51,6 +54,28 @@ private:
 	int CourseNum;
 	vector< pair< pair<int, int>, float> > graph_info;
 };
+
+void TimeSlot::put_course_color(Graph *G)
+{
+	for (int i = 0; i < G->get_size(); i++)
+	{
+		Course *temp_course = G->get_course(i);
+		bool *temp_color = temp_course->get_color();
+		int j = 0;
+		while (temp_color[j] == 0)
+			j++;
+		Base_Solution_Array.at(j).push_back(i);
+	}
+}
+
+void TimeSlot::Find_Greedy_Solution(Graph *G)
+{
+	put_graph_info(G);
+	course_sort();
+	find_greedy_basic_solution(G);
+	//	time_slot->print_graph_info();
+	print_timeslot(G);
+}
 
 void TimeSlot::print_timeslot(Graph *G)
 {
@@ -128,7 +153,7 @@ void TimeSlot::course_sort()
 	sort(graph_info.begin(), graph_info.end(), [](const pair< pair<int, int>, float>& lhs, const pair< pair<int, int>, float >& rhs) {return lhs.second > rhs.second; });
 }
 
-void TimeSlot::find_basic_solution(Graph *G){
+void TimeSlot::find_greedy_basic_solution(Graph *G){
 
 	bool *visited = new bool[CourseNum];
 

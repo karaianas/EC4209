@@ -227,10 +227,16 @@ int main(int argc, char** argv)
 		cout << tmp_vec->at(i)->get_course_name() << " ";
 	cout << endl;
 	cout << "get random test: " << tmp_simple.get_random_vertex()->get_course_name() << endl;
-	//list_subgraphs(&tmp_simple, subgraphs);
+	list_subgraphs(&tmp_simple, subgraphs);
 	cout << "subgraphs: ";
 	for (int i = 0; i < subgraphs->size(); i++)
 		cout << subgraphs->at(i)->get_size() << " ";
+	cout << endl;
+	for (int i = 0; i < subgraphs->size(); i++)
+	{
+		subgraphs->at(i)->print_graph();
+		cout << endl;
+	}
 	cout << endl;
 
 

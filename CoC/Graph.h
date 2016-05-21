@@ -69,15 +69,18 @@ public:
 		int index_j = get_index(j);
 		
 		// if index out of range, push_back
-		vector<float> to_push(index_j + 1, -1);
+		//vector<float> to_push(index_j + 1, -1);
+		vector<float> to_push(index_j + 1, 0);
 
 		// i(column to modify) greater than the size of matrix
-		if (index_i >= p.size() || index_i == 0)
+		if (index_i >= p.size() || index_i == 0) {
 			p.push_back(to_push);
+		}
 
 		// j(row to modify) greater than the size of vector
-		if (index_j >= p.at(index_i).size())
+		if (index_j >= p.at(index_i).size()) {
 			p[index_i].push_back(correlation);
+		}
 
 		modify_correlation(i, j, correlation);
 	}
@@ -112,6 +115,9 @@ public:
 	}
 
 	void add_index(Course* c) {
+		// if c already in the graph return
+		if (is_vertex(c))
+			return;
 		for (int i = 0; i < index.size(); i++)
 			if (index[i]->get_num() == c->get_num() && \
 				index[i]->get_track() == c->get_track())
@@ -331,6 +337,14 @@ public:
 			index[i]->print_course_info();
 			cout << index[i]->get_availability() << endl;
 		}
+	}
+
+	/* return true if the Course already in the graph */
+	bool is_vertex(Course* crs) {
+		for (int i = 0; i < index.size(); i++)
+			if (index[i]->get_course_name() == crs->get_course_name())
+				return true;
+		return false;
 	}
 
 	// correlation statistics

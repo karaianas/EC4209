@@ -279,6 +279,18 @@ public:
 
 		return list;
 	}
+/*	vector<Course*>* get_uncolored_nodes(Course* i)	//전체 course list중에서 색칠이 안되어있는 course_list들을 return ;
+	{
+		vector<Course *>* list = new vector<Course*>;
+		for (int j = 0; j < num_courses; j++)
+		{
+			Course *ptr = get_course(j);
+			if (ptr->get_select_color() == -1)
+				list->push_back(get_course());
+		}
+		return list;
+	}
+*/
 
 	int get_max_degree()
 	{

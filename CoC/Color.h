@@ -104,7 +104,6 @@ public:
 	{
 
 	}
-	*/
 
 	// Graph에 존재하는 get_vertex_degree로 짜서 만든건데 혹시 이게
 	// color가 정해진 거를 degree에서 제외시키는 게 없으면 오류가 나요
@@ -137,7 +136,7 @@ public:
 	vector<Course*>* get_min_colors_vertex( vector<Course*>* list )
 	{
 		vector<Course*>* min_remaining_colors_course = NULL;
-		int min_remaining_colors = INFINITE;
+		int min_remaining_colors = 99999999;
 		for (int i = 0; i < list->size(); i++)
 		{
 			Course* temp = list->at(i);
@@ -180,15 +179,11 @@ public:
 		}
 		return max_corr_vertex;
 	}
-<<<<<<< HEAD
-	
-=======
 
 	vector<Course*>* get_course_list()
 	{
 		return &gptr->get_course_list();
 	}
->>>>>>> origin/ClashOfClass
 
 private:
 

@@ -2,6 +2,7 @@
  *	Checks if the two nodes in Graph* G are connected using BFS.
  *	Returns true if they are, false otherwise.
  */
+#pragma once
 
 #include <vector>
 

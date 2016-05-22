@@ -1,6 +1,6 @@
 /*
-	Functions for coloring a graph
-*/
+ *	Functions for coloring a graph
+ */
 #pragma once
 
 #include "Graph.h"
@@ -86,7 +86,7 @@ public:
 			else
 			{
 				cout << "Colored vertex is : " << start->get_course_name() << endl;
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -123,10 +123,15 @@ public:
 
 	}
 
+	vector<Course*>* get_course_list()
+	{
+		return &gptr->get_course_list();
+	}
+
 private:
 
-	Graph* gptr;// pointer to the given graph for convenience
-	int num_used_colors;// number of colors actually used
+	Graph* gptr; // pointer to the given graph for convenience
+	int num_used_colors; // number of colors actually used
 	int color_frequency[NUM];
 
 	vector<Course*> colored_path;

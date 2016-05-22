@@ -383,6 +383,8 @@ public:
 		return alone_list;
 	}
 
+	vector<Course*> get_course_list() { return index; }
+
 	// correlation statistics
 	float avg, min, max;
 

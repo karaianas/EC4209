@@ -2,6 +2,7 @@
  *	BFS search the graph G until it finds all the connected components
  *	then add the found component to vector, 
  */
+#pragma once
 
 #include <iostream>
 #include <vector>

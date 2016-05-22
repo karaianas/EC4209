@@ -59,8 +59,7 @@ Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
 vector<Course*>* bfs(Graph* G, Course* root);
-
-
+void graph_coloring_bfs(Color* to_color);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
 int main(int argc, char** argv)
@@ -223,8 +222,8 @@ int main(int argc, char** argv)
 
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
-	//list_subgraphs(simple_graph, subgraphs);
-	//alone_list = simple_graph->get_alone_crs();
+	list_subgraphs(simple_graph, subgraphs);
+	alone_list = simple_graph->get_alone_crs();
 
 	/* list_subgraph tests */
 	/*Graph tmp = build_multi_graph(toy_course_list);
@@ -253,6 +252,15 @@ int main(int argc, char** argv)
 	for (int i = 0; i < tmp_vec->size(); i++)
 		tmp_vec->at(i)->print_course_info();
 	cout << endl;*/
+
+	/* graph_coloring_bfs tests */
+	vector<Color*>* colored_graphs = new vector<Color*>();
+	Color* to_color;
+	for (int i = 0; i < subgraphs->size(); i++) {
+		to_color = new Color(subgraphs->at(i));
+		graph_coloring_bfs(to_color);
+		colored_graphs->push_back(to_color);
+	}
 
 
 	// graphical interface

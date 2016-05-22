@@ -48,6 +48,7 @@ Graph* Copy_graph;
 TimeSlot* greedy_time_slot;
 TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
+vector<Course*>* alone_list;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -58,8 +59,7 @@ Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
 vector<Course*>* bfs(Graph* G, Course* root);
-
-
+void graph_coloring_bfs(Color* to_color);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
 int main(int argc, char** argv)
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 	toy_course_list.push_back(course_list[98]);
 	toy_course_list.push_back(course_list[50]);
 	toy_course_list.push_back(course_list[113]);
-	//toy_course_list.push_back(course_list[103]);
+	toy_course_list.push_back(course_list[103]);
 	toy_course_list.push_back(course_list[110]);
 
 
@@ -160,6 +160,16 @@ int main(int argc, char** argv)
 	printf("%d\t%d\n", p, q);
 	}
 	}*/
+
+	Color C(simple_graph, 5);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
+	C.color_vertex(course_list[0], 10);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
+	C.color_vertex(course_list[1], 10);
+	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
+	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
 
 
 	Copy_graph = build_simple_graph(multi_graph, course_list);
@@ -212,10 +222,11 @@ int main(int argc, char** argv)
 
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
-	//list_subgraphs(simple_graph, subgraphs);
+	list_subgraphs(simple_graph, subgraphs);
+	alone_list = simple_graph->get_alone_crs();
 
 	/* list_subgraph tests */
-	Graph tmp = build_multi_graph(toy_course_list);
+	/*Graph tmp = build_multi_graph(toy_course_list);
 	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
 	tmp_simple.print_graph();
 	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
@@ -225,11 +236,31 @@ int main(int argc, char** argv)
 		cout << tmp_vec->at(i)->get_course_name() << " ";
 	cout << endl;
 	cout << "get random test: " << tmp_simple.get_random_vertex()->get_course_name() << endl;
-	//list_subgraphs(&tmp_simple, subgraphs);
+	list_subgraphs(&tmp_simple, subgraphs);
 	cout << "subgraphs: ";
 	for (int i = 0; i < subgraphs->size(); i++)
 		cout << subgraphs->at(i)->get_size() << " ";
 	cout << endl;
+	for (int i = 0; i < subgraphs->size(); i++)
+	{
+		subgraphs->at(i)->print_graph();
+		cout << endl;
+	}
+	cout << endl;
+	tmp_vec = tmp_simple.get_alone_crs();
+	cout << "alone_list size: " << tmp_vec->size() << endl;
+	for (int i = 0; i < tmp_vec->size(); i++)
+		tmp_vec->at(i)->print_course_info();
+	cout << endl;*/
+
+	/* graph_coloring_bfs tests */
+	vector<Color*>* colored_graphs = new vector<Color*>();
+	Color* to_color;
+	for (int i = 0; i < subgraphs->size(); i++) {
+		to_color = new Color(subgraphs->at(i));
+		graph_coloring_bfs(to_color);
+		colored_graphs->push_back(to_color);
+	}
 
 
 	// graphical interface

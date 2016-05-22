@@ -69,15 +69,18 @@ public:
 		int index_j = get_index(j);
 		
 		// if index out of range, push_back
-		vector<float> to_push(index_j + 1, -1);
+		//vector<float> to_push(index_j + 1, -1);
+		vector<float> to_push(index_j + 1, 0);
 
 		// i(column to modify) greater than the size of matrix
-		if (index_i >= p.size() || index_i == 0)
+		if (index_i >= p.size() || index_i == 0) {
 			p.push_back(to_push);
+		}
 
 		// j(row to modify) greater than the size of vector
-		if (index_j >= p.at(index_i).size())
+		if (index_j >= p.at(index_i).size()) {
 			p[index_i].push_back(correlation);
+		}
 
 		modify_correlation(i, j, correlation);
 	}
@@ -112,6 +115,9 @@ public:
 	}
 
 	void add_index(Course* c) {
+		// if c already in the graph return
+		if (is_vertex(c))
+			return;
 		for (int i = 0; i < index.size(); i++)
 			if (index[i]->get_num() == c->get_num() && \
 				index[i]->get_track() == c->get_track())
@@ -273,6 +279,18 @@ public:
 
 		return list;
 	}
+/*	vector<Course*>* get_uncolored_nodes(Course* i)	//전체 course list중에서 색칠이 안되어있는 course_list들을 return ;
+	{
+		vector<Course *>* list = new vector<Course*>;
+		for (int j = 0; j < num_courses; j++)
+		{
+			Course *ptr = get_course(j);
+			if (ptr->get_select_color() == -1)
+				list->push_back(get_course());
+		}
+		return list;
+	}
+*/
 
 	int get_max_degree()
 	{
@@ -332,6 +350,40 @@ public:
 			cout << index[i]->get_availability() << endl;
 		}
 	}
+
+	/* return true if the Course already in the graph */
+	bool is_vertex(Course* crs) {
+		for (int i = 0; i < index.size(); i++)
+			if (index[i]->get_course_name() == crs->get_course_name())
+				return true;
+		return false;
+	}
+
+	vector<Course*>* get_alone_crs() {
+		vector<Course*>* alone_list = new vector<Course*>();
+		int flag;
+
+		for (int i = 0; i < num_courses; i++)
+		{
+			flag = 0;
+			for (int j = 0; j < num_courses; j++)
+			{
+				if (i == j)
+					continue;
+
+				if (p.at(i).at(j) > 0) {
+					++flag;
+					break;
+				}
+			}
+			if (!flag)
+				alone_list->push_back(get_course(i));
+		}
+		
+		return alone_list;
+	}
+
+	vector<Course*> get_course_list() { return index; }
 
 	// correlation statistics
 	float avg, min, max;

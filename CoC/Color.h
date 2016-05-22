@@ -1,10 +1,11 @@
 /*
-	Functions for coloring a graph
-*/
+ *	Functions for coloring a graph
+ */
 #pragma once
 
 #include "Graph.h"
 #include "Course.h"
+#include <vector>
 
 // number of colors that can be used
 #define NUM 12
@@ -20,20 +21,20 @@ public:
 		set_color_limit(_limit);
 		num_used_colors = 0;
 	}
-
+	
 	// color a vertex
-	bool color_vertex(Course* C)
+	bool color_vertex(Course* C, int limit)
 	{
 		// 일단 되는 대로 색깔을 칠하고 있음
 		for (int i = 0; i < NUM; i++)
 		{
-			if (color_frequency[i] > 0 && C->is_color_ok(i))
+			if (color_frequency[i] <= limit && C->is_color_ok(i))
 			{
 				// (1) color a vertex
 				C->set_color(i);
 
 				// (2) decrease color frequency
-				color_frequency[i] -= 1;
+				color_frequency[i] += 1;
 
 				// (3) remove the color from its neighbors
 				vector<Course*>* neigbor = gptr->get_uncolored_neighbors(C);
@@ -65,7 +66,32 @@ public:
 		return false;
 	}
 
-	/*
+	// color the graph
+	bool start_coloring(vector<Course *> course_list, int limit)
+	{
+		Course* start = get_init_vertex(course_list);
+		int size = gptr->get_size();
+		int purity = 1;
+		// (1) color starting vertex
+		while (purity)
+		{
+			int check=color_vertex(start, limit);
+			if (!check)
+			{
+				std::cout << "Choose another starting vertex!" << endl;
+//				course_list.erase(start->get_id());
+				start = get_init_vertex(course_list);
+				continue;	//다른 점이 색칠 될때까지 계속 진행.
+			}
+			else
+			{
+				cout << "Colored vertex is : " << start->get_course_name() << endl;
+				return true;
+			}
+		}
+	}
+
+	
 	// get an optimal color
 	int get_opt_color()
 	{
@@ -74,7 +100,7 @@ public:
 
 
 	// get starting vertex of graph G
-	Course* get_init_vertex()
+	Course* get_init_vertex(vector<Course *> list)
 	{
 
 	}
@@ -154,12 +180,20 @@ public:
 		}
 		return max_corr_vertex;
 	}
+<<<<<<< HEAD
 	
+=======
+
+	vector<Course*>* get_course_list()
+	{
+		return &gptr->get_course_list();
+	}
+>>>>>>> origin/ClashOfClass
 
 private:
 
-	Graph* gptr;// pointer to the given graph for convenience
-	int num_used_colors;// number of colors actually used
+	Graph* gptr; // pointer to the given graph for convenience
+	int num_used_colors; // number of colors actually used
 	int color_frequency[NUM];
 
 	vector<Course*> colored_path;
@@ -170,6 +204,6 @@ private:
 		assert(limit > 0);
 
 		for (int i = 0; i < NUM; i++)
-			color_frequency[i] = limit;
+			color_frequency[i] = 0;
 	}
 };

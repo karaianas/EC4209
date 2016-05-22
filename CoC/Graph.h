@@ -359,6 +359,30 @@ public:
 		return false;
 	}
 
+	vector<Course*>* get_alone_crs() {
+		vector<Course*>* alone_list = new vector<Course*>();
+		int flag;
+
+		for (int i = 0; i < num_courses; i++)
+		{
+			flag = 0;
+			for (int j = 0; j < num_courses; j++)
+			{
+				if (i == j)
+					continue;
+
+				if (p.at(i).at(j) > 0) {
+					++flag;
+					break;
+				}
+			}
+			if (!flag)
+				alone_list->push_back(get_course(i));
+		}
+		
+		return alone_list;
+	}
+
 	// correlation statistics
 	float avg, min, max;
 

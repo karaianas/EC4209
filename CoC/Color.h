@@ -5,6 +5,7 @@
 
 #include "Graph.h"
 #include "Course.h"
+#include <vector>
 
 // number of colors that can be used
 #define NUM 12
@@ -77,8 +78,8 @@ public:
 			int check=color_vertex(start, limit);
 			if (!check)
 			{
-				cout << "Choose another starting vertex!" << endl;
-				course_list.erase(start->get_id());
+				std::cout << "Choose another starting vertex!" << endl;
+//				course_list.erase(start->get_id());
 				start = get_init_vertex(course_list);
 				continue;	//다른 점이 색칠 될때까지 계속 진행.
 			}

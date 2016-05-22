@@ -48,6 +48,7 @@ Graph* Copy_graph;
 TimeSlot* greedy_time_slot;
 TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
+vector<Course*>* alone_list;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -127,7 +128,7 @@ int main(int argc, char** argv)
 	toy_course_list.push_back(course_list[98]);
 	toy_course_list.push_back(course_list[50]);
 	toy_course_list.push_back(course_list[113]);
-	//toy_course_list.push_back(course_list[103]);
+	toy_course_list.push_back(course_list[103]);
 	toy_course_list.push_back(course_list[110]);
 
 
@@ -223,9 +224,10 @@ int main(int argc, char** argv)
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
 	//list_subgraphs(simple_graph, subgraphs);
+	//alone_list = simple_graph->get_alone_crs();
 
 	/* list_subgraph tests */
-	Graph tmp = build_multi_graph(toy_course_list);
+	/*Graph tmp = build_multi_graph(toy_course_list);
 	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
 	tmp_simple.print_graph();
 	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
@@ -246,6 +248,11 @@ int main(int argc, char** argv)
 		cout << endl;
 	}
 	cout << endl;
+	tmp_vec = tmp_simple.get_alone_crs();
+	cout << "alone_list size: " << tmp_vec->size() << endl;
+	for (int i = 0; i < tmp_vec->size(); i++)
+		tmp_vec->at(i)->print_course_info();
+	cout << endl;*/
 
 
 	// graphical interface

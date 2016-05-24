@@ -28,10 +28,6 @@ public:
 			num_courses = to_copy->get_size();
 			index = to_copy->index;
 			p = to_copy->p;
-			/*for (int i = 0; i < num_courses; i++)
-			{
-				index.push_back(to_copy->in)
-			}*/
 		}
 
 		if (n) {

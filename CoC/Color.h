@@ -9,6 +9,8 @@
 
 // number of colors that can be used
 #define NUM 12
+// length of the coloring history
+#define COLORED_PATH_LENGTH 4
 
 class Color{
 public:
@@ -33,7 +35,7 @@ public:
 				// (1) color a vertex
 				C->set_color(i);
 
-				// (2) decrease color frequency
+				// (2) increase color frequency
 				color_frequency[i] += 1;
 
 				// (3) remove the color from its neighbors
@@ -102,7 +104,7 @@ public:
 	// get starting vertex of graph G
 	Course* get_init_vertex(vector<Course *> list)
 	{
-
+		return NULL;
 	}
 
 	// Graph에 존재하는 get_vertex_degree로 짜서 만든건데 혹시 이게

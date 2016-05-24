@@ -6,7 +6,7 @@
 //#include "Graph.h"
 
 using namespace std;
-#define Color_size 12
+#define COLOR_SIZE 12
 
 class Course{
 public:
@@ -23,8 +23,8 @@ public:
 		class_size = 0;
 		num_classes = 0;
 
-		for (int i = 0; i < Color_size; i++)
-			color[i] = 1;
+		for (int i = 0; i < COLOR_SIZE; i++)
+			color[i] = true;
 		selected_color = -1;
 	}
 
@@ -199,7 +199,7 @@ public:
 	int color_possible_num()
 	{
 		int temp = 0;
-		for (int i = 0; i < Color_size; i++)
+		for (int i = 0; i < COLOR_SIZE; i++)
 			temp = temp + is_color_ok(i);
 		return temp;
 	}
@@ -251,7 +251,7 @@ public:
 	bool is_empty()
 	{
 		int sum = 0;
-		for (int i = 0; i < Color_size; i++)
+		for (int i = 0; i < COLOR_SIZE; i++)
 			sum += color[i];
 
 		if (!sum)
@@ -265,7 +265,8 @@ public:
 		return selected_color;
 	}
 
-	bool *get_color(){
+	bool *get_color()
+	{
 		return color;
 	}
 
@@ -277,7 +278,7 @@ public:
 	bool whether_selected()
 	{
 		int sum = 0;
-		for (int i = 0; i < Color_size; i++)
+		for (int i = 0; i < COLOR_SIZE; i++)
 			sum += get_color()[i];
 		if (sum == 1)
 			return 1;
@@ -288,7 +289,7 @@ public:
 	void set_select_color()
 	{
 		if (whether_selected())
-			for (int i = 0; i < Color_size; i++)
+			for (int i = 0; i < COLOR_SIZE; i++)
 				if (get_color()[i])
 					selected_color = i;
 		else
@@ -306,7 +307,7 @@ private:
 	int class_size;// this is the size of one single class of the course
 	int num_classes;// this is the number of classes of the course
 
-	bool color[Color_size];
+	bool color[COLOR_SIZE];
 	int selected_color;
 
 	// list of enrolled students

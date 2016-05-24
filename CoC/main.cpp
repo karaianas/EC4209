@@ -18,6 +18,7 @@
 #include "Color.h"
 
 #define PI 3.1415926
+#define COLOR_LIMIT 10
 
 using namespace std;
 
@@ -59,7 +60,7 @@ Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
 vector<Course*>* bfs(Graph* G, Course* root);
-void graph_coloring_bfs(Color* to_color);
+void graph_coloring_bfs(Graph* to_color, int color_limit);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
 int main(int argc, char** argv)
@@ -172,7 +173,8 @@ int main(int argc, char** argv)
 	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
 
 
-	Copy_graph = build_simple_graph(multi_graph, course_list);
+//	Copy_graph = build_simple_graph(multi_graph, course_list);
+	Copy_graph = new Graph(simple_graph); // 이렇게 하면 그래프를 카피할 수 있음
 	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");
 	Copy_graph->get_max_degree();
 	Copy_graph->remove_less_threshold(threshold);
@@ -222,11 +224,11 @@ int main(int argc, char** argv)
 
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
-	list_subgraphs(simple_graph, subgraphs);
-	alone_list = simple_graph->get_alone_crs();
+	/*list_subgraphs(simple_graph, subgraphs);
+	alone_list = simple_graph->get_alone_crs();*/
 
 	/* list_subgraph tests */
-	/*Graph tmp = build_multi_graph(toy_course_list);
+	Graph tmp = build_multi_graph(toy_course_list);
 	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
 	tmp_simple.print_graph();
 	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
@@ -251,16 +253,15 @@ int main(int argc, char** argv)
 	cout << "alone_list size: " << tmp_vec->size() << endl;
 	for (int i = 0; i < tmp_vec->size(); i++)
 		tmp_vec->at(i)->print_course_info();
-	cout << endl;*/
+	cout << endl;
 
 	/* graph_coloring_bfs tests */
-	vector<Color*>* colored_graphs = new vector<Color*>();
-	Color* to_color;
-	for (int i = 0; i < subgraphs->size(); i++) {
-		to_color = new Color(subgraphs->at(i));
-		graph_coloring_bfs(to_color);
-		colored_graphs->push_back(to_color);
-	}
+	/*vector<Color*>* colored_graphs = new vector<Color*>();
+	Color* to_color;*/
+	/*for (int i = 0; i < subgraphs->size(); i++) {
+		graph_coloring_bfs(subgraphs->at(i), COLOR_LIMIT);
+		subgraphs->at(i)->print_graph();
+	}*/
 
 
 	// graphical interface

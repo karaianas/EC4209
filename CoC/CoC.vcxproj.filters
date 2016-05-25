@@ -45,7 +45,10 @@
     <ClCompile Include="in_conversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graph_coloring_bfs.cpp">
+    <ClCompile Include="init_coloring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graph_coloring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

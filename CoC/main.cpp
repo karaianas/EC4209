@@ -60,7 +60,9 @@ Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
 vector<Course*>* bfs(Graph* G, Course* root);
-void graph_coloring_bfs(Graph* to_color, int color_limit);
+void graph_coloring(Graph* to_color, int color_limit);
+void alone_coloring(vector<Course*>*, int color_limit);
+void init_coloring(vector<Graph*>* to_init);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
 int main(int argc, char** argv)
@@ -258,10 +260,41 @@ int main(int argc, char** argv)
 	/* graph_coloring_bfs tests */
 	/*vector<Color*>* colored_graphs = new vector<Color*>();
 	Color* to_color;*/
-	/*for (int i = 0; i < subgraphs->size(); i++) {
-		graph_coloring_bfs(subgraphs->at(i), COLOR_LIMIT);
+
+	init_coloring(subgraphs);
+
+	for (int i = 0; i < subgraphs->size(); i++) {
+		vector<Course*>* crs_list = \
+			subgraphs->at(i)->get_course_list();
+
+		/*cout << "[main] (before gc_bfs)" << endl;
+		for (int i = 0; i < crs_list->size(); i++)
+		{
+			crs_list->at(i)->print_course_info();
+			cout << " initial color: " << crs_list->at(i)->get_select_color() << endl;
+		}*/
+
+		cout << i + 1 << "th subgraph coloring..." << endl;
+		graph_coloring(subgraphs->at(i), COLOR_LIMIT);
+		cout << "output:" << endl;
 		subgraphs->at(i)->print_graph();
-	}*/
+		cout << "colors:" << endl;
+
+		for (int j = 0; j < crs_list->size(); j++)
+		{
+			crs_list->at(j)->print_course_info();
+			cout << crs_list->at(j)->get_select_color() << endl;
+		} cout << endl;
+	}
+
+	/* alone_list는 따로 coloring해줘야 함 */
+	alone_coloring(tmp_vec, COLOR_LIMIT);
+	cout << "[main] alone_coloring: " << endl;
+	for (int i = 0; i < tmp_vec->size(); i++)
+	{
+		tmp_vec->at(i)->print_course_info();
+		cout << " colored with: " << tmp_vec->at(i)->get_select_color() << endl;
+	}
 
 
 	// graphical interface

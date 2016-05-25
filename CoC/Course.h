@@ -296,6 +296,11 @@ public:
 			cout << "we can not choose the selected color" << endl;
 	}
 
+	void init_selected_color()
+	{
+		selected_color = -1;
+	}
+
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;

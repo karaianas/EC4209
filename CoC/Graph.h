@@ -379,7 +379,15 @@ public:
 		return alone_list;
 	}
 
-	vector<Course*> get_course_list() { return index; }
+	vector<Course*>* get_course_list() { return &index; }
+
+	void set_index(vector<Course*>* crs_list)
+	{
+		if (p.size())
+			return;
+
+		index = *crs_list;
+	}
 
 	// correlation statistics
 	float avg, min, max;

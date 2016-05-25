@@ -27,6 +27,9 @@ public:
 	// color a vertex
 	bool color_vertex(Course* C, int limit)
 	{
+		/*cout << "[color_vertex] start coloring course ";
+		C->print_course_info(); cout << endl;*/
+
 		// 일단 되는 대로 색깔을 칠하고 있음
 		for (int i = 0; i < NUM; i++)
 		{
@@ -34,6 +37,8 @@ public:
 			{
 				// (1) color a vertex
 				C->set_color(i);
+				/*cout << "\tcolored "; C->print_course_info();
+				cout << ": " << C->get_select_color() << endl;*/
 
 				// (2) increase color frequency
 				color_frequency[i] += 1;
@@ -69,9 +74,11 @@ public:
 	}
 
 	// color the graph
-	bool start_coloring(vector<Course *> course_list, int limit)
+	bool start_coloring(vector<Course *>* course_list, int limit)
 	{
-		Course* start = get_init_vertex(course_list);
+		//Course* start = get_init_vertex(course_list);
+		Course* start = get_max_degree_vertex(course_list);
+
 		int size = gptr->get_size();
 		int purity = 1;
 		// (1) color starting vertex
@@ -82,12 +89,13 @@ public:
 			{
 				std::cout << "Choose another starting vertex!" << endl;
 //				course_list.erase(start->get_id());
-				start = get_init_vertex(course_list);
+				start = get_min_colors_vertex(course_list);
 				continue;	//다른 점이 색칠 될때까지 계속 진행.
 			}
 			else
 			{
-				cout << "Colored vertex is : " << start->get_course_name() << endl;
+				cout << "Colored vertex is : ";
+				start->print_course_info(); cout << endl;
 				return true;
 			}
 		}
@@ -102,7 +110,7 @@ public:
 
 
 	// get starting vertex of graph G
-	Course* get_init_vertex(vector<Course *> list)
+	Course* get_init_vertex(vector<Course *>* list)
 	{
 		return NULL;
 	}
@@ -110,50 +118,83 @@ public:
 	// Graph에 존재하는 get_vertex_degree로 짜서 만든건데 혹시 이게
 	// color가 정해진 거를 degree에서 제외시키는 게 없으면 오류가 나요
 	// MRV
-	vector<Course*>* get_max_degree_vertex( vector<Course*>* list )
+	//vector<Course*>* get_max_degree_vertex( vector<Course*>* list )
+	Course* get_max_degree_vertex(vector<Course*>* list)
 	{
-		vector<Course*>* max_degree_course = NULL;
-		int maxdegree = -1;
+		//// Color 정해진 vertex들을 degree에서 제거
+		//vector<int> net_degree;
+		//for (int i = 0; i < list->size(); i++)
+		//{
+
+		//}
+
+		// vector<Course*>* max_degree_course = NULL;
+		int max_degree = -1;
+		Course* max_vertex = new Course();
 		for (int i = 0; i < list->size(); i++)
 		{
 			Course* temp = list->at(i);
-			if (gptr->get_vertex_degree(temp) > maxdegree)
+			if ( (gptr->get_vertex_degree(temp) > max_degree) && \
+				temp->get_select_color() == -1)
 			{
-				maxdegree = gptr->get_vertex_degree(temp);
+				max_degree = gptr->get_vertex_degree(temp);
+				max_vertex = temp;
 			}
+			/*if (temp->get_num() == 24) {
+				temp->print_course_info();
+				cout << "coloring: " << temp->get_select_color() << endl;
+			}*/
 		}
 
-		for (int i = 0; i < list->size(); i++)
+		/*cout << "[get_max_deg_ver] max_ver: ";
+		max_vertex->print_course_info();
+		cout << endl;*/
+
+		return max_vertex;
+
+		/*for (int i = 0; i < list->size(); i++)
 		{
 			Course* temp = list->at(i);
-			if (gptr->get_vertex_degree(temp) == maxdegree)
+			if (gptr->get_vertex_degree(temp) == max_degree)
 				max_degree_course->push_back(temp);
 		}
 
-		return max_degree_course;
+		return max_degree_course;*/
 	}
 	
 	// get vertex of minimum remaining colors i.e. LRV
 	// MRV with LCV
-	vector<Course*>* get_min_colors_vertex( vector<Course*>* list )
+	//vector<Course*>* get_min_colors_vertex( vector<Course*>* list )
+	Course* get_min_colors_vertex(vector<Course*>* list)
 	{
 		vector<Course*>* min_remaining_colors_course = NULL;
 		int min_remaining_colors = 99999999;
+		Course* min_remaining_vertex = new Course();
+
 		for (int i = 0; i < list->size(); i++)
 		{
 			Course* temp = list->at(i);
-			if (temp->color_possible_num() < min_remaining_colors)
+			if ( (temp->color_possible_num() < min_remaining_colors) &&
+				temp->get_select_color() == -1) {
 				min_remaining_colors = temp->color_possible_num();
+				min_remaining_vertex = temp;
+			}
 		}
 
-		for (int i = 0; i < list->size(); i++)
+		/*cout << "[get_min_col_ver] min_ver: ";
+		min_remaining_vertex->print_course_info();
+		cout << endl;*/
+
+		return min_remaining_vertex;
+
+		/*for (int i = 0; i < list->size(); i++)
 		{
 			Course* temp = list->at(i);
 			if (temp->color_possible_num() == min_remaining_colors)
 				min_remaining_colors_course->push_back(temp);
 		}
 
-		return min_remaining_colors_course;
+		return min_remaining_colors_course;*/
 	}
 
 	// get vertex of maximum correlation
@@ -182,10 +223,10 @@ public:
 		return max_corr_vertex;
 	}
 
-	vector<Course*>* get_course_list()
+	/*vector<Course*>* get_course_list()
 	{
-		return &gptr->get_course_list();
-	}
+		return gptr->get_course_list();
+	}*/
 
 private:
 

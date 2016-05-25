@@ -72,7 +72,8 @@
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
     <ClCompile Include="generate_virtual_students.cpp" />
-    <ClCompile Include="graph_coloring_bfs.cpp" />
+    <ClCompile Include="graph_coloring.cpp" />
+    <ClCompile Include="init_coloring.cpp" />
     <ClCompile Include="in_conversion.cpp" />
     <ClCompile Include="is_connected.cpp" />
     <ClCompile Include="list_subgraphs.cpp" />

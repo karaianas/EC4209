@@ -112,6 +112,7 @@ public:
 	// get starting vertex of graph G
 	Course* get_init_vertex(vector<Course *>* list)
 	{
+		// return NULL을 고치지 않으면 문제를 일으킬 것임
 		return NULL;
 	}
 
@@ -121,13 +122,6 @@ public:
 	//vector<Course*>* get_max_degree_vertex( vector<Course*>* list )
 	Course* get_max_degree_vertex(vector<Course*>* list)
 	{
-		//// Color 정해진 vertex들을 degree에서 제거
-		//vector<int> net_degree;
-		//for (int i = 0; i < list->size(); i++)
-		//{
-
-		//}
-
 		// vector<Course*>* max_degree_course = NULL;
 		int max_degree = -1;
 		Course* max_vertex = new Course();
@@ -140,10 +134,6 @@ public:
 				max_degree = gptr->get_vertex_degree(temp);
 				max_vertex = temp;
 			}
-			/*if (temp->get_num() == 24) {
-				temp->print_course_info();
-				cout << "coloring: " << temp->get_select_color() << endl;
-			}*/
 		}
 
 		/*cout << "[get_max_deg_ver] max_ver: ";
@@ -222,11 +212,6 @@ public:
 		}
 		return max_corr_vertex;
 	}
-
-	/*vector<Course*>* get_course_list()
-	{
-		return gptr->get_course_list();
-	}*/
 
 private:
 

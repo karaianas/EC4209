@@ -8,7 +8,7 @@
 #include <vector>
 
 // number of colors that can be used
-#define NUM 12
+#define NUM_COLORS 12
 // length of the coloring history
 #define COLORED_PATH_LENGTH 4
 
@@ -31,7 +31,7 @@ public:
 		C->print_course_info(); cout << endl;*/
 
 		// 일단 되는 대로 색깔을 칠하고 있음
-		for (int i = 0; i < NUM; i++)
+		for (int i = 0; i < NUM_COLORS; i++)
 		{
 			if (color_frequency[i] <= limit && C->is_color_ok(i))
 			{
@@ -188,7 +188,7 @@ public:
 	}
 
 	// get vertex of maximum correlation
-	Course* get_max_corr_vertex( vector<Course*>* list)
+	Course* get_max_corr_vertex(vector<Course*>* list)
 	{
 		Course* max_corr_vertex = NULL;
 		float max_corr = -1.0;
@@ -217,7 +217,7 @@ private:
 
 	Graph* gptr; // pointer to the given graph for convenience
 	int num_used_colors; // number of colors actually used
-	int color_frequency[NUM];
+	int color_frequency[NUM_COLORS];
 
 	vector<Course*> colored_path;
 
@@ -226,7 +226,7 @@ private:
 	{
 		assert(limit > 0);
 
-		for (int i = 0; i < NUM; i++)
+		for (int i = 0; i < NUM_COLORS; i++)
 			color_frequency[i] = 0;
 	}
 };

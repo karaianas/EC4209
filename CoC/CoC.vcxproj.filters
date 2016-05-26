@@ -33,9 +33,6 @@
     <ClCompile Include="generate_virtual_students.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bfs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="list_subgraphs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graph_coloring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bfs_connected_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

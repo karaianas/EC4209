@@ -59,7 +59,7 @@ void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Cou
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
-vector<Course*>* bfs(Graph* G, Course* root);
+vector<Course*>* bfs_connected_component(Graph* G, Course* root);
 void graph_coloring(Graph* to_color, int color_limit);
 void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
 	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
 	tmp_simple.print_graph();
 	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
-	vector<Course*>* tmp_vec = bfs(&tmp_simple, toy_course_list[0]);
+	vector<Course*>* tmp_vec = bfs_connected_component(&tmp_simple, toy_course_list[0]);
 	cout << "[main] tmp_vec: ";
 	for (int i = 0; i < tmp_vec->size(); i++)
 		cout << tmp_vec->at(i)->get_course_name() << " ";

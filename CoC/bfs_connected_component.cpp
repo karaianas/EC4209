@@ -1,3 +1,6 @@
+/* bfs_connected_component
+ *	finds connected components in a graph(G)
+ */
 #pragma once
 
 #include <iostream>
@@ -6,7 +9,7 @@
 #include "Graph.h"
 #include "Course.h"
 
-vector<Course*>* bfs(Graph* G, Course* root)
+vector<Course*>* bfs_connected_component(Graph* G, Course* root)
 {
 	vector<Course*>* visited = new vector<Course*>();
 	vector<Course*> to_visit;

@@ -10,7 +10,7 @@
 #include "Graph.h"
 #include "Course.h"
 
-vector<Course*>* bfs(Graph* G, Course* root);
+vector<Course*>* bfs_connected_component(Graph* G, Course* root);
 
 void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
 {
@@ -26,7 +26,7 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
 		root = G_copy->get_random_vertex();
 
 		// find connected component (i.e., subgraph)
-		sub_nodes = bfs(G_copy, root);
+		sub_nodes = bfs_connected_component(G_copy, root);
 		
 		Graph* subgraph = new Graph();
 

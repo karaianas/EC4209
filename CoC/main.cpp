@@ -93,7 +93,7 @@ int main(int argc, char** argv)
 		home_dir = "C:\\Users\\±Ôºó\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
 	case 4:
-		home_dir = "C:\\Users\\June\\Desktop\\EC4209 (2)\\CoC\\";
+		home_dir = "C:\\Users\\USER\\Documents\\GitHub\\EC4209\\CoC\\";
 		break;
 	case 5:
 		home_dir = "C:\\Users\\June\\Documents\\GitHub\\EC4209\\CoC\\";
@@ -321,7 +321,9 @@ int main(int argc, char** argv)
 
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//glClearColor(1, 1, 1, 1);// white background
 
 	GLfloat size[2];
 	GLfloat sizeL[2];

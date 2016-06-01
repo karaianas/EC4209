@@ -51,6 +51,9 @@
     <ClCompile Include="back_tracking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="find_minimum_threshold.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Student.h">

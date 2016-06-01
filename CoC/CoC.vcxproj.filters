@@ -48,6 +48,9 @@
     <ClCompile Include="bfs_connected_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="back_tracking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Student.h">

@@ -221,6 +221,10 @@ public:
 		else
 			cout << ": color " << i << " cannot be used[unavailable]" << endl;
 	}
+	void set_flag(int i)
+	{
+		color[i] = -1;
+	}
 
 	// remove a color
 	bool remove_color(int i)
@@ -250,11 +254,15 @@ public:
 	// check if the color set is empty
 	bool is_empty()
 	{
-		int sum = 0;
+		int purity = 0;
 		for (int i = 0; i < COLOR_SIZE; i++)
-			sum += color[i];
+			if (color[i] == 1)
+			{
+				purity++;
+				break;
+			}
 
-		if (!sum)
+		if (!purity)
 			return 1;		//비었으면 return 1;
 		else
 			return 0;		//안 비어있으면 return 0;
@@ -265,7 +273,7 @@ public:
 		return selected_color;
 	}
 
-	bool *get_color()
+	int *get_color()
 	{
 		return color;
 	}
@@ -300,7 +308,10 @@ public:
 	{
 		selected_color = -1;
 	}
-
+	void recover_color(int i)
+	{
+		color[i] = 1;
+	}
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
@@ -312,7 +323,7 @@ private:
 	int class_size;// this is the size of one single class of the course
 	int num_classes;// this is the number of classes of the course
 
-	bool color[COLOR_SIZE];
+	int color[COLOR_SIZE];
 	int selected_color;
 
 	// list of enrolled students

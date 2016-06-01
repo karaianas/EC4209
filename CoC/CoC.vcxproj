@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="back_tracking.cpp" />
     <ClCompile Include="bfs_connected_component.cpp" />
     <ClCompile Include="build_multi_graph.cpp" />
     <ClCompile Include="build_simple_graph.cpp" />

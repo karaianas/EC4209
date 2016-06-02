@@ -12,7 +12,7 @@
 #include "Course.h"
 #include "Graph.h"
 
-#define NUM_COLORS 12 // 12 times slots
+#define NUM_COLORS 12 // 12 time slots
 #define MAX_FREQ 10 // Max classes per slot
 
 using namespace std;
@@ -30,13 +30,18 @@ public:
 				assert(false);
 			}
 
-			me = crs;
+			if (children == NULL)
+				children_list = new vector<TreeNode*>();
+			else
+				children_list = children;
+				
 			parent = prnt;
-			children_list = children;
-
+			
+			me = crs;
+			
 			// color initialization
 			for (int i = 0; i < NUM_COLORS; i++)
-				colors[i] = me->get_color[i];
+				colors[i] = 1;
 
 			selected_color = -1;
 		}
@@ -49,6 +54,16 @@ public:
 		void set_children(vector<TreeNode*>* children) { children_list = children; }
 		TreeNode* get_nth_child(int n) { return children_list->at(n); }
 		void add_child(TreeNode* to_add) { children_list->push_back(to_add); }
+		bool is_leaf() {
+			if (children_list)
+				return false;
+			return true;
+		}
+		bool is_root() {
+			if (parent)
+				return false;
+			return true;
+		}
 
 		// color related functions
 		bool remove_color(int i)
@@ -147,7 +162,6 @@ public:
 	// get next TreeNode* to color
 	TreeNode* get_next(TreeNode* cur)
 	{
-		return //
 	}
 
 	// return NULL if no problem; return parent otherwise
@@ -226,24 +240,24 @@ public:
 	}
 
 	// color tree by DFS
-	bool color_tree()
-	{
-		TreeNode* cur, next;
+	//bool color_tree()
+	//{
+	//	TreeNode* cur, next;
 
-		// ...
+	//	// ...
 
-		if (color_parent(cur) == NULL)
-			
-			// get next treenode to color
-		else
-		{
-			if (backtrack(cur))
-				// 
-			else
-				// backtracking does not work
-		}
-		// ...
-	}
+	//	if (color_parent(cur) == NULL)
+	//		
+	//		// get next treenode to color
+	//	else
+	//	{
+	//		if (backtrack(cur))
+	//			// 
+	//		else
+	//			// backtracking does not work
+	//	}
+	//	// ...
+	//}
 
 
 	

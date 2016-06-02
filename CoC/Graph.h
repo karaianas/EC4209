@@ -306,7 +306,47 @@ public:
 		cout << max_degree;
 		return max_degree;
 	}
+
+	Course* get_max_degree_vertex()
+	{
+		int max_degree = 0, degree;
+		Course* max_crs = new Course();
+		for (int i = 0; i < num_courses; i++)
+		{
+			degree = get_neighbors(index.at(i))->size();
+			if (max_degree < degree)
+			{
+				max_degree = degree;
+				max_crs = index.at(i);
+			}
+		}
+		assert(max_crs);
+
+		return max_crs;
+	}
 	
+	vector<Course*>* get_max_edge()
+	{
+		float max = 0;
+		Course* crs_i = new Course();
+		Course* crs_j = new Course();
+		vector<Course*>* to_return = new vector<Course*>();
+		for (int i = 0; i < num_courses; i++) {
+			for (int j = i + 1; j < num_courses; j++) {
+				if (max < p.at(i).at(j)) {
+					max = p.at(i).at(j);
+					crs_i = get_course(i);
+					crs_j = get_course(j);
+				}
+			}
+		}
+
+		to_return->push_back(crs_i);
+		to_return->push_back(crs_j);
+
+		return to_return;
+	}
+
 	void remove_less_threshold(float threshold)
 	{
 		float temp;

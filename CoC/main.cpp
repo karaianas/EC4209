@@ -16,6 +16,7 @@
 #include "Graph.h"
 #include "TimeSlot.h"
 #include "Color.h"
+#include "Tree.h"
 
 #define PI 3.1415926
 #define COLOR_LIMIT 10
@@ -55,6 +56,7 @@ TimeSlot* greedy_time_slot;
 TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 vector<Course*>* alone_list;
+vector<Tree::TreeNode*>* coloring_order;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -70,13 +72,16 @@ void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 void draw_course(Course* ptr, int _j);
+Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
+vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 
 int main(int argc, char** argv)
 {
 	// Add your own home directory
 	int user_id;
 	char* home_dir = " ";
-	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5] Seoyoung Debug[6]" << endl << "Enter user number:";
+	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5] Seoyoung Debug[6] Sunwoo_room[7]" \
+		<< endl << "Enter user number:";
 	cin >> user_id;
 
 	switch (user_id)
@@ -98,6 +103,9 @@ int main(int argc, char** argv)
 		break;
 	case 6:
 		home_dir = "C:\\Users\\USER\\Desktop\\back_up\\CoC\\";
+		break;
+	case 7:
+		home_dir = "C:\\Users\\Sunwoo\\Documents\\GitHub\\EC4209\\Coc\\";
 		break;
 	}
 
@@ -224,8 +232,6 @@ int main(int argc, char** argv)
 
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
-	/*list_subgraphs(simple_graph, subgraphs);
-	alone_list = simple_graph->get_alone_crs();*/
 
 	/* list_subgraph tests */
 	Graph tmp = build_multi_graph(toy_course_list);
@@ -294,6 +300,12 @@ int main(int argc, char** argv)
 		cout << " colored with: " << tmp_vec->at(i)->get_select_color() << endl;
 	}
 
+	cout << "coloring real graph" << endl;
+	
+	list_subgraphs(simple_graph, subgraphs);
+	alone_list = simple_graph->get_alone_crs();
+	cout << "number of total subgraphs: " << subgraphs->size() << endl;
+	//Tree* T = build_tree(simple_graph, coloring_order);
 
 	// graphical interface
 	glutInit(&argc, argv);

@@ -74,3 +74,13 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
 		sub_list->push_back(subgraph);
 	}
 }
+
+vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
+	vector<Graph*>* cut_Gs = new vector<Graph*>();
+	Graph* G_cp = new Graph(G);
+	
+	G_cp->remove_less_threshold(thres);
+	list_subgraphs(G_cp, cut_Gs);
+
+	return cut_Gs;
+}

@@ -34,7 +34,7 @@ vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
 	return sorted;
 }
 
-Tree* build_tree(Graph* weighted_graph) {
+Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring) {
 	Course* root = weighted_graph->get_max_degree_vertex();
 	Tree::TreeNode* root_node = new Tree::TreeNode(root);
 	Tree* T = new Tree(root_node);
@@ -94,6 +94,8 @@ Tree* build_tree(Graph* weighted_graph) {
 			parents->push_back(visiting);
 		}
 	}
+
+	order_of_coloring = coloring_order;
 
 	// print test
 	cout << "[build_tree] visited printing..." << endl;

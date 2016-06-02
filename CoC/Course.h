@@ -213,7 +213,7 @@ public:
 		for (int j = 0; j < 4; j++)
 			cout << name[j];
 
-		if (color[i])
+		if (color[i] > 0)
 		{
 			selected_color = i;
 			cout << ": color set to " << i << endl;
@@ -232,6 +232,8 @@ public:
 		char* name;
 		name = get_course_name();
 
+		int original_color = color[i];
+
 		color[i] = 0;
 
 		if (is_empty())
@@ -239,14 +241,13 @@ public:
 			for (int j = 0; j < 4; j++)
 				cout << name[j];
 			cout << ": color " << i << " cannot be removed[becomes empty]" << endl;
-			color[i] = 1;
+			color[i] = original_color;
 			return false;
 		}
 		else
 		{
-			//for (int j = 0; j < 4; j++)
-			//	cout << name[j];
-			//cout << ": color " << i << " removed" << endl;
+			if (original_color == -1)
+				color[i] = -1;
 			return true;
 		}
 	}

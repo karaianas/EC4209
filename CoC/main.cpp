@@ -261,6 +261,10 @@ int main(int argc, char** argv)
 		tmp_vec->at(i)->print_course_info();
 	cout << endl;
 
+	/* build_tree test */
+	Tree* T = build_tree(&tmp_simple);
+	cout << "build tree done" << endl;
+
 	/* graph_coloring_bfs tests */
 	/*vector<Color*>* colored_graphs = new vector<Color*>();
 	Color* to_color;*/

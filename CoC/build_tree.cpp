@@ -77,7 +77,7 @@ Tree* build_tree(Graph* weighted_graph) {
 		to_add->set_parent(parent_ptr);
 
 		Course* cur_par = parents->back();
-		for (int i = coloring_order->size() - 1; i >= 0; i++) {
+		for (int i = coloring_order->size() - 1; i >= 0; i--) {
 			Tree::TreeNode* ptr = coloring_order->at(i);
 			if (ptr->get_TreeNode() == cur_par) {
 				parent_ptr = ptr;
@@ -85,8 +85,6 @@ Tree* build_tree(Graph* weighted_graph) {
 				break;
 			}
 		}
- 		
-
 
 		neighbors = weighted_graph->get_neighbors(visiting);
 		neighbors = max_sorting(weighted_graph, neighbors, visiting, visited);
@@ -96,6 +94,14 @@ Tree* build_tree(Graph* weighted_graph) {
 			parents->push_back(visiting);
 		}
 	}
+
+	// print test
+	cout << "[build_tree] visited printing..." << endl;
+	for (int i = 0; i < visited->size(); i++)
+	{
+		visited->at(i)->print_course_info();
+		cout << " ";
+	} cout << endl;
 
 	return T;
 }

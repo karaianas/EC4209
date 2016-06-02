@@ -310,7 +310,7 @@ public:
 	Course* get_max_degree_vertex()
 	{
 		int max_degree = 0, degree;
-		Course* max_crs;
+		Course* max_crs = new Course();
 		for (int i = 0; i < num_courses; i++)
 		{
 			degree = get_neighbors(index.at(i))->size();

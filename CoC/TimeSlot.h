@@ -55,18 +55,18 @@ private:
 	vector< pair< pair<int, int>, float> > graph_info;
 };
 
-void TimeSlot::put_course_color(Graph *G)
-{
-	for (int i = 0; i < G->get_size(); i++)
-	{
-		Course *temp_course = G->get_course(i);
-		bool *temp_color = temp_course->get_color();
-		int j = 0;
-		while (temp_color[j] == 0)
-			j++;
-		Base_Solution_Array.at(j).push_back(i);
-	}
-}
+//void TimeSlot::put_course_color(Graph *G)
+//{
+//	for (int i = 0; i < G->get_size(); i++)
+//	{
+//		Course *temp_course = G->get_course(i);
+//		bool *temp_color = temp_course->get_color();
+//		int j = 0;
+//		while (temp_color[j] == 0)
+//			j++;
+//		Base_Solution_Array.at(j).push_back(i);
+//	}
+//}
 
 void TimeSlot::Find_Greedy_Solution(Graph *G)
 {

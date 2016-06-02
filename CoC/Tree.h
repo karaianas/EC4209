@@ -12,7 +12,7 @@
 #include "Course.h"
 #include "Graph.h"
 
-#define NUM_COLORS 12 // 12 times slots
+#define NUM_COLORS 12 // 12 time slots
 #define MAX_FREQ 10 // Max classes per slot
 
 using namespace std;
@@ -30,10 +30,15 @@ public:
 				assert(false);
 			}
 
-			me = crs;
+			if (children == NULL)
+				children_list = new vector<TreeNode*>();
+			else
+				children_list = children;
+				
 			parent = prnt;
-			children_list = children;
-
+			
+			me = crs;
+			
 			// color initialization
 			for (int i = 0; i < NUM_COLORS; i++)
 				colors[i] = 1;

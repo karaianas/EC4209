@@ -66,14 +66,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="back_tracking.cpp" />
     <ClCompile Include="bfs_connected_component.cpp" />
     <ClCompile Include="build_multi_graph.cpp" />
     <ClCompile Include="build_simple_graph.cpp" />
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
-    <ClCompile Include="find_minimum_threshold.cpp" />
-    <ClCompile Include="generate_virtual_students.cpp" />
     <ClCompile Include="graph_coloring.cpp" />
     <ClCompile Include="in_conversion.cpp" />
     <ClCompile Include="is_connected.cpp" />
@@ -87,7 +84,6 @@
     <ClInclude Include="RCourse.h" />
     <ClInclude Include="Student.h" />
     <ClInclude Include="TimeSlot.h" />
-    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -37,6 +37,11 @@ int view = 1;
 float mouse_x = 0;
 float mouse_y = 0;
 bool mouse_down = false;
+bool ortho = false;
+
+double angle_x = 0;
+double angle_y = -30;
+double angle_z = 0;
 
 // variables
 bool is_parsed = false;
@@ -64,6 +69,7 @@ void graph_coloring(Graph* to_color, int color_limit);
 void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
+void draw_course(Course* ptr, int _j);
 
 int main(int argc, char** argv)
 {
@@ -72,14 +78,6 @@ int main(int argc, char** argv)
 	char* home_dir = " ";
 	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5] Seoyoung Debug[6]" << endl << "Enter user number:";
 	cin >> user_id;
-
-	// Determine whether this is an ideal/real registration
-	char answer;
-	cout << "Is this an ideal case?" << endl << "i.e. class size * number of classes >= number of students" << endl << "Write y/n: ";
-	cin >> answer;
-
-	if (answer == 'n')
-		is_ideal = false;
 
 	switch (user_id)
 	{
@@ -301,9 +299,9 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(1000, 1000);
-	glutCreateWindow("Graph");
+	glutCreateWindow("Clash of Class");
 	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
+	//glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
 
@@ -312,6 +310,7 @@ int main(int argc, char** argv)
 	glutAddMenuEntry("View Popularity", 2);
 	glutAddMenuEntry("View Availability", 3);
 	glutAddMenuEntry("View Distribution", 4);
+	glutAddMenuEntry("View Timetable", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	glutMainLoop();
@@ -323,7 +322,35 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glClearColor(1, 1, 1, 1);// white background
+	// culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
+
+	// viewport
+	glViewport(0, 0, 1000, 1000);// left right corner and size
+
+	if (ortho)
+	{
+		// orthogonal
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-100, 100, -100, 100, 1, 300.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	else
+	{
+		// perspective
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glFrustum(-1, 1, -1, 1, 1, 300.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+
+	gluLookAt(0, 0, 100, 0.0, 0, 0.0, 0, 1.0, 0.0);// eye, at, up
 
 	GLfloat size[2];
 	GLfloat sizeL[2];
@@ -391,7 +418,8 @@ void display()
 
 				if (mouse_down)
 				{
-					if (sqrt(pow(mouse_x - 85 * cos(angle), 2) + pow(mouse_y - 85 * sin(angle), 2)) < 2)
+					//if (sqrt(pow(mouse_x - 85 * cos(angle), 2) + pow(mouse_y - 85 * sin(angle), 2)) < 2)
+					if (sqrt(pow(mouse_x - 42.5 * cos(angle), 2) + pow(mouse_y - 42.5 * sin(angle), 2)) < 1)
 					{
 						glColor3f(1, 0, 0);
 						clicked = j;
@@ -473,7 +501,7 @@ void display()
 			}
 		}
 	}
-	else
+	else if (view == 4)
 	{
 		float num = 2 / thr_step;
 		float step = 180 / num;
@@ -571,8 +599,201 @@ void display()
 		glEnd();
 
 	}
+	// view timetable
+	else
+	{
+		glPushMatrix();
+		glScaled(0.6, 0.6, 0.6);
+		glTranslated(0, -30, 0);
+		glRotated(angle_x, 1.0f, 0.0f, 0.0f);
+		glRotated(angle_y, 0.0f, 1.0f, 0.0f);
+		glRotated(angle_z, 0.0f, 0.0f, 1.0f);
+
+		glColor3f(0.7, 0.7, 0.7);
+
+		/*
+		// xy-plane
+		for (int i = 0; i <= 120; i += 20)
+		{
+			glBegin(GL_LINES);
+			glVertex3f(-60, 0 + i, -60);
+			glVertex3f(60, 0 + i, -60);
+			glEnd();
+
+			glBegin(GL_LINES);
+			glVertex3f(-60 + i, 120, -60);
+			glVertex3f(-60 + i, 0, -60);
+			glEnd();
+		}
+		
+		// yz-plane
+		for (int i = 0; i <= 120; i += 20)
+		{
+			glBegin(GL_LINES);
+			glVertex3f(-60, 0 + i, 60);
+			glVertex3f(-60, 0 + i, -60);
+			glEnd();
+
+			glBegin(GL_LINES);
+			glVertex3f(-60, 0, -60 + i);
+			glVertex3f(-60, 120, -60 + i);
+			glEnd();
+		}
+		*/
+		
+		// zx-plane
+		for (int i = 0; i <= 120; i += 20)
+		{
+			if (i == 60)
+				i += 20;
+			
+			// zx
+			glBegin(GL_LINES);
+			glVertex3f(-60 + i, 0, 60);
+			glVertex3f(-60 + i, 0, -60);
+			glEnd();
+
+			glBegin(GL_LINES);
+			glVertex3f(-60, 0, -60 + i);
+			glVertex3f(60, 0, -60 + i);
+			glEnd();
+		}
+		
+		glColor3f(1, 0, 0);
+
+		// y-axis
+		//glBegin(GL_LINES);
+		//glVertex3d(0, 0, 0);
+		//glVertex3d(0, 100, 0);
+		//glEnd();
+
+		// x-axis
+		glBegin(GL_LINES);
+		glVertex3d(-60, 0.1, 0);
+		glVertex3d(60, 0.1, 0);
+		glEnd();
+
+		// z-axis
+		glBegin(GL_LINES);
+		glVertex3d(0, 0.1, -60);
+		glVertex3d(0, 0.1, 60);
+		glEnd();
+
+		//glPushMatrix();
+		//glTranslated(-50, 5, -50);
+		//glScaled(20, 10, 20);
+		//glutSolidCube(1);
+
+		int freq[12];
+		for (int j = 0; j < 12; j++)
+			freq[j] = 0;
+
+		int k = 0;
+		for (int i = 0; i < 50; i++)
+		{
+			Course* cptr = course_list[i];
+			if (cptr->is_color_ok(k))
+			{
+				cptr->set_color(k);
+				freq[k]++;
+				draw_course(cptr, freq[k]);
+
+				k++;
+
+				if (k == 12)
+					k = 0;
+			}
+		}
+
+		glPopMatrix();
+	}
 
 	glutSwapBuffers(); // this is only used for double buffers
+}
+
+void draw_course(Course* ptr, int _j)
+{
+	int color = 1 + ptr->get_select_color();
+	
+	int i, k, j;
+	j = _j;
+
+	// time slot
+	if (color <= 6)
+	{
+		i = 1;
+		k = color;
+	}
+	else
+	{
+		i = 2;
+		k = color - 6;
+	}
+
+	switch (ptr->get_track())
+	{
+		// gs
+	case 1:
+		glColor3f(0.4, 0.804, 0.667);// medium aquamarine
+		break;
+		// bi
+	case 2:
+		glColor3f(1, 0.843, 0);// gold
+		break;
+		// ch
+	case 3:
+		glColor3f(1, 0.498, 0.314);// coral
+		break;
+		// cs
+	case 4:
+		glColor3f(0, 0.749, 1);// deep sky blue
+		break;
+		// ev
+	case 5:
+		glColor3f(1, 0.753, 0.796);// pink
+		break;
+		// ma
+	case 6:
+		glColor3f(0.498039, 0.53, 1.0);// purple
+		break;
+		// me
+	case 7:
+		glColor3f(1.00, 0.11, 0.68);// hot pink
+		break;
+		// ph
+	case 8:
+		glColor3f(0.678, 1, 0.184);// green yellow
+		break;
+	}
+
+	int delta = 10;
+
+	glPushMatrix();
+	glTranslated(-70 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutSolidCube(1);
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslated(-30 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutSolidCube(1);
+	glPopMatrix();
+
+	glColor3f(0.4, 0.4, 0.4);
+	glPushMatrix();
+	glTranslated(-70 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutWireCube(1.01);
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslated(-30 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutWireCube(1.01);
+	glPopMatrix();
 }
 
 void reshape(int w, int h)
@@ -606,6 +827,25 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 		}
 		break;
+
+	case 'a':
+		angle_x += 30;
+		break;
+	case 's':
+		angle_y += 30;
+		break;
+	case 'd':
+		angle_z += 30;
+		break;
+	case 'q':
+		angle_x -= 30;
+		break;
+	case 'w':
+		angle_y -= 30;
+		break;
+	case 'e':
+		angle_z -= 30;
+		break;
 	}
 
 	glutPostRedisplay();
@@ -614,17 +854,6 @@ void keyboard(unsigned char key, int x, int y)
 void menu(int value)
 {
 	view = value;
-	/*
-	switch (value)
-	{
-	case 1:
-		view = 1;
-		break;
-	case 2:
-		view = 2;
-		break;
-	}
-	*/
 
 	glutPostRedisplay();
 }
@@ -636,10 +865,15 @@ void mouse(int button, int state, int x, int y)
 	case GLUT_LEFT_BUTTON:
 		if (state == GLUT_DOWN)
 		{
-			mouse_x = (float)x / 5 - 100;
-			mouse_y = 100 - (float)y / 5;
-			
+			cout << x << " " << y << endl;
+			//mouse_x = (float)x; mouse_y = (float)y;
+			//mouse_x = (float)x * 70 / 370 - 400 * 70 / 370;
+			//mouse_y = (float)y * (-70 / 370) + 400 * 70 / 370;
+			mouse_x = (float)x / 10 - 50;
+			mouse_y = 50 - (float)y / 10;
 			cout << mouse_x << " " << mouse_y << endl;
+			
+			
 			mouse_down = true;
 		}
 		break;

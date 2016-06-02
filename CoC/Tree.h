@@ -50,12 +50,6 @@ public:
 		TreeNode* get_nth_child(int n) { return children_list->at(n); }
 		void add_child(TreeNode* to_add) { children_list->push_back(to_add); }
 
-		// set children list
-		void set_children_list()
-		{
-			
-		}
-
 		// color related functions
 		bool remove_color(int i)
 		{
@@ -148,6 +142,12 @@ public:
 		// color frequency initialization
 		for (int i = 0; i < NUM_COLORS; i++)
 			color_frequency[i] = 0;
+	}
+
+	// get next TreeNode* to color
+	TreeNode* get_next(TreeNode* cur)
+	{
+		return //
 	}
 
 	// return NULL if no problem; return parent otherwise
@@ -250,4 +250,5 @@ public:
 private:
 	TreeNode* root;
 	int color_frequency[NUM_COLORS];
+	Graph* gptr;
 };

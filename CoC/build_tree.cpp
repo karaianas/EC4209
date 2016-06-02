@@ -105,3 +105,22 @@ Tree* build_tree(Graph* weighted_graph) {
 
 	return T;
 }
+
+Graph* weight_graph(Graph* G)
+{
+	vector<Course*>* cptr = G->get_course_list();
+	int csize = cptr->size();
+	Graph* WG = new Graph(G, csize);
+
+	for (int x = 0; x < csize; x++)
+	{
+		vector<Course*>* neighbors = G->get_neighbors(cptr->at(x));
+		int nsize = neighbors->size();
+		float weight = 0;
+
+		for (int y = 0; y < nsize; y++)
+			weight += G->get_correlation(cptr->at(x), neighbors->at(y));
+
+		// whatever you like
+	}
+}

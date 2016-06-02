@@ -766,31 +766,31 @@ void draw_course(Course* ptr, int _j)
 		break;
 	}
 
-	int delta = 10;
+	int delta_y = 10;
 
 	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
 	glScaled(20, 10, 20);
 	glutSolidCube(1);
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
 	glScaled(20, 10, 20);
 	glutSolidCube(1);
 	glPopMatrix();
 
 	glColor3f(0.4, 0.4, 0.4);
 	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
 	glScaled(20, 10, 20);
 	glutWireCube(1.01);
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta) * j, -70 + 20 * k);
+	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
 	glScaled(20, 10, 20);
 	glutWireCube(1.01);
 	glPopMatrix();

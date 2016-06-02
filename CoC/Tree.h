@@ -134,21 +134,6 @@ public:
 		int selected_color;
 		int colors[NUM_COLORS];
 	};
-
-	//Tree(Course* start = NULL, Graph* G = NULL) {
-	//	// constructor
-	//	assert(start);
-	//	assert(G);
-	//	
-	//	vector<Course*>* crs_list = G->get_course_list();
-	//	bool* spanned = new bool[crs_list->size()];
-	//	for (int i = 0; crs_list->size(); i++)
-	//		spanned[i] = false;
-
-	//	root = start;
-
-	//	vector<Course*>* neighbor_list = G->get_neighbors(start);
-	//}
 		
 	Tree(TreeNode* rootPtr) {
 		// constructor
@@ -239,28 +224,6 @@ public:
 			cur->reset();
 	}
 
-	// color tree by DFS
-	//bool color_tree()
-	//{
-	//	TreeNode* cur, next;
-
-	//	// ...
-
-	//	if (color_parent(cur) == NULL)
-	//		
-	//		// get next treenode to color
-	//	else
-	//	{
-	//		if (backtrack(cur))
-	//			// 
-	//		else
-	//			// backtracking does not work
-	//	}
-	//	// ...
-	//}
-
-
-	
 private:
 	TreeNode* root;
 	int color_frequency[NUM_COLORS];

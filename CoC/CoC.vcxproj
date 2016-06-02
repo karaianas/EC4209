@@ -70,9 +70,9 @@
     <ClCompile Include="bfs_connected_component.cpp" />
     <ClCompile Include="build_multi_graph.cpp" />
     <ClCompile Include="build_simple_graph.cpp" />
+    <ClCompile Include="build_tree.cpp" />
     <ClCompile Include="check_track.cpp" />
     <ClCompile Include="compute_correlation.cpp" />
-    <ClCompile Include="find_minimum_threshold.cpp" />
     <ClCompile Include="generate_virtual_students.cpp" />
     <ClCompile Include="graph_coloring.cpp" />
     <ClCompile Include="in_conversion.cpp" />

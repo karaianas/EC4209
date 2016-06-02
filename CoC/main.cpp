@@ -16,6 +16,7 @@
 #include "Graph.h"
 #include "TimeSlot.h"
 #include "Color.h"
+#include "Tree.h"
 
 #define PI 3.1415926
 #define COLOR_LIMIT 10
@@ -64,6 +65,9 @@ void graph_coloring(Graph* to_color, int color_limit);
 void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
+Tree* build_tree(Graph* weighted_graph);
+vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* );
+
 
 int main(int argc, char** argv)
 {

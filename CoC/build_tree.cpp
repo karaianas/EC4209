@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//vector<Tree::TreeNode*>* color_order;
+void list_subgraphs(Graph* G, vector<Graph*>* sub_list);
 
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
 	Course* cur, vector<Course*>* visited) {
@@ -186,6 +186,17 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 		cout << " " << coloring_order->at(j)->get_selected() << endl;
 	}
 	return true;
+}
+
+
+vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
+	vector<Graph*>* cut_Gs = new vector<Graph*>();
+	Graph* G_cp = new Graph(G);
+
+	G_cp->remove_less_threshold(thres);
+	list_subgraphs(G_cp, cut_Gs);
+
+	return cut_Gs;
 }
 
 //void subgraphs_coloring(vector<Graph*>* subgraphs, )

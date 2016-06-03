@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//vector<Tree::TreeNode*>* color_order;
+
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
 	Course* cur, vector<Course*>* visited) {
 	vector<Course*>* sorted = new vector<Course*>();
@@ -44,6 +46,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 	vector<Course*>* parents = new vector<Course*>();
 	vector<Course*>* neighbors = new vector<Course*>();
 	vector<Tree::TreeNode*>* coloring_order = new vector<Tree::TreeNode*>();
+	//order_of_coloring = new vector<Tree::TreeNode*>();
 	//vector<Course*>* max_weight_order = new vector<Course*>();
 
 	//Graph* graph_copy = new Graph(weighted_graph);
@@ -53,7 +56,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 
 	to_visit->push_back(root);
 	parents->push_back(root);
-	coloring_order->push_back(root_node);
+	//coloring_order->push_back(root_node);
 
 	while (to_visit->size()) {
 		visiting = to_visit->back();
@@ -74,7 +77,11 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		Tree::TreeNode* to_add = new Tree::TreeNode(visiting);
 		parent_ptr->add_child(to_add);
 		coloring_order->push_back(to_add);
+		order_of_coloring->push_back(to_add);
 		to_add->set_parent(parent_ptr);
+
+		cout << "[build_tree] TreeNode : ";
+		to_add->get_TreeNode()->print_course_info(); cout << endl;
 
 		Course* cur_par = parents->back();
 		for (int i = coloring_order->size() - 1; i >= 0; i--) {
@@ -95,7 +102,20 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		}
 	}
 
-	order_of_coloring = coloring_order;
+	//order_of_coloring = coloring_order;
+	//color_order = coloring_order;
+
+	cout << "Coloring_order" << endl;
+	for (int i = 0; i < coloring_order->size(); i++)
+		coloring_order->at(i)->get_TreeNode()->print_course_info();
+	cout << endl;
+	cout << "Coloring_order size: " << coloring_order->size() << endl;
+
+	cout << "ordering_of_coloring" << endl;
+	for (int i = 0; i < order_of_coloring->size(); i++)
+		order_of_coloring->at(i)->get_TreeNode()->print_course_info();
+	cout << endl;
+	cout << "Coloring_order size: " << order_of_coloring->size() << endl;
 
 	// print test
 	cout << "[build_tree] visited printing..." << endl;
@@ -108,6 +128,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 	return T;
 }
 
+/*
 Graph* weight_graph(Graph* G)
 {
 	vector<Course*>* cptr = G->get_course_list();
@@ -126,3 +147,48 @@ Graph* weight_graph(Graph* G)
 		// whatever you like
 	}
 }
+*/
+
+bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
+{
+	Tree::TreeNode* curr;
+	int count = 0;
+
+	while (count < coloring_order->size())
+	{
+		for (int i = 0; i < coloring_order->size(); i++)
+		{
+			curr = coloring_order->at(i);
+			Tree::TreeNode* ptr = T->color_parent(curr);
+			
+			// there was a problem coloring
+			if (ptr)
+			{
+				if (!T->backtrack(ptr, coloring_order))
+				{
+					cout << "Impossible to solve" << endl;
+					return false;
+				}
+				else
+				{
+					count = 0;
+					break;
+				}
+			}
+			count++;
+		}
+	}
+
+	cout << "Done" << endl;
+	for (int j = 0; j < coloring_order->size(); j++)
+	{
+		coloring_order->at(j)->get_TreeNode()->print_course_info();
+		cout << " " << coloring_order->at(j)->get_selected() << endl;
+	}
+	return true;
+}
+
+//void subgraphs_coloring(vector<Graph*>* subgraphs, )
+//{
+
+//}

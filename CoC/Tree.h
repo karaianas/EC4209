@@ -42,6 +42,10 @@ public:
 			// color initialization
 			for (int i = 0; i < NUM_COLORS; i++)
 				colors[i] = 1;
+			//for (int i = 0; i < 6; i++)
+			//	colors[i] = 1;
+			//for (int i = 6; i < NUM_COLORS; i++)
+			//	colors[i] = 0;
 
 			selected_color = -1;
 		}
@@ -75,7 +79,7 @@ public:
 
 			for (int j = 0; j < NUM_COLORS; j++)
 			{
-				if (colors[i] > 0)
+				if (colors[j] > 0)
 					sum++;
 			}
 
@@ -121,6 +125,11 @@ public:
 		{
 			for (int i = 0; i < NUM_COLORS; i++)
 				colors[i] = 1;
+
+			//for (int i = 0; i < 6; i++)
+			//	colors[i] = 1;
+			//for (int i = 6; i < NUM_COLORS; i++)
+			//	colors[i] = 0;
 			
 			selected_color = -1;
 		}
@@ -142,11 +151,6 @@ public:
 		// color frequency initialization
 		for (int i = 0; i < NUM_COLORS; i++)
 			color_frequency[i] = 0;
-	}
-
-	// get next TreeNode* to color
-	TreeNode* get_next(TreeNode* cur)
-	{
 	}
 
 	// return NULL if no problem; return parent otherwise
@@ -188,11 +192,17 @@ public:
 			}
 		}
 
+		if (parent == root)
+		{
+			cout << parent << endl;
+			cout << root << endl;
+			return NULL;
+		}
 		return parent;
 	}
 
 	// return false if there's no soln; return true otherwise
-	bool backtrack(TreeNode* child)
+	bool backtrack(TreeNode* child, vector<TreeNode*>* order)
 	{
 		assert(child != NULL);
 
@@ -205,24 +215,33 @@ public:
 		int bad_color = bad_parent->get_selected();
 
 		// reset the whole tree
-		reset(bad_parent, bad_color);
+		reset(bad_parent, bad_color, order);
 
 		return true;
 	}
 
 	// reset the tree
-	void reset(TreeNode* parent, int color)
+	void reset(TreeNode* parent, int color, vector<TreeNode*>* order)
 	{
 		// traverse all treenodes
-		TreeNode* cur;
-		if (cur == parent)
+		for (int i = 0; i < order->size(); i++)
 		{
-			cur->reset();
-			cur->set_flag(color);
+			TreeNode* cur = order->at(i);
+			if (cur == parent)
+			{
+				cur->reset();
+				cur->set_flag(color);
+			}
+			else
+				cur->reset();
 		}
-		else
-			cur->reset();
 	}
+
+	TreeNode* get_root()
+	{
+		return root;
+	}
+
 
 private:
 	TreeNode* root;

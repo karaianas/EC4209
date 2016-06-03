@@ -56,7 +56,7 @@ TimeSlot* greedy_time_slot;
 TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 vector<Course*>* alone_list;
-vector<Tree::TreeNode*>* coloring_order;
+vector<Tree::TreeNode*>* color_order;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -74,6 +74,7 @@ void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, 
 void draw_course(Course* ptr, int _j);
 Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
+bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 
 int main(int argc, char** argv)
 {
@@ -301,11 +302,19 @@ int main(int argc, char** argv)
 	}
 
 	cout << "coloring real graph" << endl;
-	
+
 	list_subgraphs(simple_graph, subgraphs);
 	alone_list = simple_graph->get_alone_crs();
 	cout << "number of total subgraphs: " << subgraphs->size() << endl;
 	//Tree* T = build_tree(simple_graph, coloring_order);
+	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
+
+	Tree* T = build_tree(subgraphs->at(2), color_order);
+	//Tree* T = build_tree(&tmp_simple, color_order);
+	cout << "Coloring order size: " << color_order->size() << endl;
+
+
+	lets_color(T, color_order);
 
 	// graphical interface
 	glutInit(&argc, argv);

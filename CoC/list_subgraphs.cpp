@@ -70,6 +70,7 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
 			sub_nodes->pop_back();
 		}
 
+		//
 		// push back the subgraph to sub_list
 		subgraph->set_threshold(G_copy->get_curr_thres());
 		sub_list->push_back(subgraph);

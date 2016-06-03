@@ -153,6 +153,7 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list)
 {
+	//
 	vector<Tree::TreeNode*>* coloring_order;
 	vector<Tree*>* sub_trees = new vector<Tree*>();
 

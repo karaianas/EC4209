@@ -425,5 +425,5 @@ private:
 	int num_courses;
 	vector<Course*> index;
 	vector<vector<float>> p;
-	float current_threshold;
+	float current_threshold;	// current thresholding
 };

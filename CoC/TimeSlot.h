@@ -60,11 +60,13 @@ void TimeSlot::put_course_color(Graph *G)
 	for (int i = 0; i < G->get_size(); i++)
 	{
 		Course *temp_course = G->get_course(i);
-		int *temp_color = temp_course->get_color();
-		int j = 0;
-		while (temp_color[j] == 0)
-			j++;
-		Base_Solution_Array.at(j).push_back(i);
+		int j = temp_course->get_time_slot();
+		//int *temp_color = temp_course->get_color();
+		//int j = 0;
+		//while (temp_color[j] == 0)
+		//	j++;
+		if (j != -1)
+			Base_Solution_Array.at(j).push_back(i);
 	}
 }
 

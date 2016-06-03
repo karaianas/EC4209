@@ -233,9 +233,29 @@ public:
 		return root;
 	}
 
+	void set_order(vector<TreeNode*>* _order)
+	{
+		order = new vector<TreeNode*>();
+		order = _order;
+	}
+
+	vector<TreeNode*>* get_order()
+	{
+		return order;
+	}
+
+	int get_size()
+	{
+		if (order == NULL)
+			return 1;
+		else
+			return order->size();
+	}
+
 
 private:
 	TreeNode* root;
 	int color_frequency[NUM_COLORS];
 	Graph* gptr;
+	vector<TreeNode*>* order;
 };

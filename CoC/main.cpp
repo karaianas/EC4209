@@ -60,22 +60,29 @@ vector<Tree*>* all_trees;
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
 int check_track(char x, char y);
+
 Graph* build_multi_graph(vector<Course*> course_list);
 void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Course* cour_j);
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
+
 bool is_connected(Graph* G, Course* u, Course* v);
 void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
 vector<Course*>* bfs_connected_component(Graph* G, Course* root);
+
 void graph_coloring(Graph* to_color, int color_limit);
 void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
+
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
-void draw_course(Tree::TreeNode* ptr, int _j);
+
 Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
+
+void draw_course(Course* ptr, int _j); 
+void set_time_table();
 
 int main(int argc, char** argv)
 {
@@ -135,13 +142,6 @@ int main(int argc, char** argv)
 	cptr = &course_list;
 	simple_graph->get_correlation_stats(cptr);
 
-	// Timeslot Allocation -----------------------------------------------
-	greedy_time_slot = new TimeSlot(12);
-	time_slot = new TimeSlot(12);
-	greedy_time_slot->Find_Greedy_Solution(multi_graph);
-	printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
-	cout << multi_graph->get_size() << endl;
-
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
 
@@ -150,9 +150,10 @@ int main(int argc, char** argv)
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
 
 	Graph* simple_copy = new Graph(simple_graph);
-	
-	// 여기다 쓰면 됨
+
 	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
+
+	cout << "Number of Trees:" << all_trees->size() << endl;
 
 	// graphical interface 
 	glutInit(&argc, argv);
@@ -175,6 +176,99 @@ int main(int argc, char** argv)
 	glutMainLoop();
 
 	return 0;
+}
+
+void set_time_table()
+{
+	// 12 timeslots * 10 courses = 120 courses in a timetable
+
+	int max_fr = 10;
+
+	// frequency initialization
+	int fr[12];
+	for (int i = 0; i < 12; i++)
+		fr[i] = 0;
+	
+	int color;
+	int max = 0;
+	int num = all_trees->size();
+
+	for (int j = 0; j < 1; j++)
+	{
+		Tree* ptr = all_trees->at(j);
+		int size = ptr->get_size();
+
+		// not a root tree
+		if (size != 1)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				color = ptr->get_order()->at(i)->get_selected();
+
+				// timeslot overallocation
+				while (fr[color] + 1 > max_fr)
+				{
+					color++;
+					if (color >= 12)
+						color -= 12;
+				}
+
+				// set timeslot
+				ptr->get_order()->at(i)->get_TreeNode()->set_time_slot(color);
+				fr[color] += 1;
+				draw_course(ptr->get_order()->at(i)->get_TreeNode(), fr[color]);
+				
+				// set next color
+				if (color > max)
+					max = color;
+			}
+		}
+		// root tree
+		else
+		{
+			// start from last color
+			color = max;
+			color %= 12;
+
+			while (fr[color] + 1 > max_fr)
+			{
+				color++;
+				if (color >= 12)
+					color -= 12;
+			}
+
+			// set timeslot
+			ptr->get_root()->get_TreeNode()->set_time_slot(color);
+			fr[color] += 1;
+			draw_course(ptr->get_root()->get_TreeNode(), fr[color]);
+
+			// set next color
+			if (color > max)
+				max = color;
+		}
+	}
+
+	for (int i = 0; i < multi_graph->get_size(); i++)
+		cout << course_list[i]->get_time_slot() << " ";
+	cout << endl;
+	// Timeslot Allocation -----------------------------------------------
+	//greedy_time_slot = new TimeSlot(12);
+	time_slot = new TimeSlot(12);
+	//greedy_time_slot->Find_Greedy_Solution(multi_graph);
+	//printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
+	time_slot->put_course_color(multi_graph);
+	printf_happiness(&student_list, time_slot, &course_list, 80);
+
+	cout << "Number of courses: " << course_list.size() << endl;
+
+	int sum = 0;
+	for (int i = 0; i < course_list.size(); i++)
+	{
+		if (course_list[i]->get_time_slot() >= 0)
+			sum++;
+	}
+
+	cout << "Number of colored courses: " << sum << endl;
 }
 
 void display()
@@ -326,6 +420,7 @@ void display()
 					float range = simple_graph->max - threshold;
 
 					glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
+					//glColor3f(1 * (weight - threshold) / range, 0, 0);
 					glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
 					glBegin(GL_LINE_STRIP);
 					glVertex3f(79 * cos(2 * PI / node_num * clicked), 79 * sin(2 * PI / node_num * clicked), 0);
@@ -348,6 +443,7 @@ void display()
 						float range = simple_graph->max - threshold;
 
 						glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
+						//glColor3f(1 * (weight - threshold) / range, 0, 0);
 						glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
 						glBegin(GL_LINE_STRIP);
 						glVertex3f(79 * cos(2 * PI / node_num * x), 79 * sin(2 * PI / node_num * x), 0);
@@ -384,7 +480,8 @@ void display()
 		for (float x = 0; x <= num; x++)
 		{
 			glLineWidth(sizeL[1]);
-			glColor3f(1, 1, 1);
+			//glColor3f(1, 1, 1);
+			glColor3f(0.7, 0.7, 0.7);
 			glBegin(GL_LINE_STRIP);
 			glVertex3f(-90 + x * step, -90, 0);
 			glVertex3f(-90 + x * step, -90 + freq[(int)x], 0);
@@ -500,8 +597,8 @@ void display()
 		// zx-plane
 		for (int i = 0; i <= 120; i += 20)
 		{
-			if (i == 60)
-				i += 20;
+			//if (i == 60)
+			//	i += 20;
 			
 			// zx
 			glBegin(GL_LINES);
@@ -517,38 +614,19 @@ void display()
 		
 		glColor3f(1, 0, 0);
 
-		// x-axis
-		glBegin(GL_LINES);
-		glVertex3d(-60, 0.1, 0);
-		glVertex3d(60, 0.1, 0);
-		glEnd();
+		//// x-axis
+		//glBegin(GL_LINES);
+		//glVertex3d(-60, 0.1, 0);
+		//glVertex3d(60, 0.1, 0);
+		//glEnd();
 
-		// z-axis
-		glBegin(GL_LINES);
-		glVertex3d(0, 0.1, -60);
-		glVertex3d(0, 0.1, 60);
-		glEnd();
+		//// z-axis
+		//glBegin(GL_LINES);
+		//glVertex3d(0, 0.1, -60);
+		//glVertex3d(0, 0.1, 60);
+		//glEnd();
 
-		/*int freq[12];
-		for (int j = 0; j < 12; j++)
-			freq[j] = 0;
-
-		int k = 0;
-		for (int i = 0; i < 50; i++)
-		{
-			Course* cptr = course_list[i];
-			if (cptr->is_color_ok(k))
-			{
-				cptr->set_color(k);
-				freq[k]++;
-				draw_course(cptr, freq[k]);
-
-				k++;
-
-				if (k == 12)
-					k = 0;
-			}
-		}*/
+		set_time_table();
 
 		glPopMatrix();
 	}
@@ -556,9 +634,10 @@ void display()
 	glutSwapBuffers();
 }
 
-void draw_course(Tree::TreeNode* ptr, int _j)
+void draw_course(Course* ptr, int _j)
 {
-	int color = 1 + ptr->get_selected();
+	
+	int color = 1 + ptr->get_time_slot();
 	
 	int i, k, j;
 	j = _j;
@@ -575,7 +654,7 @@ void draw_course(Tree::TreeNode* ptr, int _j)
 		k = color - 6;
 	}
 
-	switch (ptr->get_TreeNode()->get_track())
+	switch (ptr->get_track())
 	{
 		// gs
 	case 1:
@@ -611,34 +690,35 @@ void draw_course(Tree::TreeNode* ptr, int _j)
 		break;
 	}
 
-	int delta_y = 10;
+	int delta_y = 0;
 
 	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
+	glTranslated(-50 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(10, 5, 10);//20, 10, 20
 	glutSolidCube(1);
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
+	glTranslated(-10 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(10, 5, 10);
 	glutSolidCube(1);
 	glPopMatrix();
 
 	glColor3f(0.4, 0.4, 0.4);
 	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutWireCube(1.01);
+	glTranslated(-50 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(10, 5, 10);
+	glutWireCube(1.007);
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutWireCube(1.01);
+	glTranslated(-10 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(10, 5, 10);
+	glutWireCube(1.007);
 	glPopMatrix();
+	
 }
 
 void reshape(int w, int h)

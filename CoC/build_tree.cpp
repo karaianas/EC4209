@@ -167,10 +167,16 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 		Tree* to_color = build_tree(subgraphs->at(i), coloring_order);
 		sub_trees->push_back(to_color);
 
+		// order input
+		to_color->set_order(coloring_order);
+
 		bool no_answer = lets_color(to_color, coloring_order);
 		if (!no_answer) {	// cannot solve. need to split up.
 			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), \
 				subgraphs->at(i)->get_curr_thres() + THRESHOLD);
+
+			// 여기서 새로운 Threshold로 잘려나간 courses들을 또 alone_list에 추가해줘야됨  
+
 			init_coloring(cut_graphs);
 			for (int j = 0; j < cut_graphs->size(); j++)
 				subgraphs->push_back(cut_graphs->at(i));

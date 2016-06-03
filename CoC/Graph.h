@@ -379,6 +379,7 @@ public:
 
 	vector<Course*>* get_alone_crs() {
 		vector<Course*>* alone_list = new vector<Course*>();
+
 		int flag;
 
 		for (int i = 0; i < num_courses; i++)
@@ -397,6 +398,8 @@ public:
 			if (!flag)
 				alone_list->push_back(get_course(i));
 		}
+
+		//cout << "Number of alone courses: " << alone_list->size() << endl;
 		
 		return alone_list;
 	}

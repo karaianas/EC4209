@@ -76,6 +76,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
+void subgraphs_coloring(vector<Graph*>* subgraphs);
 
 
 int main(int argc, char** argv)
@@ -317,7 +318,7 @@ int main(int argc, char** argv)
 
 
 	lets_color(T, color_order);
-	
+	subgraphs_coloring(subgraphs);
 
 	// graphical interface 
 	glutInit(&argc, argv);

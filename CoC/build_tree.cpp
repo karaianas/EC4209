@@ -5,6 +5,8 @@
 #include "Course.h"
 #include "Tree.h"
 
+#define THRESHOLD 0.05
+
 using namespace std;
 
 void list_subgraphs(Graph* G, vector<Graph*>* sub_list);
@@ -80,8 +82,8 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		order_of_coloring->push_back(to_add);
 		to_add->set_parent(parent_ptr);
 
-		cout << "[build_tree] TreeNode : ";
-		to_add->get_TreeNode()->print_course_info(); cout << endl;
+	/*	cout << "[build_tree] TreeNode : ";
+		to_add->get_TreeNode()->print_course_info(); cout << endl;*/
 
 		Course* cur_par = parents->back();
 		for (int i = coloring_order->size() - 1; i >= 0; i--) {
@@ -179,7 +181,7 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 		}
 	}
 
-	cout << "Done" << endl;
+	//cout << "Done" << endl;
 	for (int j = 0; j < coloring_order->size(); j++)
 	{
 		coloring_order->at(j)->get_TreeNode()->print_course_info();
@@ -199,7 +201,21 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 	return cut_Gs;
 }
 
-//void subgraphs_coloring(vector<Graph*>* subgraphs, )
-//{
+void subgraphs_coloring(vector<Graph*>* subgraphs)
+{
+	vector<Tree::TreeNode*>* coloring_order = new vector<Tree::TreeNode*>();
 
-//}
+	for (int i = 0; i < subgraphs->size(); i++) {
+		// transform every subgraph into a tree
+		Tree* to_color = build_tree(subgraphs->at(i), coloring_order);
+		bool no_answer = lets_color(to_color, coloring_order);
+
+		if (!no_answer) {	// cannot solve. need to split up.
+			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), THRESHOLD);
+			for (int j = 0; j < cut_graphs->size(); j++)
+				subgraphs->push_back(cut_graphs->at(i));
+		}
+		cout << i << "th subgraph colored (now size: " << subgraphs->size() << ")" << endl;
+		cout << "graph size: " << subgraphs->at(i)->get_size() << endl;
+	}
+}

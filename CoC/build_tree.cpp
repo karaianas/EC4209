@@ -153,7 +153,6 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list)
 {
-	//
 	vector<Tree::TreeNode*>* coloring_order;
 	vector<Tree*>* sub_trees = new vector<Tree*>();
 
@@ -183,6 +182,12 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 
 	// alone list coloring
 	alone_list = G->get_alone_crs();
+
+	for (int i = 0; i < alone_list->size(); i++) {
+		Tree::TreeNode* root_node = new Tree::TreeNode(alone_list->at(i), NULL, NULL);
+		Tree *alone_tree = new Tree(root_node);
+		sub_trees->push_back(alone_tree);
+	}
 
 	if (alone_list) {
 		cout << "alone_list size: " << alone_list->size() << endl;

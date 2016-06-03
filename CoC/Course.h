@@ -185,10 +185,17 @@ public:
 	{
 		float num_students = student_list.size();
 
+		// only one class available
+		if ((int)num_students <= class_size)
+			availability = 1;
+		else
+			availability = float(class_size) / (float)num_students;
+		/*
 		if ((int)num_students <= class_size * num_classes)
 			availability = 1;
 		else
 			availability = float(class_size * num_classes) / (float)num_students;
+		*/
 	}
 
 	void set_class_size(int size) {

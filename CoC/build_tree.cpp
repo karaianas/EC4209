@@ -11,6 +11,7 @@
 using namespace std;
 
 void list_subgraphs(Graph* G, vector<Graph*>* sub_list);
+void init_coloring(vector<Graph*>* to_init);
 
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
 	Course* cur, vector<Course*>* visited) {
@@ -105,28 +106,13 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		}
 	}
 
-	//order_of_coloring = coloring_order;
-	//color_order = coloring_order;
-
-	cout << "Coloring_order" << endl;
-	for (int i = 0; i < coloring_order->size(); i++)
-		coloring_order->at(i)->get_TreeNode()->print_course_info();
-	cout << endl;
-	cout << "Coloring_order size: " << coloring_order->size() << endl;
-
-	cout << "ordering_of_coloring" << endl;
-	for (int i = 0; i < order_of_coloring->size(); i++)
-		order_of_coloring->at(i)->get_TreeNode()->print_course_info();
-	cout << endl;
-	cout << "Coloring_order size: " << order_of_coloring->size() << endl;
-
-	// print test
-	cout << "[build_tree] visited printing..." << endl;
-	for (int i = 0; i < visited->size(); i++)
-	{
-		visited->at(i)->print_course_info();
-		cout << " ";
-	} cout << endl;
+	//// print test
+	//cout << "[build_tree] visited printing..." << endl;
+	//for (int i = 0; i < visited->size(); i++)
+	//{
+	//	visited->at(i)->print_course_info();
+	//	cout << " ";
+	//} cout << endl;
 
 	return T;
 }
@@ -202,35 +188,40 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 	return cut_Gs;
 }
 
-void main_coloring(Graph* G, vector<Course*>* alone_list)
+void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list)
 {
-	vector<Graph*>* subgraphs = new vector<Graph*>();
-	vector<Tree::TreeNode*>* coloring_order = new vector<Tree::TreeNode*>();
-	vector<Course*>* alone_tmp = new vector<Course*>();
+	//vector<Graph*>* subgraph_list = new vector<Graph*>();
+	vector<Tree::TreeNode*>* coloring_order;
+	//vector<Course*>* alone_tmp = new vector<Course*>();
 
 	G->remove_less_threshold(DEFAULT_THRES);
 	list_subgraphs(G, subgraphs);
+	init_coloring(subgraphs);
+
+	cout << "# of default subgraphs: " << subgraphs->size() << endl;
 
 	for (int i = 0; i < subgraphs->size(); i++) {
 		// transform every subgraph into a tree
+		coloring_order = new vector<Tree::TreeNode*>();
 		Tree* to_color = build_tree(subgraphs->at(i), coloring_order);
 		bool no_answer = lets_color(to_color, coloring_order);
 
 		if (!no_answer) {	// cannot solve. need to split up.
 			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), THRESHOLD);
+			init_coloring(cut_graphs);
 			for (int j = 0; j < cut_graphs->size(); j++)
 				subgraphs->push_back(cut_graphs->at(i));
 		}
-		cout << i << "th subgraph colored (now size: " << subgraphs->size() << ")" << endl;
+		cout << i << "th subgraph colored (total # subG: " << subgraphs->size() << ")" << endl;
 		cout << "graph size: " << subgraphs->at(i)->get_size() << endl;
 	}
 
 	// alone list coloring
-	for (int i = 0; i < subgraphs->size(); i++){
-		alone_tmp = subgraphs->at(i)->get_alone_crs();
-		for (int j = 0; j < alone_tmp->size(); j++)
-			alone_list->push_back(alone_tmp->at(j));
+	alone_list = G->get_alone_crs();
+
+	if (alone_list) {
+		cout << "alone_list size: " << alone_list->size() << endl;
+		// color
 	}
-	// color
 
 }

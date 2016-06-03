@@ -76,8 +76,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
-void main_coloring(Graph* G, vector<Course*>* alone_list);
-
+void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
 
 int main(int argc, char** argv)
 {
@@ -238,7 +237,7 @@ int main(int argc, char** argv)
 	subgraphs = new vector<Graph*>();
 
 	/* list_subgraph tests */
-	Graph tmp = build_multi_graph(toy_course_list);
+	/*Graph tmp = build_multi_graph(toy_course_list);
 	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
 	tmp_simple.print_graph();
 	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
@@ -263,7 +262,7 @@ int main(int argc, char** argv)
 	cout << "alone_list size: " << tmp_vec->size() << endl;
 	for (int i = 0; i < tmp_vec->size(); i++)
 		tmp_vec->at(i)->print_course_info();
-	cout << endl;
+	cout << endl;*/
 
 	/* graph_coloring_bfs tests */
 	/*vector<Color*>* colored_graphs = new vector<Color*>();
@@ -271,9 +270,9 @@ int main(int argc, char** argv)
 
 	init_coloring(subgraphs);
 
-	for (int i = 0; i < subgraphs->size(); i++) {
+	/*for (int i = 0; i < subgraphs->size(); i++) {
 		vector<Course*>* crs_list = \
-			subgraphs->at(i)->get_course_list();
+			subgraphs->at(i)->get_course_list();*/
 
 		/*cout << "[main] (before gc_bfs)" << endl;
 		for (int i = 0; i < crs_list->size(); i++)
@@ -282,7 +281,7 @@ int main(int argc, char** argv)
 			cout << " initial color: " << crs_list->at(i)->get_select_color() << endl;
 		}*/
 
-		cout << i + 1 << "th subgraph coloring..." << endl;
+		/*cout << i + 1 << "th subgraph coloring..." << endl;
 		graph_coloring(subgraphs->at(i), COLOR_LIMIT);
 		cout << "output:" << endl;
 		subgraphs->at(i)->print_graph();
@@ -293,32 +292,36 @@ int main(int argc, char** argv)
 			crs_list->at(j)->print_course_info();
 			cout << crs_list->at(j)->get_select_color() << endl;
 		} cout << endl;
-	}
+	}*/
 
 	/* alone_list는 따로 coloring해줘야 함 */
-	alone_coloring(tmp_vec, COLOR_LIMIT);
+	/*alone_coloring(tmp_vec, COLOR_LIMIT);
 	cout << "[main] alone_coloring: " << endl;
 	for (int i = 0; i < tmp_vec->size(); i++)
 	{
 		tmp_vec->at(i)->print_course_info();
 		cout << " colored with: " << tmp_vec->at(i)->get_select_color() << endl;
-	}
+	}*/
 
 	cout << "coloring real graph" << endl;
 
-	list_subgraphs(simple_graph, subgraphs);
+	//list_subgraphs(simple_graph, subgraphs);
 	//alone_list = simple_graph->get_alone_crs();
-	cout << "number of total subgraphs: " << subgraphs->size() << endl;
+	//cout << "number of total subgraphs: " << subgraphs->size() << endl;
 	//Tree* T = build_tree(simple_graph, coloring_order);
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
 
-	Tree* T = build_tree(subgraphs->at(2), color_order);
+	//Tree* T = build_tree(subgraphs->at(2), color_order);
 	//Tree* T = build_tree(&tmp_simple, color_order);
 	cout << "Coloring order size: " << color_order->size() << endl;
 
 
-	lets_color(T, color_order);
-	main_coloring(simple_graph, alone_list);
+	//lets_color(T, color_order);
+	//simple_graph->remove_less_threshold(0.6);
+	Graph* simple_copy = new Graph(simple_graph);
+	//simple_copy->remove_less_threshold(1);
+	//list_subgraphs(simple_copy, subgraphs);
+	main_coloring(simple_copy, subgraphs, alone_list);
 
 	// graphical interface 
 	glutInit(&argc, argv);
@@ -709,7 +712,7 @@ void display()
 		//glScaled(20, 10, 20);
 		//glutSolidCube(1);
 
-		int freq[12];
+		/*int freq[12];
 		for (int j = 0; j < 12; j++)
 			freq[j] = 0;
 
@@ -728,7 +731,7 @@ void display()
 				if (k == 12)
 					k = 0;
 			}
-		}
+		}*/
 
 		glPopMatrix();
 	}

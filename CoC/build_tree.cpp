@@ -132,11 +132,10 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 		}
 	}
 
-	//cout << "Done" << endl;
 	for (int j = 0; j < coloring_order->size(); j++)
 	{
-		coloring_order->at(j)->get_TreeNode()->print_course_info();
-		cout << " " << coloring_order->at(j)->get_selected() << endl;
+		int color = coloring_order->at(j)->get_selected();
+		coloring_order->at(j)->get_TreeNode()->sudo_color(color);
 	}
 	return true;
 }

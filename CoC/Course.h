@@ -26,6 +26,8 @@ public:
 		for (int i = 0; i < COLOR_SIZE; i++)
 			color[i] = true;
 		selected_color = -1;
+
+		time_slot = -1;
 	}
 
 	// enroll a student
@@ -161,7 +163,17 @@ public:
 		return num_classes;
 	}
 
+	int get_time_slot()
+	{
+		return time_slot;
+	}
+
 	// set-----------------------------------------------------------
+	void set_time_slot(int _time_slot)
+	{
+		time_slot = _time_slot;
+	}
+
 	void set_popularity()
 	{
 		float num_students = student_list.size();
@@ -313,6 +325,12 @@ public:
 	{
 		color[i] = 1;
 	}
+
+	void sudo_color(int i)
+	{
+		selected_color = i;
+	}
+
 private:
 	// track: gs == 1 bi == 2 ch == 3 cs == 4 ... ph == 8
 	int track;
@@ -329,4 +347,6 @@ private:
 
 	// list of enrolled students
 	vector<Student*> student_list;
+
+	int time_slot;
 };

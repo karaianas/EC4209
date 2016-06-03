@@ -55,6 +55,7 @@ TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 vector<Course*>* alone_list;
 vector<Tree::TreeNode*>* color_order;
+vector<Tree*>* all_trees;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -151,7 +152,7 @@ int main(int argc, char** argv)
 	Graph* simple_copy = new Graph(simple_graph);
 	
 	// 여기다 쓰면 됨
-	main_coloring(simple_copy, subgraphs, alone_list);
+	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
 
 	// graphical interface 
 	glutInit(&argc, argv);

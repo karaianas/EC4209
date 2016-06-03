@@ -151,11 +151,10 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 	return cut_Gs;
 }
 
-void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list)
+vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list)
 {
-	//vector<Graph*>* subgraph_list = new vector<Graph*>();
 	vector<Tree::TreeNode*>* coloring_order;
-	//vector<Course*>* alone_tmp = new vector<Course*>();
+	vector<Tree*>* sub_trees = new vector<Tree*>();
 
 	G->remove_less_threshold(DEFAULT_THRES);
 	list_subgraphs(G, subgraphs);
@@ -167,10 +166,12 @@ void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_l
 		// transform every subgraph into a tree
 		coloring_order = new vector<Tree::TreeNode*>();
 		Tree* to_color = build_tree(subgraphs->at(i), coloring_order);
-		bool no_answer = lets_color(to_color, coloring_order);
+		sub_trees->push_back(to_color);
 
+		bool no_answer = lets_color(to_color, coloring_order);
 		if (!no_answer) {	// cannot solve. need to split up.
-			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), THRESHOLD);
+			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), \
+				subgraphs->at(i)->get_curr_thres() + THRESHOLD);
 			init_coloring(cut_graphs);
 			for (int j = 0; j < cut_graphs->size(); j++)
 				subgraphs->push_back(cut_graphs->at(i));
@@ -184,7 +185,8 @@ void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_l
 
 	if (alone_list) {
 		cout << "alone_list size: " << alone_list->size() << endl;
-		// color
+		// color alone_list
 	}
 
+	return sub_trees;
 }

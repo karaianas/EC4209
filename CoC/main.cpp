@@ -187,8 +187,7 @@ void display()
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 
-	// viewport
-	glViewport(0, 0, 1000, 1000);// left right corner and size
+	// viewporzo	glViewport(0, 0, 1000, 1000);// left right corner and size
 
 	if (ortho)
 	{
@@ -747,7 +746,8 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 	int total_course = my_list.size();
 	vector <vector <int> > temp = T->get_Array();
 
-	int sum = 0;
+	float sum = 0;
+	float possibility = 0;
 	int purity = my_list.size();
 	for (int i = 0; i < temp.size(); i++)
 	{
@@ -758,15 +758,20 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			{
 				if ( multi_graph->get_course(temp.at(i).at(k))->get_id() == my_list.at(j))
 				{
+					possibility = multi_graph->get_course(temp.at(i).at(k))->get_availability();
 					if (!checked)
+					{
 						checked = 1;
+						sum += possibility;
+					}
 					else
 						purity--;
 				}
 			}
 		}
 	}
-	_one_happiness = ((float)purity / (float)total_course) * 100;
+	_one_happiness = ((float)purity / (float)total_course) * 100;	//분반이 없을때 
+//	_one_happiness = ((float)sum / (float)total_course) * 100;		//확률적으로 들을 수 있을 떄 
 
 	return _one_happiness;
 }

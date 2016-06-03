@@ -55,6 +55,7 @@ TimeSlot* time_slot;
 vector<Graph*>* subgraphs;
 vector<Course*>* alone_list;
 vector<Tree::TreeNode*>* color_order;
+vector<Tree*>* all_trees;
 
 // function prototypes
 bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* c_list);
@@ -75,10 +76,11 @@ vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, v
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
 void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
+void draw_all_courses(vector<Tree*>* tree);
 
 int main(int argc, char** argv)
 {
-	// Add your own home directory
+	// (1) Add your own working directory
 	int user_id;
 	char* home_dir = " ";
 	cout << "Giyeon[1] Sunwoo_lab[2] Kyubihn[3] Seoyoung_room[4] Seoyoung_lab[5] Seoyoung Debug[6] Sunwoo_room[7]" \
@@ -110,15 +112,16 @@ int main(int argc, char** argv)
 		break;
 	}
 
+	// (2) Parse data
 	is_parsed = in_conversion(home_dir, &student_list, &course_list);
+
+	// (3) Build graphs
 
 	/* Build Multi Graph
 	 *  builds a directed graph
 	 *  with bidirectional correlation coefficients
 	 */
 	multi_graph = build_multi_graph(course_list);
-
-	/* graph print test */
 	multi_graph->file_print_graph(home_dir, "directed_graph.txt");
 
 	/* Build Simple Graph
@@ -126,10 +129,9 @@ int main(int argc, char** argv)
 	 *  need specific models to merge the correlation coefficients
 	 */
 	simple_graph = build_simple_graph(multi_graph, course_list);
-
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
 	
-	// set correlation statistics
+	// (4) Statistical data collection
 	vector<Course*>* cptr;
 	cptr = &course_list;
 	simple_graph->get_correlation_stats(cptr);
@@ -141,16 +143,13 @@ int main(int argc, char** argv)
 	printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
 
+	// (5) Graph division
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
-
 	cout << "coloring real graph" << endl;
-
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
-
 	Graph* simple_copy = new Graph(simple_graph);
-	
-	main_coloring(simple_copy, subgraphs, alone_list);
+	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
 
 	// graphical interface 
 	glutInit(&argc, argv);
@@ -173,6 +172,101 @@ int main(int argc, char** argv)
 	glutMainLoop();
 
 	return 0;
+}
+
+void draw_all_courses(vector<Tree*>* trees)
+{
+	int num = trees->size();
+
+	for (int i = 0; i < num; i++)
+	{
+
+	}
+}
+
+void draw_course(Tree::TreeNode* ptr, int _j)
+{
+	int color = 1 + ptr->get_selected();
+
+	int i, k, j;
+	j = _j;
+
+	// time slot
+	if (color <= 6)
+	{
+		i = 1;
+		k = color;
+	}
+	else
+	{
+		i = 2;
+		k = color - 6;
+	}
+
+	switch (ptr->get_TreeNode()->get_track())
+	{
+		// gs
+	case 1:
+		glColor3f(0.4, 0.804, 0.667);// medium aquamarine
+		break;
+		// bi
+	case 2:
+		glColor3f(1, 0.843, 0);// gold
+		break;
+		// ch
+	case 3:
+		glColor3f(1, 0.498, 0.314);// coral
+		break;
+		// cs
+	case 4:
+		glColor3f(0, 0.749, 1);// deep sky blue
+		break;
+		// ev
+	case 5:
+		glColor3f(1, 0.753, 0.796);// pink
+		break;
+		// ma
+	case 6:
+		glColor3f(0.498039, 0.53, 1.0);// purple
+		break;
+		// me
+	case 7:
+		glColor3f(1.00, 0.11, 0.68);// hot pink
+		break;
+		// ph
+	case 8:
+		glColor3f(0.678, 1, 0.184);// green yellow
+		break;
+	}
+
+	int delta_y = 10;
+
+	glPushMatrix();
+	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutSolidCube(1);
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutSolidCube(1);
+	glPopMatrix();
+
+	glColor3f(0.4, 0.4, 0.4);
+	glPushMatrix();
+	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutWireCube(1.01);
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
+	glScaled(20, 10, 20);
+	glutWireCube(1.01);
+	glPopMatrix();
 }
 
 void display()
@@ -553,91 +647,6 @@ void display()
 	}
 
 	glutSwapBuffers();
-}
-
-void draw_course(Tree::TreeNode* ptr, int _j)
-{
-	int color = 1 + ptr->get_selected();
-	
-	int i, k, j;
-	j = _j;
-
-	// time slot
-	if (color <= 6)
-	{
-		i = 1;
-		k = color;
-	}
-	else
-	{
-		i = 2;
-		k = color - 6;
-	}
-
-	switch (ptr->get_TreeNode()->get_track())
-	{
-		// gs
-	case 1:
-		glColor3f(0.4, 0.804, 0.667);// medium aquamarine
-		break;
-		// bi
-	case 2:
-		glColor3f(1, 0.843, 0);// gold
-		break;
-		// ch
-	case 3:
-		glColor3f(1, 0.498, 0.314);// coral
-		break;
-		// cs
-	case 4:
-		glColor3f(0, 0.749, 1);// deep sky blue
-		break;
-		// ev
-	case 5:
-		glColor3f(1, 0.753, 0.796);// pink
-		break;
-		// ma
-	case 6:
-		glColor3f(0.498039, 0.53, 1.0);// purple
-		break;
-		// me
-	case 7:
-		glColor3f(1.00, 0.11, 0.68);// hot pink
-		break;
-		// ph
-	case 8:
-		glColor3f(0.678, 1, 0.184);// green yellow
-		break;
-	}
-
-	int delta_y = 10;
-
-	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutSolidCube(1);
-	glPopMatrix();
-
-
-	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutSolidCube(1);
-	glPopMatrix();
-
-	glColor3f(0.4, 0.4, 0.4);
-	glPushMatrix();
-	glTranslated(-70 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutWireCube(1.01);
-	glPopMatrix();
-
-
-	glPushMatrix();
-	glTranslated(-30 + 20 * i, -5 + (10 + delta_y) * j, -70 + 20 * k);
-	glScaled(20, 10, 20);
-	glutWireCube(1.01);
-	glPopMatrix();
 }
 
 void reshape(int w, int h)

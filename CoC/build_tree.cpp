@@ -141,7 +141,6 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 	return true;
 }
 
-
 vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 	vector<Graph*>* cut_Gs = new vector<Graph*>();
 	Graph* G_cp = new Graph(G);

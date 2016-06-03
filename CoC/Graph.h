@@ -25,14 +25,16 @@ public:
 			num_courses = to_copy->get_size();
 			index = to_copy->index;
 			p = to_copy->p;
+			current_threshold = to_copy->get_curr_thres();
 		}
-
-		if (n) {
-			vector<float> tmp(n, 0);
-			for (int i = 0; i < n; i++)
-				p.push_back(tmp);
+		else {
+			if (n) {
+				vector<float> tmp(n, 0);
+				for (int i = 0; i < n; i++)
+					p.push_back(tmp);
+			}
+			current_threshold = 0;
 		}
-		
 	}
 
 	// return TRUE if nodes have an edge, FALSE if not
@@ -114,7 +116,6 @@ public:
 				return;
 		index.push_back(c);
 		num_courses++;
-		//cout << index.size() << endl;
 	}
 
 	int get_size() { return num_courses; }
@@ -283,9 +284,7 @@ public:
 				max_degree = degree;
 			}
 		}
-		cout << a << endl;
-		index.at(a)->print_course_info();
-		cout << max_degree;
+
 		return max_degree;
 	}
 
@@ -331,6 +330,7 @@ public:
 
 	void remove_less_threshold(float threshold)
 	{
+		current_threshold = threshold;
 		float temp;
 		for (int i = 0; i < num_courses; i++)
 			for (int j = 0; j < num_courses; j++)
@@ -411,6 +411,12 @@ public:
 		index = *crs_list;
 	}
 
+	void set_threshold(float thres) {
+		current_threshold = thres;
+	}
+
+	float get_curr_thres() { return current_threshold; }
+
 	// correlation statistics
 	float avg, min, max;
 
@@ -419,4 +425,5 @@ private:
 	int num_courses;
 	vector<Course*> index;
 	vector<vector<float>> p;
+	float current_threshold;
 };

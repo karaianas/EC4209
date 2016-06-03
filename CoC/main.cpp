@@ -74,7 +74,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
-void main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
+vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
 
 int main(int argc, char** argv)
 {

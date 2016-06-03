@@ -79,7 +79,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Color.h" />
     <ClInclude Include="Course.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="RCourse.h" />

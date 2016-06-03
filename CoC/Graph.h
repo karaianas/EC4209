@@ -12,9 +12,6 @@
 
 #include "Course.h"
 
-// negative infinity (type float)
-// const float neg_inf = -numeric_limits<float>::infinity();
-
 using namespace std;
 
 class Graph{
@@ -65,7 +62,6 @@ public:
 		int index_j = get_index(j);
 		
 		// if index out of range, push_back
-		//vector<float> to_push(index_j + 1, -1);
 		vector<float> to_push(index_j + 1, 0);
 
 		// i(column to modify) greater than the size of matrix
@@ -91,8 +87,6 @@ public:
 			index_j < p.at(index_i).size());
 
 		p.at(index_i).at(index_j) = correlation;
-		//cout << "in modify func! with corr, " << correlation << \
-			", p_val: " << p.at(index_i).at(index_j) << endl;
 	}
 	
 	int get_index(Course* c) {
@@ -275,18 +269,6 @@ public:
 
 		return list;
 	}
-/*	vector<Course*>* get_uncolored_nodes(Course* i)	//전체 course list중에서 색칠이 안되어있는 course_list들을 return ;
-	{
-		vector<Course *>* list = new vector<Course*>;
-		for (int j = 0; j < num_courses; j++)
-		{
-			Course *ptr = get_course(j);
-			if (ptr->get_select_color() == -1)
-				list->push_back(get_course());
-		}
-		return list;
-	}
-*/
 
 	int get_max_degree()
 	{

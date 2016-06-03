@@ -15,11 +15,9 @@
 #include "Course.h"
 #include "Graph.h"
 #include "TimeSlot.h"
-#include "Color.h"
 #include "Tree.h"
 
 #define PI 3.1415926
-#define COLOR_LIMIT 10
 
 using namespace std;
 
@@ -71,7 +69,7 @@ void graph_coloring(Graph* to_color, int color_limit);
 void alone_coloring(vector<Course*>*, int color_limit);
 void init_coloring(vector<Graph*>* to_init);
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
-void draw_course(Course* ptr, int _j);
+void draw_course(Tree::TreeNode* ptr, int _j);
 Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
@@ -114,43 +112,11 @@ int main(int argc, char** argv)
 
 	is_parsed = in_conversion(home_dir, &student_list, &course_list);
 
-	/*
-	// result print out on console
-	if (is_parsed)
-	{
-	for (int i = 0; i < student_list.size(); i++)
-	student_list[i]->print_student_info();
-	for (int j = 0; j < course_list.size(); j++)
-	course_list[j]->print_student_list();
-	}
-	*/
-
-	/* Toy graph example
-	 * with simple toy course list
-	 * used course list 0 to 4
-	 */
-	vector<Course*> toy_course_list;
-	toy_course_list.push_back(course_list[0]);
-	//toy_course_list.push_back(course_list[1]);
-	toy_course_list.push_back(course_list[3]);
-	toy_course_list.push_back(course_list[29]);
-	toy_course_list.push_back(course_list[69]);
-	toy_course_list.push_back(course_list[39]);
-	toy_course_list.push_back(course_list[98]);
-	toy_course_list.push_back(course_list[50]);
-	toy_course_list.push_back(course_list[113]);
-	toy_course_list.push_back(course_list[103]);
-	toy_course_list.push_back(course_list[110]);
-
-
-
 	/* Build Multi Graph
 	 *  builds a directed graph
 	 *  with bidirectional correlation coefficients
 	 */
 	multi_graph = build_multi_graph(course_list);
-	//multi_graph = build_multi_graph(toy_course_list);
-
 
 	/* graph print test */
 	multi_graph->file_print_graph(home_dir, "directed_graph.txt");
@@ -160,167 +126,31 @@ int main(int argc, char** argv)
 	 *  need specific models to merge the correlation coefficients
 	 */
 	simple_graph = build_simple_graph(multi_graph, course_list);
-	//simple_graph = build_simple_graph(multi_graph, toy_course_list);	
 
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
-
-	/*for (int p = 0; p < simple_graph->get_size(); p++)
-	{
-	for (int q = p + 1; q < simple_graph->get_size(); q++)
-	{
-	if (!is_connected(simple_graph, course_list[p], course_list[q]))
-	printf("%d\t%d\n", p, q);
-	}
-	}*/
-
-	Color C(simple_graph, 5);
-	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
-	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
-	C.color_vertex(course_list[0], 10);
-	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
-	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
-	C.color_vertex(course_list[1], 10);
-	cout << "# neighbors: " << simple_graph->get_neighbors(course_list[0])->size() << endl;
-	cout << "# neighbors: " << simple_graph->get_uncolored_neighbors(course_list[0])->size() << endl;
-
-
-//	Copy_graph = build_simple_graph(multi_graph, course_list);
-	Copy_graph = new Graph(simple_graph); // 이렇게 하면 그래프를 카피할 수 있음
-	Copy_graph->file_print_graph(home_dir, "simple_graph.txt");
-	Copy_graph->get_max_degree();
-	Copy_graph->remove_less_threshold(threshold);
-	Copy_graph->file_print_graph(home_dir, "Copy_graph.txt");
 	
 	// TEST01: get correlation statistics
 	vector<Course*>* cptr;
 	cptr = &course_list;
 	simple_graph->get_correlation_stats(cptr);
 
-	// TEST02: get course info
-	cout << course_list[0]->get_num_enrolled_students() << endl;
-	course_list[0]->print_student_list();
 
-	// TEST03: get popularity and availability of the course
-	//int _size = student_list.size();
-	//for (int j = 0; j < course_list.size(); j++)
-	//	course_list[j]->set_course_size(30, -1, _size);
-
-	// TEST04: get neighbors of a course
-	int _length = multi_graph->get_neighbors(course_list[40])->size();
-	cout << _length << endl;
-	for (int i = 0; i < _length; i++)
-		multi_graph->get_neighbors(course_list[1])->at(i)->print_course_info();
-	/*
-	// ideal case, students < class size
-	course_list[0]->set_course_size(15, -1, _size);
-	// ideal case, students == class size
-	course_list[0]->set_course_size(10, -1, _size);
-	// ideal case, students > class size
-	course_list[0]->set_course_size(5, -1, _size);
-
-	// real case, students < class size
-	course_list[0]->set_course_size(15, 1, _size);
-	// real case, students == class size
-	course_list[0]->set_course_size(10, 1, _size);
-	// real case, students > class size
-	course_list[0]->set_course_size(5, 1, _size);
-	*/
-
+	// Timeslot Allocation -----------------------------------------------
 	greedy_time_slot = new TimeSlot(12);
 	time_slot = new TimeSlot(12);
 	greedy_time_slot->Find_Greedy_Solution(multi_graph);
 	printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
 	cout << multi_graph->get_size() << endl;
 
-
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
 
-	/* list_subgraph tests */
-	/*Graph tmp = build_multi_graph(toy_course_list);
-	Graph tmp_simple = build_simple_graph(&tmp, toy_course_list);
-	tmp_simple.print_graph();
-	cout << "# corr's that is not zero: " << tmp_simple.get_num_edge() << endl;
-	vector<Course*>* tmp_vec = bfs_connected_component(&tmp_simple, toy_course_list[0]);
-	cout << "[main] tmp_vec: ";
-	for (int i = 0; i < tmp_vec->size(); i++)
-		cout << tmp_vec->at(i)->get_course_name() << " ";
-	cout << endl;
-	cout << "get random test: " << tmp_simple.get_random_vertex()->get_course_name() << endl;
-	list_subgraphs(&tmp_simple, subgraphs);
-	cout << "subgraphs: ";
-	for (int i = 0; i < subgraphs->size(); i++)
-		cout << subgraphs->at(i)->get_size() << " ";
-	cout << endl;
-	for (int i = 0; i < subgraphs->size(); i++)
-	{
-		subgraphs->at(i)->print_graph();
-		cout << endl;
-	}
-	cout << endl;
-	tmp_vec = tmp_simple.get_alone_crs();
-	cout << "alone_list size: " << tmp_vec->size() << endl;
-	for (int i = 0; i < tmp_vec->size(); i++)
-		tmp_vec->at(i)->print_course_info();
-	cout << endl;*/
-
-	/* graph_coloring_bfs tests */
-	/*vector<Color*>* colored_graphs = new vector<Color*>();
-	Color* to_color;*/
-
-	init_coloring(subgraphs);
-
-	/*for (int i = 0; i < subgraphs->size(); i++) {
-		vector<Course*>* crs_list = \
-			subgraphs->at(i)->get_course_list();*/
-
-		/*cout << "[main] (before gc_bfs)" << endl;
-		for (int i = 0; i < crs_list->size(); i++)
-		{
-			crs_list->at(i)->print_course_info();
-			cout << " initial color: " << crs_list->at(i)->get_select_color() << endl;
-		}*/
-
-		/*cout << i + 1 << "th subgraph coloring..." << endl;
-		graph_coloring(subgraphs->at(i), COLOR_LIMIT);
-		cout << "output:" << endl;
-		subgraphs->at(i)->print_graph();
-		cout << "colors:" << endl;
-
-		for (int j = 0; j < crs_list->size(); j++)
-		{
-			crs_list->at(j)->print_course_info();
-			cout << crs_list->at(j)->get_select_color() << endl;
-		} cout << endl;
-	}*/
-
-	/* alone_list는 따로 coloring해줘야 함 */
-	/*alone_coloring(tmp_vec, COLOR_LIMIT);
-	cout << "[main] alone_coloring: " << endl;
-	for (int i = 0; i < tmp_vec->size(); i++)
-	{
-		tmp_vec->at(i)->print_course_info();
-		cout << " colored with: " << tmp_vec->at(i)->get_select_color() << endl;
-	}*/
-
 	cout << "coloring real graph" << endl;
 
-	//list_subgraphs(simple_graph, subgraphs);
-	//alone_list = simple_graph->get_alone_crs();
-	//cout << "number of total subgraphs: " << subgraphs->size() << endl;
-	//Tree* T = build_tree(simple_graph, coloring_order);
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
 
-	//Tree* T = build_tree(subgraphs->at(2), color_order);
-	//Tree* T = build_tree(&tmp_simple, color_order);
-	cout << "Coloring order size: " << color_order->size() << endl;
-
-
-	//lets_color(T, color_order);
-	//simple_graph->remove_less_threshold(0.6);
 	Graph* simple_copy = new Graph(simple_graph);
-	//simple_copy->remove_less_threshold(1);
-	//list_subgraphs(simple_copy, subgraphs);
+	
 	main_coloring(simple_copy, subgraphs, alone_list);
 
 	// graphical interface 
@@ -446,7 +276,6 @@ void display()
 
 				if (mouse_down)
 				{
-					//if (sqrt(pow(mouse_x - 85 * cos(angle), 2) + pow(mouse_y - 85 * sin(angle), 2)) < 2)
 					if (sqrt(pow(mouse_x - 42.5 * cos(angle), 2) + pow(mouse_y - 42.5 * sin(angle), 2)) < 1)
 					{
 						glColor3f(1, 0, 0);
@@ -492,9 +321,9 @@ void display()
 			{
 				float weight = simple_graph->get_correlation(course_list[clicked], course_list[y]);
 
-				if ((weight >= threshold) && (weight <= simple_graph->max))//multi_graph->max))
+				if ((weight >= threshold) && (weight <= simple_graph->max))
 				{
-					float range = simple_graph->max - threshold;//multi_graph->max - threshold;
+					float range = simple_graph->max - threshold;
 
 					glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
 					glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
@@ -514,9 +343,9 @@ void display()
 				{
 					float weight = simple_graph->get_correlation(course_list[x], course_list[y]);
 
-					if ((weight >= threshold) && (weight <= simple_graph->max))//multi_graph->max))
+					if ((weight >= threshold) && (weight <= simple_graph->max))
 					{
-						float range = simple_graph->max - threshold;//multi_graph->max - threshold;
+						float range = simple_graph->max - threshold;
 
 						glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
 						glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
@@ -542,7 +371,6 @@ void display()
 			for (int y = 0; y < x; y++)
 			{
 				float weight = simple_graph->get_correlation(course_list[x], course_list[y]);
-				//float weight = multi_graph->get_correlation_addition(course_list[x], course_list[y]);
 
 				if (weight >= 0)
 				{
@@ -689,12 +517,6 @@ void display()
 		
 		glColor3f(1, 0, 0);
 
-		// y-axis
-		//glBegin(GL_LINES);
-		//glVertex3d(0, 0, 0);
-		//glVertex3d(0, 100, 0);
-		//glEnd();
-
 		// x-axis
 		glBegin(GL_LINES);
 		glVertex3d(-60, 0.1, 0);
@@ -706,11 +528,6 @@ void display()
 		glVertex3d(0, 0.1, -60);
 		glVertex3d(0, 0.1, 60);
 		glEnd();
-
-		//glPushMatrix();
-		//glTranslated(-50, 5, -50);
-		//glScaled(20, 10, 20);
-		//glutSolidCube(1);
 
 		/*int freq[12];
 		for (int j = 0; j < 12; j++)
@@ -736,12 +553,12 @@ void display()
 		glPopMatrix();
 	}
 
-	glutSwapBuffers(); // this is only used for double buffers
+	glutSwapBuffers();
 }
 
-void draw_course(Course* ptr, int _j)
+void draw_course(Tree::TreeNode* ptr, int _j)
 {
-	int color = 1 + ptr->get_select_color();
+	int color = 1 + ptr->get_selected();
 	
 	int i, k, j;
 	j = _j;
@@ -758,7 +575,7 @@ void draw_course(Course* ptr, int _j)
 		k = color - 6;
 	}
 
-	switch (ptr->get_track())
+	switch (ptr->get_TreeNode()->get_track())
 	{
 		// gs
 	case 1:
@@ -893,14 +710,8 @@ void mouse(int button, int state, int x, int y)
 	case GLUT_LEFT_BUTTON:
 		if (state == GLUT_DOWN)
 		{
-			cout << x << " " << y << endl;
-			//mouse_x = (float)x; mouse_y = (float)y;
-			//mouse_x = (float)x * 70 / 370 - 400 * 70 / 370;
-			//mouse_y = (float)y * (-70 / 370) + 400 * 70 / 370;
 			mouse_x = (float)x / 10 - 50;
 			mouse_y = 50 - (float)y / 10;
-			cout << mouse_x << " " << mouse_y << endl;
-			
 			
 			mouse_down = true;
 		}
@@ -946,10 +757,6 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			{
 				if ( multi_graph->get_course(temp.at(i).at(k))->get_id() == my_list.at(j))
 				{
-			//		cout << " student ID: " << s_id << " ";
-			//		multi_graph->get_course(temp.at(i).at(k))->print_course_info();
-			//		cout << " time slot : " << i << " ";
-			//		cout << endl;
 					if (!checked)
 						checked = 1;
 					else
@@ -958,43 +765,8 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			}
 		}
 	}
-
-		/*
-		int checking_course = 0;
-		int len = my_list.size();
-		if (len == 0)
-			break;
-		for (int j = 0; j < temp.at(i).size(); j++)
-		{
-			checking_course = 0;
-			for (int k = 0; k < my_list.size(); k++)
-			{
-
-				//cout << simple_graph->get_course(temp.at(i).at(j))->get_id() << " " << my_list.at(k) << endl;
-				if (multi_graph->get_course(temp.at(i).at(j))->get_id() == my_list.at(k))
-				{
-					purity++;
-					checking_course++;
-				}
-//				cout << "checking course :" << checking_course << endl;
-
-			}
-			if (purity == total_course)
-				break;
-			if (checking_course > 0)
-				sum++;
-//			cout << "sum :" << sum << endl;
-			
-		}
-		if (purity = total_course)
-			break;
-	}
-	*/
-//	cout << "DAMN!" << sum << endl;
-//	cout << "total_course" << total_course << endl;
 	_one_happiness = ((float)purity / (float)total_course) * 100;
 
-//	cout << "HAPPY!" << _one_happiness << endl;
 	return _one_happiness;
 }
 
@@ -1022,9 +794,6 @@ float average_happiness(vector<Student*>* ptr, TimeSlot* T, vector<Course*>* ptr
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness)
 {
-//	for (int i = 0; i < ptr->size(); i++)
-//		cout << i << "th happiness : " << one_happiness(ptr, i, T, ptr2) << "%" << endl;
-
 	cout << "The number of happy student :" << num_of_student(ptr, happiness, T, ptr2) << endl;
 	cout << "The average happiness of all student : " << average_happiness(ptr, T, ptr2) << "%" << endl;
 }

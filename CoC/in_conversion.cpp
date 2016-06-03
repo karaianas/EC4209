@@ -20,7 +20,8 @@ bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* 
 	output.open(s + "output.txt");
 
 	// read in test.txt
-	string p = s + "test3.txt";
+	//string p = s + "test3.txt";
+	string p = s + "final_data.txt";
 	FILE* file = fopen(p.c_str(), "r");
 	int c;
 

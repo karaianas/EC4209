@@ -23,8 +23,6 @@ Graph* build_multi_graph(vector<Course*> course_list)
 				G->add_index(course_list[j]);
 
 			compute_correlation(G, i, j, course_list[i], course_list[j]);
-			//G->set_correlation(course_list[i], course_list[j], \
-							compute_correlation(i, j, course_list[i], course_list[j]));
 
 		}
 	}

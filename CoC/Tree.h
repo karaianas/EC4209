@@ -42,10 +42,6 @@ public:
 			// color initialization
 			for (int i = 0; i < NUM_COLORS; i++)
 				colors[i] = 1;
-			//for (int i = 0; i < 6; i++)
-			//	colors[i] = 1;
-			//for (int i = 6; i < NUM_COLORS; i++)
-			//	colors[i] = 0;
 
 			selected_color = -1;
 		}
@@ -125,11 +121,6 @@ public:
 		{
 			for (int i = 0; i < NUM_COLORS; i++)
 				colors[i] = 1;
-
-			//for (int i = 0; i < 6; i++)
-			//	colors[i] = 1;
-			//for (int i = 6; i < NUM_COLORS; i++)
-			//	colors[i] = 0;
 			
 			selected_color = -1;
 		}

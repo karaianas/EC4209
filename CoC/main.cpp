@@ -76,7 +76,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres);
-void subgraphs_coloring(vector<Graph*>* subgraphs);
+void main_coloring(Graph* G, vector<Course*>* alone_list);
 
 
 int main(int argc, char** argv)
@@ -307,7 +307,7 @@ int main(int argc, char** argv)
 	cout << "coloring real graph" << endl;
 
 	list_subgraphs(simple_graph, subgraphs);
-	alone_list = simple_graph->get_alone_crs();
+	//alone_list = simple_graph->get_alone_crs();
 	cout << "number of total subgraphs: " << subgraphs->size() << endl;
 	//Tree* T = build_tree(simple_graph, coloring_order);
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
@@ -318,7 +318,7 @@ int main(int argc, char** argv)
 
 
 	lets_color(T, color_order);
-	subgraphs_coloring(subgraphs);
+	main_coloring(simple_graph, alone_list);
 
 	// graphical interface 
 	glutInit(&argc, argv);

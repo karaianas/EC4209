@@ -6,6 +6,7 @@
 #include "Tree.h"
 
 #define THRESHOLD 0.05
+#define DEFAULT_THRES 0.6
 
 using namespace std;
 
@@ -201,9 +202,14 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
 	return cut_Gs;
 }
 
-void subgraphs_coloring(vector<Graph*>* subgraphs)
+void main_coloring(Graph* G, vector<Course*>* alone_list)
 {
+	vector<Graph*>* subgraphs = new vector<Graph*>();
 	vector<Tree::TreeNode*>* coloring_order = new vector<Tree::TreeNode*>();
+	vector<Course*>* alone_tmp = new vector<Course*>();
+
+	G->remove_less_threshold(DEFAULT_THRES);
+	list_subgraphs(G, subgraphs);
 
 	for (int i = 0; i < subgraphs->size(); i++) {
 		// transform every subgraph into a tree
@@ -218,4 +224,13 @@ void subgraphs_coloring(vector<Graph*>* subgraphs)
 		cout << i << "th subgraph colored (now size: " << subgraphs->size() << ")" << endl;
 		cout << "graph size: " << subgraphs->at(i)->get_size() << endl;
 	}
+
+	// alone list coloring
+	for (int i = 0; i < subgraphs->size(); i++){
+		alone_tmp = subgraphs->at(i)->get_alone_crs();
+		for (int j = 0; j < alone_tmp->size(); j++)
+			alone_list->push_back(alone_tmp->at(j));
+	}
+	// color
+
 }

@@ -50,17 +50,13 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 	vector<Course*>* parents = new vector<Course*>();
 	vector<Course*>* neighbors = new vector<Course*>();
 	vector<Tree::TreeNode*>* coloring_order = new vector<Tree::TreeNode*>();
-	//order_of_coloring = new vector<Tree::TreeNode*>();
-	//vector<Course*>* max_weight_order = new vector<Course*>();
 
-	//Graph* graph_copy = new Graph(weighted_graph);
 	Course* visiting = new Course();
 	bool cont = false;
 	Tree::TreeNode* parent_ptr = root_node;
 
 	to_visit->push_back(root);
 	parents->push_back(root);
-	//coloring_order->push_back(root_node);
 
 	while (to_visit->size()) {
 		visiting = to_visit->back();
@@ -84,9 +80,6 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		order_of_coloring->push_back(to_add);
 		to_add->set_parent(parent_ptr);
 
-	/*	cout << "[build_tree] TreeNode : ";
-		to_add->get_TreeNode()->print_course_info(); cout << endl;*/
-
 		Course* cur_par = parents->back();
 		for (int i = coloring_order->size() - 1; i >= 0; i--) {
 			Tree::TreeNode* ptr = coloring_order->at(i);
@@ -106,37 +99,8 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 		}
 	}
 
-	//// print test
-	//cout << "[build_tree] visited printing..." << endl;
-	//for (int i = 0; i < visited->size(); i++)
-	//{
-	//	visited->at(i)->print_course_info();
-	//	cout << " ";
-	//} cout << endl;
-
 	return T;
 }
-
-/*
-Graph* weight_graph(Graph* G)
-{
-	vector<Course*>* cptr = G->get_course_list();
-	int csize = cptr->size();
-	Graph* WG = new Graph(G, csize);
-
-	for (int x = 0; x < csize; x++)
-	{
-		vector<Course*>* neighbors = G->get_neighbors(cptr->at(x));
-		int nsize = neighbors->size();
-		float weight = 0;
-
-		for (int y = 0; y < nsize; y++)
-			weight += G->get_correlation(cptr->at(x), neighbors->at(y));
-
-		// whatever you like
-	}
-}
-*/
 
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 {

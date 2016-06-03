@@ -129,11 +129,10 @@ int main(int argc, char** argv)
 
 	simple_graph->file_print_graph(home_dir, "simple_graph.txt");
 	
-	// TEST01: get correlation statistics
+	// set correlation statistics
 	vector<Course*>* cptr;
 	cptr = &course_list;
 	simple_graph->get_correlation_stats(cptr);
-
 
 	// Timeslot Allocation -----------------------------------------------
 	greedy_time_slot = new TimeSlot(12);

@@ -12,6 +12,8 @@ using namespace std;
 
 void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_list);
 void init_coloring(vector<Graph*>* to_init);
+void set_neighbors(Tree* T, Graph* subG);
+
 
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
 	Course* cur, vector<Course*>* visited) {
@@ -117,6 +119,7 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 			// there was a problem coloring
 			if (ptr)
 			{
+				cout << " color prob " << endl;
 				if (!T->backtrack(ptr, coloring_order))
 				{
 					cout << "Impossible to solve" << endl;
@@ -147,6 +150,13 @@ vector<Graph*>* cut_subgraphs(Graph* G, float thres, vector<Course*>* alone_list
 	G_cp->remove_less_threshold(thres);
 	list_subgraphs(G_cp, cut_Gs, alone_list);
 
+	cout << "[cut_subgraphs] backtracking..." << endl;
+	for (int i = 0; i < alone_list->size(); i++)
+	{
+		alone_list->at(i)->print_course_info();
+		cout << " ";
+	} cout << endl;
+
 	return cut_Gs;
 }
 
@@ -160,6 +170,13 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 	list_subgraphs(G, subgraphs, alone_list);
 	init_coloring(subgraphs);
 
+	cout << "[main_coloring] after thresholding w/ default 0.6..." << endl;
+	for (int i = 0; i < alone_list->size(); i++)
+	{
+		alone_list->at(i)->print_course_info();
+		cout << " ";
+	} cout << endl;
+
 	cout << "# of default subgraphs: " << subgraphs->size() << endl;
 
 	for (int i = 0; i < subgraphs->size(); i++) {
@@ -171,12 +188,16 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 		// order input
 		to_color->set_order(coloring_order);
 
+		for (int j = 0; j < coloring_order->size(); j++)
+			coloring_order->at(j)->get_TreeNode()->print_course_info();
+		cout << endl;
+
+		set_neighbors(to_color, subgraphs->at(i)); // newly added
+
 		bool no_answer = lets_color(to_color, coloring_order);
 		if (!no_answer) {	// cannot solve. need to split up.
 			vector <Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), \
 				subgraphs->at(i)->get_curr_thres() + THRESHOLD, alone_list);
-
-			// 여기서 새로운 Threshold로 잘려나간 courses들을 또 alone_list에 추가해줘야됨  
 
 			init_coloring(cut_graphs);
 			for (int j = 0; j < cut_graphs->size(); j++)
@@ -195,14 +216,47 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 		sub_trees->push_back(alone_tree);
 	}
 
-	if (alone_list) {
-		cout << "alone_list size: " << alone_list->size() << endl;
-		// color alone_list
-	}
+	cout << "[main_coloring] after main_coloring..." << endl;
+	for (int i = 0; i < alone_list->size(); i++)
+	{
+		alone_list->at(i)->print_course_info();
+		cout << " ";
+	} cout << endl;
 
 	for (int i = 0; i < subgraphs->size(); i++)
 		cout << "Subgraph sizes: " << subgraphs->at(i)->get_size() << endl;
 	cout << "Entire graph size: " << G->get_size() << endl;
 
 	return sub_trees;
+}
+
+Tree::TreeNode* find_treenode(vector<Tree::TreeNode*>* node_list, Course* crs) 
+{
+	for (int i = 0; i < node_list->size(); i++)
+	{
+		if (node_list->at(i)->get_TreeNode()->get_id() == crs->get_id())
+			return node_list->at(i);
+	}
+	return NULL;
+}
+
+void set_neighbors(Tree* T, Graph* subG)
+{
+	vector<Tree::TreeNode*>* col_ord = T->get_order();
+	Course* cur_crs;
+	vector<Course*>* cur_neighbors;
+	vector<Tree::TreeNode*>* neighbor_to_set;
+
+	for (int i = 0; i < col_ord->size(); i++) {
+		cur_crs = col_ord->at(i)->get_TreeNode();
+		cur_neighbors = subG->get_neighbors(cur_crs);
+
+		neighbor_to_set = new vector<Tree::TreeNode*>();
+		for (int j = 0; j < cur_neighbors->size(); j++) {
+			Tree::TreeNode* tmp = find_treenode(col_ord, cur_neighbors->at(j));
+			neighbor_to_set->push_back(tmp);
+		}
+
+		col_ord->at(i)->set_neighbors(neighbor_to_set);
+	}
 }

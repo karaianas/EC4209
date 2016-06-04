@@ -125,11 +125,22 @@ public:
 			selected_color = -1;
 		}
 
+		void set_neighbors(vector<TreeNode*>* to_set) {
+			assert(to_set);
+			neighbor_list = to_set;
+		}
+
+		vector<TreeNode*>* get_neighbors() {
+			assert(neighbor_list);
+			return neighbor_list;
+		}
+
 	private:
 		Course* me;
 		TreeNode* parent;
 		vector<TreeNode*>* children_list;// make it a list of neighbors
 		TreeNode* only_child;// make it the node to visit next i.e. child in DFS
+		vector<TreeNode*>* neighbor_list;
 
 		int selected_color;
 		int colors[NUM_COLORS];
@@ -196,6 +207,8 @@ public:
 	bool backtrack(TreeNode* child, vector<TreeNode*>* order)
 	{
 		assert(child != NULL);
+
+		cout << " back " << endl;
 
 		// backtracking cannot solve this problem
 		if (child == root)

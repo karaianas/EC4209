@@ -81,6 +81,9 @@ vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, v
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres, vector<Course*> alone_list);
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
+Tree::TreeNode* find_treenode(vector<Tree::TreeNode*>* node_list, Course* crs);
+void set_neighbors(Tree* T, Graph* subG);
+
 
 void draw_course(Course* ptr, int _j); 
 void set_time_table();

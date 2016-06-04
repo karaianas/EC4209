@@ -259,6 +259,7 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 				subgraphs->at(i)->get_curr_thres() + THRESHOLD, alone_list);
 
 			init_coloring(cut_graphs);
+			cout << "num of cut graphs: " << cut_graphs->size() << endl;
 			for (int j = 0; j < cut_graphs->size(); j++)
 				subgraphs->push_back(cut_graphs->at(i));
 		}

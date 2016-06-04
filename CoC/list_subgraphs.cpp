@@ -80,23 +80,57 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_l
 	// Compare G and subgraphs to get alone courses
 	assert(alone_list);
 	//vector<Course*>* alone_list = new vector<Course*>();
-	int size = G->get_size();
-	bool* crs_existance = new bool[size];
+
+	const int size = G->get_size();
+	/*bool crs_existence[size];
+	for (int i = 0; i < size; i++) {
+		*crs_existence++ = false;
+	}*/
+	vector<Course*>* crs_exists = new vector<Course*>();
+		//crs_existence[i] = false;
 
 	for (int i = 0; i < sub_list->size(); i++) {
 		vector<Course*>* crs_list = sub_list->at(i)->get_course_list();
 		for (int j = 0; j < crs_list->size(); j++) {
-			crs_existance[crs_list->at(j)->get_id()] = true;
+			//crs_existence[crs_list->at(j)->get_id()] = true;
+			crs_exists->push_back(crs_list->at(j));
 		}
 	}
-	
+
+	// check the redundancy in crs_exists list
+	// push back to alone_list if not already in it
+	bool add_ok;
+	bool exists;
 	vector<Course*>* entire_crs = G->get_course_list();
 	for (int i = 0; i < size; i++) {
-		if (crs_existance[i])
+		exists = false;
+		for (int k = 0; k < crs_exists->size(); k++) {
+			if (entire_crs->at(i) == crs_exists->at(k)) {
+				exists = true;
+			}
+		}
+		if (!exists) {
+			add_ok = true;
+			Course* cur = crs_exists->at(i);
+			for (int j = 0; j < alone_list->size(); j++) {
+				if (cur == alone_list->at(j)) {
+					add_ok = false;
+					break;
+				}
+			}
+			if (add_ok)
+				alone_list->push_back(cur);
+		}
+	}
+	/*vector<Course*>* entire_crs = G->get_course_list();
+	for (int i = 0; i < size; i++) {
+		if (crs_existence[i])
 			continue;
 		Course* alone = find_crs_with_index(i, entire_crs);
 		alone_list->push_back(alone);
-	}
+	}*/
+
+	//delete[] crs_existence;
 	//return alone_list;
 }
 

@@ -266,9 +266,11 @@ void set_time_table()
 	{
 		if (course_list[i]->get_time_slot() >= 0)
 			sum++;
+		else
+			course_list[i]->print_course_info();
 	}
 
-	cout << "Number of colored courses: " << sum << endl;
+	cout << endl << "Number of colored courses: " << sum << endl;
 }
 
 void display()
@@ -415,13 +417,13 @@ void display()
 			{
 				float weight = simple_graph->get_correlation(course_list[clicked], course_list[y]);
 
-				if ((weight >= threshold) && (weight <= simple_graph->max))
+				if ((weight > threshold) && (weight <= simple_graph->max))
 				{
 					float range = simple_graph->max - threshold;
 
-					glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
-					//glColor3f(1 * (weight - threshold) / range, 0, 0);
-					glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
+					//glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
+					glColor3f(1, 1, 1);
+					glLineWidth(sizeL[0] * 10 * (weight - threshold) / range);
 					glBegin(GL_LINE_STRIP);
 					glVertex3f(79 * cos(2 * PI / node_num * clicked), 79 * sin(2 * PI / node_num * clicked), 0);
 					glVertex3f(79 * cos(2 * PI / node_num * y), 79 * sin(2 * PI / node_num * y), 0);
@@ -438,13 +440,13 @@ void display()
 				{
 					float weight = simple_graph->get_correlation(course_list[x], course_list[y]);
 
-					if ((weight >= threshold) && (weight <= simple_graph->max))
+					if ((weight > threshold) && (weight <= simple_graph->max))
 					{
 						float range = simple_graph->max - threshold;
 
-						glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
-						//glColor3f(1 * (weight - threshold) / range, 0, 0);
-						glLineWidth(sizeL[0] * 4.5 * (weight - threshold) / range);
+						//glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
+						glColor3f(1, 1, 1);
+						glLineWidth(sizeL[0] * 10 * (weight - threshold) / range);
 						glBegin(GL_LINE_STRIP);
 						glVertex3f(79 * cos(2 * PI / node_num * x), 79 * sin(2 * PI / node_num * x), 0);
 						glVertex3f(79 * cos(2 * PI / node_num * y), 79 * sin(2 * PI / node_num * y), 0);

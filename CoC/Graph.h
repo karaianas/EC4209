@@ -121,7 +121,6 @@ public:
 	int get_size() { return num_courses; }
 
 	void print_graph() {
-		//printf("size_i: %d\nsize_j: %d\n", p.size(), p.at(0).size());
 		for (int i = 0; i < p.size(); i++) {
 			for (int j = 0; j < p.at(i).size(); j++)
 				printf("%.3f\t", p.at(i).at(j));

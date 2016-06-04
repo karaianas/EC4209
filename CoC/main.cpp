@@ -150,25 +150,11 @@ int main(int argc, char** argv)
 	/* make list of subgraphs from the simple_graph */
 	subgraphs = new vector<Graph*>();
 
-	cout << "coloring real graph" << endl;
-
 	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
 
 	Graph* simple_copy = new Graph(simple_graph);
 
 	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
-
-	cout << "Number of Trees:" << all_trees->size() << endl;
-	for (int i = 0; i < all_trees->size(); i++) {
-		cout << "Tree Number " << i + 1 << endl;
-		vector<Tree::TreeNode*>* col_ord = all_trees->at(i)->get_order();
-		if (!col_ord)
-			continue;
-		for (int j = 0; j < col_ord->size(); j++) {
-			cout << col_ord->at(j)->get_TreeNode()->get_select_color() << " ";
-		} cout << endl;
-	}
-
 
 	// graphical interface 
 	glutInit(&argc, argv);
@@ -263,9 +249,6 @@ void set_time_table()
 		}
 	}
 
-	for (int i = 0; i < multi_graph->get_size(); i++)
-		cout << course_list[i]->get_time_slot() << " ";
-	cout << endl;
 	// Timeslot Allocation -----------------------------------------------
 	//greedy_time_slot = new TimeSlot(12);
 	time_slot = new TimeSlot(12);
@@ -273,19 +256,6 @@ void set_time_table()
 	//printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
 	time_slot->put_course_color(multi_graph);
 	printf_happiness(&student_list, time_slot, &course_list, 80);
-
-	cout << "Number of courses: " << course_list.size() << endl;
-
-	int sum = 0;
-	for (int i = 0; i < course_list.size(); i++)
-	{
-		if (course_list[i]->get_time_slot() >= 0)
-			sum++;
-		else
-			course_list[i]->print_course_info();
-	}
-
-	cout << endl << "Number of colored courses: " << sum << endl;
 }
 
 void display()

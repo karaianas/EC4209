@@ -80,7 +80,8 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_l
 	// Compare G and subgraphs to get alone courses
 	assert(alone_list);
 	//vector<Course*>* alone_list = new vector<Course*>();
-	vector<bool> crs_existance (G->get_size(), false);
+	int size = G->get_size();
+	bool* crs_existance = new bool[size];
 
 	for (int i = 0; i < sub_list->size(); i++) {
 		vector<Course*>* crs_list = sub_list->at(i)->get_course_list();
@@ -90,7 +91,7 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_l
 	}
 	
 	vector<Course*>* entire_crs = G->get_course_list();
-	for (int i = 0; i < crs_existance.size(); i++) {
+	for (int i = 0; i < size; i++) {
 		if (crs_existance[i])
 			continue;
 		Course* alone = find_crs_with_index(i, entire_crs);

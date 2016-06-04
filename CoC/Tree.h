@@ -206,10 +206,11 @@ public:
 
 		if (parent == root)
 		{
-			cout << "curent is root" << endl;
+			cout << "current is root" << endl;
 			//cout << root << endl;
 			return NULL;
 		}
+
 		return parent;
 	}
 
@@ -228,7 +229,10 @@ public:
 		TreeNode* bad_parent = child->get_parent();
 		int bad_color = bad_parent->get_selected();
 
-		cout << "parent: " << bad_parent->get_TreeNode()->get_id() << endl;
+		cout << "My parent is: " << bad_parent->get_TreeNode()->get_id() << endl;
+
+		if (bad_parent == root)
+			return false;
 
 		// reset the whole tree
 		reset(bad_parent, bad_color, order);

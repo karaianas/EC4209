@@ -377,8 +377,9 @@ public:
 		return false;
 	}
 
-	vector<Course*>* get_alone_crs() {
-		vector<Course*>* alone_list = new vector<Course*>();
+	void get_alone_crs(vector<Course*>* alone_list) {
+		//vector<Course*>* alone_list = new vector<Course*>();
+		assert(alone_list);
 
 		int flag;
 
@@ -398,10 +399,6 @@ public:
 			if (!flag)
 				alone_list->push_back(get_course(i));
 		}
-
-		//cout << "Number of alone courses: " << alone_list->size() << endl;
-		
-		return alone_list;
 	}
 
 	vector<Course*>* get_course_list() { return &index; }

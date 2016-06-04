@@ -66,7 +66,8 @@ void compute_correlation(Graph* G, int index_i, int index_j, Course* cour_i, Cou
 Graph* build_simple_graph(Graph* multi_graph, vector<Course*> course_list);
 
 bool is_connected(Graph* G, Course* u, Course* v);
-void list_subgraphs(Graph* G, vector<Graph*>*sub_list);
+void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_list);
+Course* find_crs_with_index(int index, vector<Course*>* crs_list);
 vector<Course*>* bfs_connected_component(Graph* G, Course* root);
 
 void graph_coloring(Graph* to_color, int color_limit);
@@ -78,7 +79,7 @@ void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, 
 Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
-vector<Graph*>* cut_subgraphs(Graph* G, float thres);
+vector<Graph*>* cut_subgraphs(Graph* G, float thres, vector<Course*> alone_list);
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);
 
 void draw_course(Course* ptr, int _j); 
@@ -154,6 +155,16 @@ int main(int argc, char** argv)
 	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
 
 	cout << "Number of Trees:" << all_trees->size() << endl;
+	for (int i = 0; i < all_trees->size(); i++) {
+		cout << "Tree Number " << i + 1 << endl;
+		vector<Tree::TreeNode*>* col_ord = all_trees->at(i)->get_order();
+		if (!col_ord)
+			continue;
+		for (int j = 0; j < col_ord->size(); j++) {
+			cout << col_ord->at(j)->get_TreeNode()->get_select_color() << " ";
+		} cout << endl;
+	}
+
 
 	// graphical interface 
 	glutInit(&argc, argv);

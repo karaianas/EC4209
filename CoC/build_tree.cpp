@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void list_subgraphs(Graph* G, vector<Graph*>* sub_list);
+void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_list);
 void init_coloring(vector<Graph*>* to_init);
 
 vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, \
@@ -140,12 +140,12 @@ bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order)
 	return true;
 }
 
-vector<Graph*>* cut_subgraphs(Graph* G, float thres) {
+vector<Graph*>* cut_subgraphs(Graph* G, float thres, vector<Course*>* alone_list) {
 	vector<Graph*>* cut_Gs = new vector<Graph*>();
 	Graph* G_cp = new Graph(G);
 
 	G_cp->remove_less_threshold(thres);
-	list_subgraphs(G_cp, cut_Gs);
+	list_subgraphs(G_cp, cut_Gs, alone_list);
 
 	return cut_Gs;
 }
@@ -154,9 +154,10 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 {
 	vector<Tree::TreeNode*>* coloring_order;
 	vector<Tree*>* sub_trees = new vector<Tree*>();
+	alone_list = new vector<Course*>();
 
 	G->remove_less_threshold(DEFAULT_THRES);
-	list_subgraphs(G, subgraphs);
+	list_subgraphs(G, subgraphs, alone_list);
 	init_coloring(subgraphs);
 
 	cout << "# of default subgraphs: " << subgraphs->size() << endl;
@@ -172,8 +173,8 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 
 		bool no_answer = lets_color(to_color, coloring_order);
 		if (!no_answer) {	// cannot solve. need to split up.
-			vector<Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), \
-				subgraphs->at(i)->get_curr_thres() + THRESHOLD);
+			vector <Graph*>* cut_graphs = cut_subgraphs(subgraphs->at(i), \
+				subgraphs->at(i)->get_curr_thres() + THRESHOLD, alone_list);
 
 			// 여기서 새로운 Threshold로 잘려나간 courses들을 또 alone_list에 추가해줘야됨  
 
@@ -186,7 +187,7 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 	}
 
 	// alone list coloring
-	alone_list = G->get_alone_crs();
+	G->get_alone_crs(alone_list);
 
 	for (int i = 0; i < alone_list->size(); i++) {
 		Tree::TreeNode* root_node = new Tree::TreeNode(alone_list->at(i), NULL, NULL);
@@ -198,6 +199,10 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 		cout << "alone_list size: " << alone_list->size() << endl;
 		// color alone_list
 	}
+
+	for (int i = 0; i < subgraphs->size(); i++)
+		cout << "Subgraph sizes: " << subgraphs->at(i)->get_size() << endl;
+	cout << "Entire graph size: " << G->get_size() << endl;
 
 	return sub_trees;
 }

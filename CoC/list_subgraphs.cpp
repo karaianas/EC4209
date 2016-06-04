@@ -11,8 +11,9 @@
 #include "Course.h"
 
 vector<Course*>* bfs_connected_component(Graph* G, Course* root);
+Course* find_crs_with_index(int index, vector<Course*>* crs_list);
 
-void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
+void list_subgraphs(Graph* G, vector<Graph*>* sub_list, vector<Course*>* alone_list)
 {
 	Course* root = new Course();
 	vector<Course*>* sub_nodes = new vector<Course*>();
@@ -75,4 +76,34 @@ void list_subgraphs(Graph* G, vector<Graph*>* sub_list)
 		subgraph->set_threshold(G_copy->get_curr_thres());
 		sub_list->push_back(subgraph);
 	}
+
+	// Compare G and subgraphs to get alone courses
+	assert(alone_list);
+	//vector<Course*>* alone_list = new vector<Course*>();
+	vector<bool> crs_existance (G->get_size(), false);
+
+	for (int i = 0; i < sub_list->size(); i++) {
+		vector<Course*>* crs_list = sub_list->at(i)->get_course_list();
+		for (int j = 0; j < crs_list->size(); j++) {
+			crs_existance[crs_list->at(j)->get_id()] = true;
+		}
+	}
+	
+	vector<Course*>* entire_crs = G->get_course_list();
+	for (int i = 0; i < crs_existance.size(); i++) {
+		if (crs_existance[i])
+			continue;
+		Course* alone = find_crs_with_index(i, entire_crs);
+		alone_list->push_back(alone);
+	}
+	//return alone_list;
+}
+
+Course* find_crs_with_index(int index, vector<Course*>* crs_list)
+{
+	for (int i = 0; i < crs_list->size(); i++) {
+		if (crs_list->at(i)->get_id() == index)
+			return crs_list->at(i);
+	}
+	return NULL;
 }

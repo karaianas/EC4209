@@ -208,7 +208,7 @@ void set_time_table()
 	int max = 0;
 	int num = all_trees->size();
 
-	for (int j = 0; j < num; j++)
+	for (int j = 2; j < num; j++)
 	{
 		Tree* ptr = all_trees->at(j);
 		int size = ptr->get_size();

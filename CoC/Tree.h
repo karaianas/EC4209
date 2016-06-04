@@ -135,6 +135,16 @@ public:
 			return neighbor_list;
 		}
 
+		int get_neighbors_num()
+		{
+			return neighbor_list->size();
+		}
+
+		TreeNode* get_nth_neighbor(int n) 
+		{ 
+			return neighbor_list->at(n); 
+		}
+
 	private:
 		Course* me;
 		TreeNode* parent;
@@ -159,7 +169,7 @@ public:
 	TreeNode* color_parent(TreeNode* parent)
 	{
 		// set child
-		TreeNode* child = NULL;
+		TreeNode* neighbor = NULL;
 
 		// conflict flag
 		bool conflict = false;
@@ -171,13 +181,13 @@ public:
 			{
 				// forward checking children
 				conflict = false;
-				int num_children = parent->get_children_number();
-				for (int j = 0; j < num_children; j++)
+				int num = parent->get_neighbors_num();
+				for (int j = 0; j < num; j++)
 				{
-					TreeNode* child = parent->get_nth_child(j);
+					neighbor = parent->get_nth_neighbor(j);
 
-					// the color cannot be removed from the child's color set
-					if (!child->remove_color(i))
+					// the color cannot be removed from the neighbor's color set
+					if (!neighbor->remove_color(i))
 					{
 						conflict = true;
 						break;

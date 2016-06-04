@@ -6,7 +6,7 @@
 #include "Tree.h"
 
 #define THRESHOLD 0.05
-#define DEFAULT_THRES 0.6
+#define DEFAULT_THRES 1.0
 
 using namespace std;
 
@@ -76,6 +76,7 @@ Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_colori
 
 		// create TreeNode and attach to tree
 		visited->push_back(visiting);
+
 		Tree::TreeNode* to_add = new Tree::TreeNode(visiting);
 		parent_ptr->add_child(to_add);
 		coloring_order->push_back(to_add);
@@ -188,11 +189,27 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 		// order input
 		to_color->set_order(coloring_order);
 
+		cout << "subgraph: ";
+		vector<Course*>* tmp = subgraphs->at(i)->get_course_list();
+		for (int j = 0; j < tmp->size(); j++)
+			tmp->at(j)->print_course_info();
+		cout << endl;
+
+		cout << "tree: ";
 		for (int j = 0; j < coloring_order->size(); j++)
 			coloring_order->at(j)->get_TreeNode()->print_course_info();
 		cout << endl;
 
 		set_neighbors(to_color, subgraphs->at(i)); // newly added
+		cout << "printing neighbors" << endl;
+		for (int j = 0; j < coloring_order->size(); j++) {
+			cout << j + 1 << "th node : ";
+			vector<Tree::TreeNode*>* neigh = coloring_order->at(j)->get_neighbors();
+			for (int k = 0; k < neigh->size(); k++)
+				neigh->at(k)->get_TreeNode()->print_course_info();
+			cout << endl;
+		}
+		cout << endl;
 
 		bool no_answer = lets_color(to_color, coloring_order);
 		if (!no_answer) {	// cannot solve. need to split up.
@@ -237,6 +254,7 @@ Tree::TreeNode* find_treenode(vector<Tree::TreeNode*>* node_list, Course* crs)
 		if (node_list->at(i)->get_TreeNode()->get_id() == crs->get_id())
 			return node_list->at(i);
 	}
+	assert(false);
 	return NULL;
 }
 
@@ -246,6 +264,9 @@ void set_neighbors(Tree* T, Graph* subG)
 	Course* cur_crs;
 	vector<Course*>* cur_neighbors;
 	vector<Tree::TreeNode*>* neighbor_to_set;
+
+	cout << "size of subG " << subG->get_size() << endl;
+	cout << "size of tree " << col_ord->size() << endl;
 
 	for (int i = 0; i < col_ord->size(); i++) {
 		cur_crs = col_ord->at(i)->get_TreeNode();

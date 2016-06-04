@@ -206,8 +206,8 @@ public:
 
 		if (parent == root)
 		{
-			cout << parent << endl;
-			cout << root << endl;
+			cout << "curent is root" << endl;
+			//cout << root << endl;
 			return NULL;
 		}
 		return parent;
@@ -218,7 +218,7 @@ public:
 	{
 		assert(child != NULL);
 
-		cout << " back " << endl;
+		//cout << " back " << endl;
 
 		// backtracking cannot solve this problem
 		if (child == root)
@@ -227,6 +227,8 @@ public:
 		// get parent color which should not be used next time
 		TreeNode* bad_parent = child->get_parent();
 		int bad_color = bad_parent->get_selected();
+
+		cout << "parent: " << bad_parent->get_TreeNode()->get_id() << endl;
 
 		// reset the whole tree
 		reset(bad_parent, bad_color, order);

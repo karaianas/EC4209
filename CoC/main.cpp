@@ -76,8 +76,9 @@ void init_coloring(vector<Graph*>* to_init);
 
 void printf_happiness(vector<Student*>*ptr, TimeSlot* T, vector<Course*>* ptr2, int happiness);
 
+Course* get_max_crs(vector<Course*>* crs_list, vector<float>* values, vector<Course*>* visited);
+vector<Course*>* sort_neighbor(vector<Course*>* neighbor_list, Graph* G, Course* cur);
 Tree* build_tree(Graph* weighted_graph, vector<Tree::TreeNode*>* order_of_coloring);
-vector<Course*>* max_sorting(Graph* G, vector<Course*>* crs_list, Course* cur, vector<Course*>* visited);
 bool lets_color(Tree* T, vector<Tree::TreeNode*>* coloring_order);
 vector<Graph*>* cut_subgraphs(Graph* G, float thres, vector<Course*> alone_list);
 vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*>* alone_list);

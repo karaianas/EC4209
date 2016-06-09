@@ -52,6 +52,8 @@ public:
 		int index_i = get_index(i);
 		int index_j = get_index(j);
 
+		if (p.at(index_i).at(index_j) <= 0)
+			return 0;
 		return p.at(index_i).at(index_j);
 	}
 

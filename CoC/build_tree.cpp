@@ -6,7 +6,7 @@
 #include "Tree.h"
 
 #define THRESHOLD 0.05
-#define DEFAULT_THRES 0.6
+#define DEFAULT_THRES 0.2
 
 using namespace std;
 

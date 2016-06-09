@@ -17,7 +17,6 @@ public:
 
 	vector<RCourse*> get_course_list()
 	{
-		
 		return course_list; 
 	}
 

@@ -103,11 +103,11 @@ bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* 
 			if (first)
 			{
 				Course* C = new Course(track, num, counter);
-				counter++;
 				c_list->push_back(C);
 				C->enroll_student(S);
 				S->register_course(track, num, counter);
 				first = false;
+				counter++;
 			}
 			else
 			{
@@ -127,10 +127,10 @@ bool in_conversion(const char* path, vector<Student*>* s_list, vector<Course*>* 
 				if (!exist)
 				{
 					Course* C = new Course(track, num, counter);
-					counter++;
 					c_list->push_back(C);
 					C->enroll_student(S);
 					S->register_course(track, num, counter);
+					counter++;
 				}
 			}
 		}

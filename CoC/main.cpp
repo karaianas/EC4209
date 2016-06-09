@@ -16,6 +16,7 @@
 #include "Graph.h"
 #include "TimeSlot.h"
 #include "Tree.h"
+#include "Schedule.h"
 
 #define PI 3.1415926
 
@@ -85,9 +86,14 @@ vector<Tree*>* main_coloring(Graph* G, vector<Graph*>* subgraphs, vector<Course*
 Tree::TreeNode* find_treenode(vector<Tree::TreeNode*>* node_list, Course* crs);
 void set_neighbors(Tree* T, Graph* subG);
 
-
 void draw_course(Course* ptr, int _j); 
 void set_time_table();
+Course* get_course_by_id(int id);
+float check_conflict(Student* s);
+float check_happiness(Student* s);
+void five_meters(Schedule* s, int per_timeslot = 10);
+void greedy_global_max(Schedule* s);
+vector<Course*> alone_again;
 
 int main(int argc, char** argv)
 {
@@ -147,14 +153,72 @@ int main(int argc, char** argv)
 	cptr = &course_list;
 	simple_graph->get_correlation_stats(cptr);
 
+	/* SCHEDULE TEST */
+	//Schedule* S = new Schedule();
+	//cout << S->get_size() << endl;
+	//cout << S->get_freq(1) << endl;
+	//S->set(1, course_list[0]);
+	//cout << S->get_freq(1) << endl;
+	//S->set(1, course_list[1]);
+	//cout << S->get_freq(1) << endl;
+	//cout << S->get_sum(1, course_list[0], simple_graph) << endl;
+
+	cout << endl << "Course Size: " << course_list.size() << endl << "Student Size: " << student_list.size() << endl;
+
+	/* Greedy Algorithm */
+	//greedy_time_slot = new TimeSlot(12);
+	//greedy_time_slot->Find_Greedy_Solution(multi_graph);
+	//for (int i = 0; i <= 100; i += 10)
+	//{
+	//	cout << i << "% ";
+	//	printf_happiness(&student_list, greedy_time_slot, &course_list, i);
+	//}
+	
 	/* make list of subgraphs from the simple_graph */
-	subgraphs = new vector<Graph*>();
+	//subgraphs = new vector<Graph*>();
 
-	vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
+	//vector<Tree::TreeNode*>* color_order = new vector<Tree::TreeNode*>();
 
-	Graph* simple_copy = new Graph(simple_graph);
+	//Graph* simple_copy = new Graph(simple_graph);
 
-	all_trees = main_coloring(simple_copy, subgraphs, alone_list);
+	//all_trees = main_coloring(simple_copy, subgraphs, alone_list);
+
+	//cout << "Number of trees: " << all_trees->size() << endl;
+	//for (int i = 0; i < all_trees->size(); i++)
+	//	cout << "size of subtree " << i << ": " << all_trees->at(i)->get_size() << endl;
+
+	//cout << "Number of subgraphs: " << subgraphs->size() << endl;
+	//for (int i = 0; i < subgraphs->size(); i++)
+	//	cout << "size of subgraph " << i << ": " << subgraphs->at(i)->get_size() << endl;
+
+	/* Schedule TEST */
+	simple_graph->remove_less_threshold(0.25);
+	Schedule* S = new Schedule(simple_graph, 100);
+	//five_meters(S, 10);
+	greedy_global_max(S);
+
+	int count;
+	for (int j = 0; j <= 100; j += 5)
+	{
+		count = 0;
+		for (int i = 0; i < student_list.size(); i++)
+		{
+			if (check_happiness(student_list.at(i)) >= j)
+				count++;
+		}
+		cout << j << "% Number of happy students: " << count << endl;
+	}
+
+
+	//time_slot = new TimeSlot(12);
+	//time_slot->put_course_color(multi_graph);
+	//printf_happiness(&student_list, time_slot, &course_list, 80);
+
+	//for (int i = 0; i < student_list.size(); i++) {
+	//	cout << student_list.at(i)->get_course_list().size() << endl;
+	//	student_list.at(i)->print_course_list();
+	//}
+
 
 	// graphical interface 
 	glutInit(&argc, argv);
@@ -177,6 +241,153 @@ int main(int argc, char** argv)
 	glutMainLoop();
 
 	return 0;
+}
+
+void greedy_global_max(Schedule* s)
+{
+	int num = course_list.size();
+	for (int i = 0; i < num; i++)
+	{
+		int index = s->get_max_avg_sum_i(course_list);
+		//cout << "Max course: " << index << endl;
+		int opt_slot = s->get_min_slot(course_list.at(index));
+		//cout << "Opt slot: " << opt_slot << endl;
+		s->set(opt_slot, course_list.at(index));
+	}
+}
+
+Course* get_course_by_id(int id)
+{
+	for (int i = 0; i < course_list.size(); i++)
+	{
+		if (course_list[i]->get_id() == id)
+			return course_list[i];
+	}
+
+	return NULL;
+}
+
+float check_happiness(Student* s)
+{
+	int num = s->get_courses().size();
+
+	int table[12] = { 0, };
+	for (int i = 0; i < num; i++)
+	{
+		int id = s->get_courses().at(i);
+		if (get_course_by_id(id) == NULL)
+		{
+			cout << "Course missing" << endl;
+			continue;
+		}
+
+		int timeslot = get_course_by_id(id)->get_time_slot();
+		if (timeslot == -1)
+		{
+			cout << "problem!" << endl;
+			return 0;
+		}
+		table[timeslot]++;
+	}
+
+	int conflict = 0;
+	for (int i = 0; i < 12; i++)
+	{
+		if (table[i] >= 1)
+			conflict++;
+	}
+
+	return 100 * (float)conflict / (float)num;
+}
+
+float check_conflict(Student* s)
+{
+	int num = s->get_courses().size();
+
+	int table[12] = { 0, };
+	for (int i = 0; i < num; i++)
+	{
+		int id = s->get_courses().at(i);
+		Course* ptr = get_course_by_id(id);
+		int timeslot = ptr->get_time_slot();
+		if (timeslot == -1)
+		{
+			cout << "problem!" << endl;
+			return 0;
+		}
+		table[timeslot]++;
+	}
+
+	int conflict = 0;
+	for (int i = 0; i < 12; i++)
+	{
+		if (table[i] > 1)
+			conflict++;
+	}
+
+	return (float)conflict / (float)num;
+}
+
+void five_meters(Schedule* s, int per_timeslot)
+{
+	int max_fr = per_timeslot;
+
+	// per-slot initialization
+	int fr[12] = { 0, };
+
+	// color the biggest tree
+	Tree* tree_ptr = all_trees->at(2);
+	int tree_size = tree_ptr->get_size();
+	int color = 0;
+
+	for (int i = 0; i < tree_size; i++)
+	{
+		color = tree_ptr->get_order()->at(i)->get_selected();
+
+		// timeslot overallocation
+		while (fr[color] + 1 > max_fr)
+		{
+			color++;
+			if (color >= 12)
+				color -= 12;
+		}
+
+		// set timeslot
+		tree_ptr->get_order()->at(i)->get_TreeNode()->set_time_slot(color);
+		fr[color] += 1;
+		//draw_course(tree_ptr->get_order()->at(i)->get_TreeNode(), fr[color]);
+
+		// push into time table
+		s->set(color, tree_ptr->get_order()->at(i)->get_TreeNode());
+	}
+
+	// alone again.. naturally
+	for (int i = 0; i < course_list.size(); i++)
+	{
+		if (course_list.at(i)->get_time_slot() == -1)
+			alone_again.push_back(course_list.at(i));
+	}
+
+	// color root trees
+	int num = alone_again.size();
+	for (int i = 0; i < num; i++)
+	{
+		int index = s->get_max_avg_sum_i(alone_again);
+		cout << "Max course: " << index << endl;
+		int opt_slot = s->get_min_slot(alone_again.at(index));
+		cout << "Opt slot: " << opt_slot << endl;
+		s->set(opt_slot, alone_again.at(index));
+	}
+
+	int count = 0;
+	for (int i = 0; i < course_list.size(); i++)
+	{
+		if (course_list.at(i)->get_time_slot() != -1)
+			count++;
+	}
+	cout << "Number of colored courses: " << count << endl;
+
+
 }
 
 void set_time_table()
@@ -249,18 +460,28 @@ void set_time_table()
 		}
 	}
 
+	for (int i = 0; i < course_list.size(); i++){
+		if (course_list[i]->get_time_slot() == -1)
+			course_list[i]->print_course_info();
+	}
+	cout << endl;
+
+	for (int i = 0; i < 10; i++)
+		cout << check_conflict(student_list.at(i)) << endl;
+
 	// Timeslot Allocation -----------------------------------------------
 	//greedy_time_slot = new TimeSlot(12);
-	time_slot = new TimeSlot(12);
+	//time_slot = new TimeSlot(12);
 	//greedy_time_slot->Find_Greedy_Solution(multi_graph);
 	//printf_happiness(&student_list, greedy_time_slot, &course_list, 80);
-	time_slot->put_course_color(multi_graph);
-	printf_happiness(&student_list, time_slot, &course_list, 80);
+//	time_slot->put_course_color(multi_graph);
+//	printf_happiness(&student_list, time_slot, &course_list, 90);
 }
 
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(1, 1, 1, 1);
 
 	// culling
 	glEnable(GL_CULL_FACE);
@@ -407,7 +628,8 @@ void display()
 					float range = simple_graph->max - threshold;
 
 					//glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
-					glColor3f(1, 1, 1);
+					//glColor3f(1, 1, 1);
+					glColor3f(0.7, 0.7, 0.7);
 					glLineWidth(sizeL[0] * 10 * (weight - threshold) / range);
 					glBegin(GL_LINE_STRIP);
 					glVertex3f(79 * cos(2 * PI / node_num * clicked), 79 * sin(2 * PI / node_num * clicked), 0);
@@ -430,7 +652,8 @@ void display()
 						float range = simple_graph->max - threshold;
 
 						//glColor3f(0, (weight - threshold) / range, (weight - threshold) / range);
-						glColor3f(1, 1, 1);
+						//glColor3f(1, 1, 1);
+						glColor3f(0.7, 0.7, 0.7);
 						glLineWidth(sizeL[0] * 10 * (weight - threshold) / range);
 						glBegin(GL_LINE_STRIP);
 						glVertex3f(79 * cos(2 * PI / node_num * x), 79 * sin(2 * PI / node_num * x), 0);
@@ -550,36 +773,6 @@ void display()
 		glRotated(angle_z, 0.0f, 0.0f, 1.0f);
 
 		glColor3f(0.7, 0.7, 0.7);
-
-		/*
-		// xy-plane
-		for (int i = 0; i <= 120; i += 20)
-		{
-			glBegin(GL_LINES);
-			glVertex3f(-60, 0 + i, -60);
-			glVertex3f(60, 0 + i, -60);
-			glEnd();
-
-			glBegin(GL_LINES);
-			glVertex3f(-60 + i, 120, -60);
-			glVertex3f(-60 + i, 0, -60);
-			glEnd();
-		}
-		
-		// yz-plane
-		for (int i = 0; i <= 120; i += 20)
-		{
-			glBegin(GL_LINES);
-			glVertex3f(-60, 0 + i, 60);
-			glVertex3f(-60, 0 + i, -60);
-			glEnd();
-
-			glBegin(GL_LINES);
-			glVertex3f(-60, 0, -60 + i);
-			glVertex3f(-60, 120, -60 + i);
-			glEnd();
-		}
-		*/
 		
 		// zx-plane
 		for (int i = 0; i <= 120; i += 20)
@@ -601,19 +794,7 @@ void display()
 		
 		glColor3f(1, 0, 0);
 
-		//// x-axis
-		//glBegin(GL_LINES);
-		//glVertex3d(-60, 0.1, 0);
-		//glVertex3d(60, 0.1, 0);
-		//glEnd();
-
-		//// z-axis
-		//glBegin(GL_LINES);
-		//glVertex3d(0, 0.1, -60);
-		//glVertex3d(0, 0.1, 60);
-		//glEnd();
-
-		set_time_table();
+		//set_time_table();
 
 		glPopMatrix();
 	}
@@ -837,7 +1018,15 @@ float one_happiness(vector<Student*>* ptr, int s_id, TimeSlot* T, vector<Course*
 			}
 		}
 	}
+
+	//for (int i = 0; i < total_course; i++)
+	//{
+	//	get_course_by_id(my_list.at(i))->print_course_info();
+	//}
+
+	//cout << "purity: " << purity << " total_course: " << total_course << endl;
 	_one_happiness = ((float)purity / (float)total_course) * 100;	//분반이 없을때 
+	//cout << "one_hap: " << _one_happiness << endl;
 //	_one_happiness = ((float)sum / (float)total_course) * 100;		//확률적으로 들을 수 있을 떄 
 
 	return _one_happiness;

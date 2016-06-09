@@ -41,6 +41,17 @@ public:
 	void print_timeslot(Graph *G);
 	void print_graph_info();
 	void Find_Greedy_Solution(Graph *G);
+	//int get_happy_num(Graph* G, vector<Student*> list);
+	//Course* get_course_by_id(int id, vector<Course*> course_list)
+	//{
+	//	for (int i = 0; i < course_list.size(); i++)
+	//	{
+	//		if (course_list[i]->get_id() == id)
+	//			return course_list[i];
+	//	}
+
+	//	return NULL;
+	//}
 
 	vector< vector < int > > get_Array(void);
 	vector< pair< pair<int, int>, float> > get_graph_info(void);
@@ -60,11 +71,11 @@ void TimeSlot::put_course_color(Graph *G)
 	for (int i = 0; i < G->get_size(); i++)
 	{
 		Course *temp_course = G->get_course(i);
-		int j = temp_course->get_time_slot();
-		//int *temp_color = temp_course->get_color();
-		//int j = 0;
-		//while (temp_color[j] == 0)
-		//	j++;
+		//int j = temp_course->get_time_slot();
+		int *temp_color = temp_course->get_color();
+		int j = 0;
+		while (temp_color[j] == 0)
+			j++;
 		if (j != -1)
 			Base_Solution_Array.at(j).push_back(i);
 	}
@@ -94,6 +105,8 @@ void TimeSlot::print_timeslot(Graph *G)
 	}
 }
 
+
+
 void TimeSlot::print_graph_info()
 {
 	for (int i = 0; i < graph_info.size(); i++)
@@ -102,6 +115,7 @@ void TimeSlot::print_graph_info()
 			cout << graph_info.at(i).first.first << " " << graph_info.at(i).first.second << " " << graph_info.at(i).second << endl;
 	}
 }
+
 
 
 

@@ -82,6 +82,7 @@
     <ClInclude Include="Course.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="RCourse.h" />
+    <ClInclude Include="Schedule.h" />
     <ClInclude Include="Student.h" />
     <ClInclude Include="TimeSlot.h" />
     <ClInclude Include="Tree.h" />
